@@ -1,0 +1,31 @@
+# Estudo sobre Git 
+
+
+## Três Estados do Git
+
+| Estado | Localização | Descrição |
+| :--- | :--- | :--- |
+| **Modified** | Working Directory | Arquivos alterados que ainda não foram preparados para salvar. |
+| **Staged** | Staging Area (Index) | Arquivos marcados para fazer parte do próximo snapshot (commit). |
+| **Committed** | Local Repository | Dados gravados de forma permanente no banco de dados do Git. |
+
+
+## Comandos Essenciais
+
+ **Navegação e Inspeção**:
+  `git status`: Mostra o estado atual dos arquivos (modificados, em staging ou não rastreados).
+   `git log --oneline`: Exibe o histórico de commits de forma simplificada em uma linha por registro.
+   `git diff`: Exibe as alterações exatas feitas no código antes de adicioná-las ao staging.
+
+ **Fluxo de Trabalho**:
+   `git add <arquivo>`: Adiciona alterações específicas à Staging Area (`git add .` para tudo).
+   `git commit -m "mensagem"`: Grava as alterações preparadas com uma mensagem explicativa.
+   `git push origin <branch>`: Envia os commits locais para o servidor remoto.
+   `git pull origin <branch>`: Baixa e integra as atualizações do servidor remoto no ambiente local.
+
+---
+
+## Boas Práticas
+ **Commits Atômicos**: Faça commits pequenos que resolvam apenas um problema por vez.
+ **Conventional Commits**: Utilize prefixos claros na mensagem do commit (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`).
+ **Uso do `.gitignore`**: Configure para ignorar credenciais, arquivos de ambiente (`.env`), pastas de compilação e dependências (`node_modules/`, `venv/`).
