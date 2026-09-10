@@ -1,6 +1,6 @@
-# Git e Github
+#Git e Github
 
-## Configuracao e criar e clonar repositorios
+##Configuracao e criar e clonar repositorios
 'git config --global user.name "Seu Nome"
 git config --global user.email "seu@email.com"
 git config --global core.editor "code --wait" # define o editor (VS Code neste caso)
@@ -15,15 +15,15 @@ git clone <url> nome-local # clona e renomeia a pasta local
 '
 
 
-## Termos
-### Commit
+##Termos
+###Commit
 Commit e uma mudanca que foi feita em um projeto em um determinado momento sendo adicionada a um historico do projeto
 
-### Branches
+###Branches
 Branches sao ramificacoes no projeto para que as coisas nao sejam adicionadas de uma vez, sendo mais comum o uso para criar novas features em um ambiente controlado sem outros commits
 
 
-## Branches
+##Branches
 '
 git branch #listar branches locais
 git branch -a #listar branches locais e remotas
@@ -36,7 +36,7 @@ git switch nome #muda para uma branch existente
 git switch -c nome #cria e muda para uma nova branch
 '
 
-## Adicionar e commitar
+##Adicionar e commitar
 '
 git add <arquivo> #adiciona um arquivo a uma lista (staging area)
 git add . #adiciona todos os arquivos modificados/novos
@@ -48,7 +48,7 @@ git commit --ammend #reescreve o ultimo commit
 git commit --ammend --no-edit #reescreve o ultimo commit mantendo a mesma mensagem
 '
 
-## Merge
+##Merge
 '
 git merge nome-da-branch #merge da branch indicada na branch atual
 git rebase main #reaplica commits da branch atual sobre main
