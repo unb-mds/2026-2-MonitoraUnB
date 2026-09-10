@@ -1,0 +1,30 @@
+# Estudo Comparativo: FastAPI vs Django
+
+## Tabela Comparativa
+
+| Critério | Django | FastAPI |
+| :--- | :--- | :--- |
+| **Filosofia** | "Baterias inclusas" (Monolítico) | Micro-framework modular |
+| **Foco Primário** | Aplicações Web Full-Stack | APIs RESTful e Microsserviços |
+| **Desempenho** | Padrão (WSGI / ASGI) | Alto (Starlette + Pydantic) |
+| **ORM & Migrações** | Django ORM nativo | Livre escolha (SQLAlchemy, SQLModel) |
+| **Painel Admin** | Pronto para uso | Não possui (requer libs externas) |
+| **Validação** | Django Forms / DRF Serializers | Nativa com Type Hints e Pydantic |
+| **Documentação** | Manual / DRF OpenAPI | Automática (Interactive Swagger UI / ReDoc) |
+
+---
+
+## Django
+* **Pontos Fortes**: Ecossistema maduro, painel de administração pronto, sistema de autenticação e segurança testados em produção, ORM integrado com migrações automáticas.
+* **Pontos Fracos**: Acoplamento elevado, estrutura rígida e maior uso de recursos para serviços simples.
+* **Casos de Uso**: Aplicações SaaS completas, sistemas corporativos, plataformas e-commerce e projetos que exigem painel administrativo interno.
+
+## FastAPI
+* **Pontos Fortes**: Suporte nativo a `async/await`, validação automática de dados via type hints do Python, geração automática de documentação da API e alto desempenho.
+* **Pontos Fracos**: Requer definição manual da arquitetura (escolha de ORM, autenticação e rotinas de migração).
+* **Casos de Uso**: APIs REST de alto tráfego, arquiteturas de microsserviços, integração com modelos de Machine Learning e aplicações em tempo real.
+
+---
+
+## Conclusão da Análise
+A escolha depende do escopo da aplicação: **Django** prioriza produtividade de desenvolvimento ao fornecer todas as ferramentas prontas. **FastAPI** prioriza performance, flexibilidade arquitetural e padrões modernos de APIs.
