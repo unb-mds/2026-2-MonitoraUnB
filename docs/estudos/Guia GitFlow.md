@@ -1,4 +1,4 @@
-# Guia de Git Flow: Develop e Feature Branches
+# Guia de Git Flow, Develop e Feature Branches
 
 Este guia explica como o time deve trabalhar com branches `develop` e `feature` no projeto, para manter o histórico organizado e evitar conflitos entre o trabalho de diferentes membros.
 
