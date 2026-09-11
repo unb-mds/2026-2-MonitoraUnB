@@ -1,4 +1,4 @@
-# Sprint N
+# Sprint 00
 
 Período: 04/09/2023 a 11/09/2023
 
@@ -11,10 +11,10 @@ Período: 04/09/2023 a 11/09/2023
 
 ## Objetivos
 
-- [ ] definir as próximas sprints
-- [ ] delegar as funções 
-- [ ] escolher linguagens
-- [ ] começar a lógica do código
+- [x] definir as próximas sprints
+- [x] delegar as funções 
+- [x] escolher linguagens
+- [x] começar a lógica do código
 
 ## Reuniões
 
