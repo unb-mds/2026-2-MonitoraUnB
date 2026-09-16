@@ -1,135 +1,115 @@
 # Documento de Visão — Monitora UnB
 
-## 1. Introdução
+## 1. Identificação do Projeto
 
-Este documento define a visão do produto **Monitora UnB**: o problema que será solucionado, seus usuários e as principais funcionalidades do sistema. Ele serve como referência para o desenvolvimento do projeto, mantendo uma visão geral do produto antes do detalhamento dos requisitos e das decisões técnicas.
+**Nome:** Monitora UnB  
+**Disciplina:** Métodos de Desenvolvimento de Software (MDS)  
+**Instituição:** Universidade de Brasília (UnB) — FCTE
 
-O projeto é desenvolvido como parte da disciplina de **Métodos de Desenvolvimento de Software (MDS)** da FCTE/UnB.
+O Monitora UnB é um sistema desenvolvido para automatizar o processo de inscrição e auxiliar na seleção de alunos para monitorias da Universidade de Brasília.
 
 ---
 
 ## 2. Posicionamento
 
-### 2.1 Declaração do problema
+### 2.1 Problema
 
-| Campo | Descrição |
+| Aspecto | Descrição |
 |---|---|
-| **O problema de** | processo manual e sujeito a erros nas inscrições e na seleção de monitores |
-| **Afeta** | estudantes, professores e responsáveis pelas comissões de monitoria da UnB |
-| **E o impacto disso é** | demora na validação dos históricos, erros nas informações e necessidade de tratamento manual dos dados dos candidatos |
-| **Uma solução de sucesso seria** | um sistema que automatize a inscrição, valide as informações acadêmicas e organize os dados necessários para a seleção |
+| **Problema** | Processo de inscrição e seleção de monitores com etapas manuais e sujeito a erros. |
+| **Afeta** | Estudantes, professores e responsáveis pelas monitorias. |
+| **Impacto** | Demora na validação dos históricos, erros nas informações e trabalho manual na organização e classificação dos candidatos. |
+| **Solução** | Automatizar a inscrição, validação acadêmica e organização das informações dos candidatos. |
 
-### 2.2 Declaração de posicionamento do produto
+### 2.2 Visão do Produto
 
-Para **estudantes e responsáveis pelas monitorias da UnB** que precisam realizar e administrar o processo de inscrição de monitores, o **Monitora UnB** é um sistema que automatiza a inscrição e a validação dos candidatos, utilizando seus dados acadêmicos para auxiliar na classificação.
+Para **estudantes e responsáveis pelas monitorias da UnB**, o **Monitora UnB** é um sistema que automatiza a inscrição e auxilia no processo de seleção de monitores.
 
-Diferente do processo manual, o sistema permite o envio e validação do histórico acadêmico, reconhece disciplinas equivalentes, calcula o coeficiente dos candidatos e disponibiliza os dados necessários para a seleção.
+O sistema permite que o aluno envie seu histórico acadêmico, selecione uma disciplina e tenha sua aprovação validada automaticamente. Após a inscrição, os dados acadêmicos são utilizados para o cálculo do coeficiente e para a organização das informações necessárias à classificação dos candidatos.
 
 ---
 
-## 3. Descrição dos stakeholders e usuários
+## 3. Usuários e Stakeholders
 
-### 3.1 Resumo dos stakeholders
-
-| Stakeholder | Interesse no projeto |
+| Usuário/Stakeholder | Interesse |
 |---|---|
-| **Equipe do projeto** | Desenvolver e entregar o sistema dentro do prazo da disciplina, seguindo as práticas de MDS. |
-| **Professor(a) da disciplina** | Avaliar o desenvolvimento, a documentação e o produto entregue. |
-| **Estudantes da UnB** | Realizar inscrições para vagas de monitoria de forma simples e rápida. |
-| **Professores** | Participar e acompanhar o processo de monitoria. |
-| **Professor responsável pela comissão** | Controlar as informações dos candidatos e o processo de classificação. |
-| **Comissão de monitoria** | Utilizar as informações dos candidatos para realizar a seleção. |
+| **Aluno** | Realizar a inscrição de forma simples e acompanhar o resultado. |
+| **Professor** | Participar do processo de monitoria e acompanhar os candidatos. |
+| **Professor responsável pela comissão** | Controlar os dados e o processo de classificação. |
+| **Comissão de monitoria** | Realizar a seleção dos monitores. |
+| **Equipe do projeto** | Desenvolver e entregar o sistema dentro do prazo da disciplina. |
 
-### 3.2 Resumo dos usuários
+---
 
-| Usuário | Descrição | Uso esperado |
+## 4. Necessidades dos Usuários
+
+| Necessidade | Prioridade | Solução |
 |---|---|---|
-| **Aluno** | Estudante interessado em uma vaga de monitoria. | Enviar histórico, selecionar disciplina, confirmar inscrição e receber o resultado. |
-| **Professor** | Docente relacionado ao processo de monitoria. | Acompanhar o processo de seleção conforme suas responsabilidades. |
-| **Responsável pela comissão** | Professor responsável pelo controle da seleção. | Acessar os dados necessários para classificação e seleção dos candidatos. |
-
-### 3.3 Ambiente do usuário
-
-Os alunos poderão acessar o sistema por meio de um navegador, utilizando computadores ou dispositivos móveis.
-
-Os responsáveis pela monitoria utilizarão o sistema para consultar e organizar as informações dos candidatos durante o processo de seleção.
-
-### 3.4 Necessidades dos stakeholders e usuários
-
-| Necessidade | Prioridade | Problema atual | Solução proposta |
-|---|---|---|---|
-| Realizar inscrição de forma simples | Alta | Processo sujeito a erros e etapas manuais | Formulário de inscrição online |
-| Validar aprovação na disciplina | Alta | Conferência manual do histórico | Validação automática do histórico |
-| Reconhecer disciplinas equivalentes | Alta | Códigos diferentes podem dificultar a validação | Cadastro e consulta de equivalências |
-| Organizar dados dos candidatos | Alta | Informações precisam ser tratadas manualmente | Extração e organização automática |
-| Classificar candidatos | Alta | Necessidade de cálculo e organização dos dados | Cálculo do coeficiente e envio para planilha |
-| Informar o resultado | Média | Comunicação depende de processos manuais | Envio automático por e-mail |
+| Realizar inscrição de forma simples | Alta | Formulário de inscrição online |
+| Verificar aprovação na disciplina | Alta | Validação automática do histórico |
+| Considerar disciplinas equivalentes | Alta | Consulta às equivalências reconhecidas |
+| Reduzir trabalho manual | Alta | Extração e organização automática dos dados |
+| Classificar os candidatos | Alta | Cálculo do coeficiente e organização dos dados |
+| Receber o resultado | Média | Envio automático por e-mail |
 
 ---
 
-## 4. Visão geral do produto
+## 5. Visão Geral do Produto
 
-### 4.1 Perspectiva do produto
+### 5.1 Principais funcionalidades
 
-O **Monitora UnB** é um sistema desenvolvido para automatizar o processo de inscrição e auxiliar na seleção de monitores.
+- Envio do histórico acadêmico em PDF.
+- Seleção da disciplina de monitoria.
+- Validação da aprovação na disciplina.
+- Reconhecimento de disciplinas equivalentes.
+- Extração das informações acadêmicas do histórico.
+- Confirmação dos dados antes da inscrição.
+- Registro da inscrição.
+- Cálculo do coeficiente dos candidatos.
+- Envio das informações para a planilha utilizada na classificação.
+- Controle de acesso aos dados da seleção.
+- Envio do resultado da seleção por e-mail.
 
-O sistema recebe o histórico acadêmico do aluno, valida suas informações e verifica sua aprovação na disciplina escolhida ou em disciplinas equivalentes.
+### 5.2 Fluxo principal
 
-Após a inscrição, os dados acadêmicos necessários são utilizados no cálculo do coeficiente e encaminhados para a etapa de classificação dos candidatos.
+1. O aluno envia seu histórico acadêmico.
+2. Seleciona a disciplina para a qual deseja se candidatar.
+3. O sistema valida seus dados e verifica a aprovação na disciplina ou em uma equivalente.
+4. O sistema apresenta os dados encontrados para confirmação.
+5. O aluno confirma a inscrição.
+6. Os dados são utilizados no cálculo do coeficiente.
+7. As informações necessárias são disponibilizadas para a classificação.
+8. Após a seleção, o resultado é enviado ao aluno por e-mail.
 
-### 4.2 Resumo de funcionalidades
+---
 
-| Funcionalidade | Benefício para o usuário |
+## 6. Integrações
+
+O sistema deverá se relacionar com os seguintes recursos:
+
+- **Base acadêmica da UnB:** utilizada para validar as informações acadêmicas do aluno.
+- **Planilha Excel:** utilizada pela comissão para auxiliar na classificação dos candidatos.
+- **Serviço de e-mail:** utilizado para comunicar o resultado da seleção.
+
+---
+
+## 7. Restrições e Qualidade
+
+- O projeto deve ser desenvolvido dentro do prazo estabelecido pela disciplina de MDS.
+- O sistema deve possuir uma interface simples e acessível aos estudantes.
+- A validação das informações deve ocorrer em poucos segundos.
+- Dados pessoais e acadêmicos devem ser protegidos de acordo com a LGPD.
+- O acesso às informações utilizadas na seleção deve ser restrito aos responsáveis.
+- As inscrições devem possuir registro para fins de auditoria.
+
+---
+
+## 8. Priorização
+
+| Prioridade | Funcionalidades |
 |---|---|
-| **Envio do histórico em PDF** | Evita o preenchimento manual das informações acadêmicas. |
-| **Seleção da disciplina** | Permite indicar a monitoria desejada. |
-| **Validação acadêmica** | Verifica se o aluno possui aprovação na disciplina. |
-| **Reconhecimento de equivalências** | Permite validar disciplinas equivalentes reconhecidas pela UnB. |
-| **Confirmação dos dados** | Permite ao aluno verificar as informações antes da inscrição. |
-| **Cálculo do coeficiente** | Auxilia na classificação dos candidatos. |
-| **Exportação dos dados para Excel** | Facilita o controle e a classificação pela comissão. |
-| **Controle de acesso** | Restringe informações de seleção aos responsáveis. |
-| **Envio do resultado por e-mail** | Informa o aluno sobre o resultado da seleção. |
-
-### 4.3 Hipóteses e dependências
-
-- O histórico acadêmico enviado pelo aluno estará disponível em formato PDF e conterá informações suficientes para a validação.
-- A base acadêmica da UnB estará disponível para a integração prevista pelo sistema.
-- A estrutura das informações acadêmicas necessárias para a validação permanecerá compatível com o sistema.
-- A planilha utilizada pela comissão estará disponível para receber os dados necessários à classificação.
-
----
-
-## 5. Restrições
-
-- O projeto possui prazo definido pelo calendário da disciplina de MDS.
-- A equipe possui dedicação parcial ao projeto, paralelamente às demais atividades acadêmicas.
-- O sistema depende da disponibilidade das informações acadêmicas necessárias para realizar as validações.
-- O tratamento de dados pessoais e acadêmicos deve respeitar a **LGPD**.
-- O acesso aos dados utilizados na seleção deve ser restrito aos responsáveis pelo processo.
-
----
-
-## 6. Faixas de qualidade
-
-| Atributo | Faixa esperada |
-|---|---|
-| **Desempenho** | A validação do histórico deve ocorrer em poucos segundos, sem prejudicar a experiência do usuário. |
-| **Segurança** | Dados pessoais e acadêmicos não devem ser expostos indevidamente. |
-| **Usabilidade** | O processo de inscrição deve ser simples e não exigir treinamento. |
-| **Confiabilidade** | O sistema deve informar claramente quando uma inscrição foi validada ou quando ocorreu algum erro. |
-| **Privacidade** | Os dados dos alunos devem ser tratados de acordo com a LGPD. |
-| **Auditoria** | As inscrições devem ser registradas com informações como aluno, data e disciplina. |
-
----
-
-## 7. Precedência e priorização
-
-| Prioridade | Itens |
-|---|---|
-| **Essencial (must have)** | Envio do histórico, seleção da disciplina, validação da aprovação, reconhecimento de equivalências, confirmação da inscrição e registro do resultado. |
-| **Essencial (must have)** | Integração com a base acadêmica e organização dos dados para a seleção. |
-| **Importante (should have)** | Cálculo do coeficiente, envio dos dados para a planilha de classificação e controle de acesso. |
-| **Importante (should have)** | Envio automático do resultado da seleção por e-mail. |
-| **Fora de escopo (won't have, por ora)** | Alteração de notas, menções ou informações oficiais do histórico acadêmico do aluno. |
-| **Fora de escopo (won't have, por ora)** | Substituição dos sistemas acadêmicos oficiais da UnB. |
+| **Essencial (Must Have)** | Inscrição, envio do histórico, seleção da disciplina, validação da aprovação, reconhecimento de equivalências e confirmação dos dados. |
+| **Essencial (Must Have)** | Registro das inscrições e integração necessária para validação acadêmica. |
+| **Importante (Should Have)** | Cálculo do coeficiente e organização dos dados para classificação. |
+| **Importante (Should Have)** | Integração com planilha e envio do resultado por e-mail. |
+| **Fora de escopo** | Alteração de notas, menções ou informações oficiais do histórico acadêmico. |
