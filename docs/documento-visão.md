@@ -72,14 +72,16 @@ O sistema permite que o aluno envie seu histórico acadêmico, selecione uma dis
 
 ### 5.2 Fluxo principal
 
-1. O aluno envia seu histórico acadêmico.
-2. Seleciona a disciplina para a qual deseja se candidatar.
-3. O sistema valida seus dados e verifica a aprovação na disciplina ou em uma equivalente.
-4. O sistema apresenta os dados encontrados para confirmação.
-5. O aluno confirma a inscrição.
-6. Os dados são utilizados no cálculo do coeficiente.
-7. As informações necessárias são disponibilizadas para a classificação.
-8. Após a seleção, o resultado é enviado ao aluno por e-mail.
+1. O aluno deve se cadastrar com o e-mail vinculado ao SIGAA.
+2. O aluno envia seu histórico acadêmico.
+3. Seleciona a disciplina para a qual deseja se candidatar.
+4. O sistema valida seus dados e verifica a aprovação na disciplina ou em uma equivalente.
+5. O sistema apresenta os dados encontrados para confirmação.
+6. O aluno confirma a inscrição.
+7. Os dados são utilizados no cálculo do coeficiente.
+8. As informações necessárias são disponibilizadas para a classificação.
+9. Após o processamento, as informações serão organizadas em uma planilha que será enviada por e-mail para a comissão. 
+10. Após a seleção, o resultado é enviado ao aluno por e-mail.
 
 ---
 
