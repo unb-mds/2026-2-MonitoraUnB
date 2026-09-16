@@ -1,0 +1,33 @@
+Breve estudo de como extrair textos especificos de um arquivo, visando aprender a trabalhar com os dados do históico
+
+Estratégias para ler, filtrar e extrair informações de arquivos de texto no Python sem usar bibliotecas externas.
+
+Formas de Abordagem
+
+Leitura Incremental (Linha por Linha): É a estratégia mais eficiente para arquivos médios e grandes (como arquivos de log). Em vez de carregar todo o arquivo para a memória RAM de uma vez, o Python lê uma linha por vez sob demanda. A verificação é feita checando se o termo desejado está contido naquela linha específica.
+
+Busca por Padrões (Expressões Regulares): Utilizada quando a busca não é por uma palavra exata, mas por um formato específico de dados (como CPFs, e-mails, endereços IP ou datas). Usa-se a biblioteca nativa re para identificar esses padrões no texto.
+
+Captura de Grupos e Valores: Útil para extrair valores específicos associados a uma chave em arquivos de configuração (por exemplo, capturar apenas os dígitos que vêm depois da expressão "PORTA =").
+
+Lógicas e Módulos Principais
+
+Operador de Pertinência (in): Forma nativa do Python para verificar se uma substring existe dentro de uma linha ou texto maior.
+
+Módulo re (Expressões Regulares):
+
+findall: Varre o texto e retorna uma lista com todas as ocorrências que casam com o padrão informado.
+
+search: Procura a primeira ocorrência do padrão e permite extrair trechos específicos através de grupos de captura.
+
+Enumerador de Linhas (enumerate): Permite acompanhar o número exato da linha durante a leitura, facilitando a exibição da posição onde a informação foi encontrada.
+
+Cuidados Práticos e Boas Práticas
+
+Gerenciador de Contexto (with): Deve ser usado sempre ao abrir arquivos. Ele garante que o arquivo seja fechado automaticamente pelo sistema operacional ao final da leitura ou caso ocorra algum erro durante o processo.
+
+Codificação de Caracteres (utf-8): Especificar a codificação correta na abertura do arquivo previne erros de leitura quando o texto possui acentuação ou caracteres especiais, garantindo compatibilidade entre diferentes sistemas operacionais.
+
+Gerenciamento de Memória: O método de ler o arquivo inteiro para uma única variável só deve ser usado em arquivos pequenos. Para arquivos na casa dos gigabytes, a iteração linha por linha é obrigatória para evitar estouro de memória.
+
+Tratamento de Quebras de Linha (strip): Cada linha lida de um arquivo contém um caractere oculto de quebra de linha ao final. É necessário removê-lo ao comparar ou exibir os resultados para evitar formatações desalinhadas.
