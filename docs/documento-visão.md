@@ -90,8 +90,8 @@ O sistema permite que o aluno envie seu histórico acadêmico, selecione uma dis
 O sistema deverá se relacionar com os seguintes recursos:
 
 - **Base acadêmica da UnB:** utilizada para validar as informações acadêmicas do aluno (via plugin).
-- **Planilha Excel:** utilizada pela comissão para auxiliar na classificação dos candidatos.
-- **Serviço de e-mail:** utilizado para comunicar o resultado da seleção.
+- **Planilha Excel:** utilizada pela comissão para armazenar e controlar dados.
+- **Serviço de e-mail:** utilizado para comunicar o resultado da seleção para professores e alunos.
 
 ---
 
