@@ -10,15 +10,16 @@
 
 ## Objetivos
 
-- [ ] Elaborar e organizar o **Documento de Visão** do projeto.
-- [ ] Desenvolver o **Documento de Requisitos**, definindo as principais necessidades e funcionalidades do sistema.
+- [x] Elaborar e organizar o **Documento de Visão** do projeto.
+- [x] Desenvolver o **Documento de Requisitos**, definindo as principais necessidades e funcionalidades do sistema.
 - [ ] Construir o **Story Map**, organizando as funcionalidades e o fluxo do sistema.
-- [ ] Definir decisões iniciais relacionadas ao desenvolvimento do Front-end e Back-end.
-- [ ] Definir o uso de **TypeScript** no projeto.
-- [ ] Discutir e definir uma alternativa para o login da área do professor.
-- [ ] Investigar possíveis lacunas, erros e problemas técnicos do projeto.
-- [ ] Esclarecer dúvidas técnicas com o monitor e com o cliente.
-- [ ] Iniciar de forma mais efetiva o desenvolvimento do Front-end e Back-end.
+- [x] Definir decisões iniciais relacionadas ao desenvolvimento do Front-end e Back-end.
+- [x] Definir o uso de **TypeScript** no projeto.
+- [x] Discutir e definir uma alternativa para o login da área do professor.
+- [x] Investigar possíveis lacunas, erros e problemas técnicos do projeto.
+- [x] Esclarecer dúvidas técnicas com o monitor
+- [ ] Esclarecer dúvidas com o cliente.
+- [x] Iniciar de forma mais efetiva o desenvolvimento do Front-end e Back-end.
 
 ## Reuniões
 
