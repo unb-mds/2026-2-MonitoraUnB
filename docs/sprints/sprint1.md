@@ -12,7 +12,7 @@
 
 - [x] Elaborar e organizar o **Documento de Visão** do projeto.
 - [x] Desenvolver o **Documento de Requisitos**, definindo as principais necessidades e funcionalidades do sistema.
-- [ ] Construir o **Story Map**, organizando as funcionalidades e o fluxo do sistema.
+- [x] Construir o **Story Map**, organizando as funcionalidades e o fluxo do sistema.
 - [x] Definir decisões iniciais relacionadas ao desenvolvimento do Front-end e Back-end.
 - [x] Definir o uso de **TypeScript** no projeto.
 - [x] Discutir e definir uma alternativa para o login da área do professor.
@@ -38,7 +38,7 @@
 - Foram alinhados os papeis de liderança e responsabilidades dentro do **Back-end e Front-end**.
 - Foram investigadas lacunas, erros e dúvidas técnicas encontradas no projeto.
 - Foram discutidas questões relacionadas ao uso de **JavaScript ou TypeScript**, ao funcionamento do login da área do professor e à utilização de plugin ou banco de dados da UnB.
-- O grupo optou inicialmente pelo uso de **TypeScript** e pela utilização de um **plugin**.
+- O grupo optou pelo uso de **TypeScript**.
 - Foi discutido o processo de login do professor.
 - Foram analisadas possíveis problemáticas do projeto e alternativas técnicas para solucioná-las.
 - Foi realizado o **início do planejamento da Release 1** e definida a Sprint 01.
