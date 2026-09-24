@@ -1,1 +1,278 @@
+/*PÁGINA 5 — SOLICITAÇÃO REGISTRADA */
+
+body:has(.confirmation) {
+    background-color: #f4f8ff;
+}
+/* Cabeçalho */
+
+body:has(.confirmation) header {
+    background-color: #ffffff;
+    padding: 18px 10%;
+    border-bottom: 1px solid #dfe7f5;
+}
+
+
+body:has(.confirmation) .logo {
+    border: none;
+    padding: 0;
+    color: #1736a6;
+    font-size: 1.45rem;
+    background-color: transparent;
+}
+
+/*CONFIRMAÇÃO */
+
+.confirmation {
+    max-width: none;
+    width:100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Mensagem azul */
+
+.confirmation-message {
+    background: linear-gradient(
+        135deg,
+        #1736a6,
+        #2855d9
+    );
+
+    color: white;
+    padding: 40px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(23, 54, 166, 0.15);
+    flex: 1 ;
+}
+
+
+.confirmation-message h1 {
+    font-size: 2.4rem;
+    margin-bottom: 18px;
+}
+
+
+.confirmation-message p {
+    color: #e8edff;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+
+/*RESUMO DA PÁGINA 5*/
+
+.summary {
+    margin-top: 25px;
+    padding: 35px 40px;
+    background-color: #ffffff;
+    border: 1.5px solid #9bc9aa;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(23, 54, 166, 0.08);
+}
+
+/*SALVAR RESUMO*/
+
+.save-summary {
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+
+.save-summary p {
+    color: #4c6355;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+
+#download-summary {
+    border: none;
+    padding: 20px 40px;
+    border-radius: 8px;
+    background-color: #217346;
+    color: white;
+    font-family: inherit;
+    font-weight: bold;
+    font-size: large;
+    cursor: pointer;
+}
+
+
+#download-summary:hover {
+    background-color: #185c36;
+}
+
+
+
+/* RESPONSIVIDADE*/
+
+@media (max-width: 700px) {
+
+    /*PÁGINA 1 */
+
+    body:has(.botao-inscricao) header {
+        padding: 60px 7%;
+
+        min-height: 60vh;
+    }
+
+    body:has(.botao-inscricao) header h1 {
+        font-size: 2.8rem;
+    }
+
+    body:has(.botao-inscricao) header h3:last-of-type {
+        font-size: 1.1rem;
+    }
+
+    body:has(.botao-inscricao) main {
+        padding: 0 7% 60px;
+    }
+
+
+    /*PÁGINA 2 */
+
+    body:has(#email-form) section {
+        padding: 40px 7%;
+    }
+
+    body:has(#email-form) section h2 {
+        font-size: 2rem;
+    }
+
+    body:has(#email-form) #email-form {
+        grid-template-columns: 1fr;
+
+        padding: 20px;
+    }
+
+    body:has(#email-form) #email-form label {
+        white-space: normal;
+    }
+
+    #verification-form {
+        grid-template-columns: 1fr;
+    }
+
+    #verification-form label {
+        white-space: normal;
+    }
+
+
+    /*PÁGINA 3*/
+
+    body:has(.form-group) header {
+        padding: 20px 7%;
+    }
+
+    body:has(.form-group) main {
+        padding: 35px 15px;
+    }
+
+    body:has(.form-group) section {
+        padding: 30px 22px;
+    }
+
+    body:has(.form-group) section h2 {
+        font-size: 1.8rem;
+    }
+
+
+    /* PÁGINA 4 */
+
+    body:has(.resumo) .logo {
+        padding: 18px 7%;
+    }
+
+    body:has(.resumo) .mensagem {
+        padding: 40px 7%;
+    }
+
+    body:has(.resumo) .mensagem h1 {
+        font-size: 2.2rem;
+    }
+
+    body:has(.resumo) main {
+        padding: 35px 15px;
+    }
+
+    .resumo {
+        padding: 25px 20px;
+    }
+
+    .acoes {
+        flex-direction: column;
+    }
+
+
+    /* PÁGINA 5 */
+
+    .confirmation {
+        margin: 30px auto;
+
+        padding: 0 15px;
+    }
+
+    .confirmation-message {
+        padding: 30px 22px;
+    }
+
+    .confirmation-message h1 {
+        font-size: 2rem;
+    }
+
+    .summary {
+        padding: 25px 20px;
+    }
+}
+
+
+/* AJUSTES FINAIS DA PÁGINA 5 */
+
+.confirmation-message {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+    background: linear-gradient(
+        135deg,
+        #273cbd,
+        #315fd1
+    );
+
+    color: white;
+    border-radius: 0;
+    padding: 42px 10%;
+    margin: 0;
+    text-align: left;
+    box-shadow: none;
+}
+
+/* Título da faixa */
+.confirmation-message h1 {
+    margin: 0 0 12px 0;
+    color: white;
+}
+
+/* Textos da faixa */
+.confirmation-message p {
+    margin: 6px 0;
+    color: white;
+    opacity: 0.95;
+}
+
+/* AJUSTE DO ESPAÇAMENTO DA PÁGINA 5*/
+
+.confirmation {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.confirmation .summary {
+    margin-left: auto;
+    margin-right: auto;
+}
 
