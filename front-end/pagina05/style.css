@@ -29,9 +29,7 @@ body:has(.confirmation) .logo {
     padding: 0;
 }
 
-
 /* Mensagem azul */
-
 .confirmation-message {
     background: linear-gradient(
         135deg,
@@ -73,7 +71,6 @@ body:has(.confirmation) .logo {
 }
 
 /*SALVAR RESUMO*/
-
 .save-summary {
     margin-top: 25px;
     padding: 25px;
@@ -89,7 +86,11 @@ body:has(.confirmation) .logo {
 }
 
 
-#download-summary {
+#download-summary:hover {
+    background-color: #185c36;
+}
+
+button{
     border: none;
     padding: 20px 40px;
     border-radius: 8px;
@@ -99,13 +100,8 @@ body:has(.confirmation) .logo {
     font-weight: bold;
     font-size: large;
     cursor: pointer;
+
 }
-
-
-#download-summary:hover {
-    background-color: #185c36;
-}
-
 
 
 /* RESPONSIVIDADE*/
@@ -230,7 +226,6 @@ body:has(.confirmation) .logo {
 }
 
 
-/* AJUSTES FINAIS DA PÁGINA 5 */
 
 .confirmation-message {
     width: 100%;
