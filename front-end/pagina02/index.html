@@ -1,41 +1,107 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitora UnB</title>
+    <title>Monitora-UnB</title>
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="verificacao-email.css">
 </head>
+
 <body>
+
     <header>
-        <h6>Sistema de monitoria</h6>
-        <img src="" alt="um treco escrito unb">
+        <h1>Monitora-UnB</h1>
     </header>
+
     <main>
 
-        <!--Não sei como caralhos a gente vai colocar o banco de dados de materias aqui, mas é isso-->
         <section>
-            <h4>Disciplina que deseja ser monitor</h4>
-            <form>
-                <select name="Disciplina" id="dis">
-                    <option value="placeholder">--Selecione uma Disciplina--</option>
-                    <option value="Cálculo 1" id="MAT0025">MAT0025-Cálculo 1</option>
-                </select>
+
+            <h2>Verifique seu e-mail</h2>
+
+            <p>
+                Informe seu e-mail institucional vinculado ao SIGAA
+                para continuar sua inscrição.
+            </p>
+
+            <!-- Formulário para informar o e-mail -->
+
+            <form id="email-form">
+
+                <label for="email">
+                    E-mail institucional:
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="seuemail@unb.br"
+                    required
+                >
+
+                <button type="submit">
+                    Enviar código
+                </button>
+
             </form>
+
+
+            <!-- Área para inserir o código de verificação -->
+
+            <div id="verification-area">
+
+                <h3>Digite o código de verificação</h3>
+
+                <p>
+                    Enviamos um código para o e-mail informado.
+                    Digite o código abaixo para confirmar seu e-mail.
+                </p>
+
+                <form id="verification-form">
+
+                    <label for="verification-code">
+                        Código de verificação:
+                    </label>
+
+                    <input
+                        type="text"
+                        id="verification-code"
+                        name="verification-code"
+                        placeholder="Digite o código"
+                        maxlength="6"
+                        required
+                    >
+
+                    <button type="submit">
+                        Verificar e-mail
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- Área exibida após a confirmação do e-mail -->
+
+            <div id="verification-success">
+
+                <p>
+                    ✓ E-mail verificado com sucesso!
+                </p>
+
+                <a href="pagina 3 index.html" id="continue-button">
+                    Continuar para inscrição
+                </a>
+
+            </div>
+
         </section>
-        <section>
-            <form>
-                <label for="email">E-mail institucional</label><br>
-                <input type="email" id="email" name="email">
-            </form>
-        </section>
-        <section>
-            <h4>Faça o upload do seu histórico em formato pdf</h4><br>
-            <input type="file" name="arquivo" id="arquivo">
-        </section>
-        <section>
-            <button onclick="">Continuar --></button>
-        </section>
+
     </main>
-    
+
 </body>
+
 </html>
