@@ -1,0 +1,96 @@
+/* ==================================================
+   PÁGINA 1 — INÍCIO
+================================================== */
+
+body:has(.botao-inscricao) {
+    background-color: #f4f8ff;
+}
+
+/* Área azul principal */
+body:has(.botao-inscricao) header {
+    min-height: 65vh;
+    padding: 80px 10%;
+    background: linear-gradient(
+        135deg,
+        #1736a6,
+        #2855d9
+    );
+
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+/* Monitora-UnB */
+
+body:has(.botao-inscricao) header h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+
+/* Universidade de Brasília */
+
+body:has(.botao-inscricao) header h3:first-of-type {
+    color: #8bd3a5;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+}
+
+
+/* Texto */
+
+body:has(.botao-inscricao) header h3:last-of-type {
+    max-width: 650px;
+    font-size: 1.35rem;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+
+/* Área do botão */
+
+body:has(.botao-inscricao) main {
+    background: linear-gradient(
+        135deg,
+        #1736a6,
+        #2855d9
+    );
+
+    padding: 0 10% 70px;
+}
+
+
+/* Botão */
+
+.botao-inscricao {
+   
+    background-color: #ffffff;
+    color: #1736a6;
+    padding: 25px 35px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    transition: 0.25s ease;
+}
+
+.botao-inscricao:hover {
+    background-color: #eef3ff;
+    transform: translateY(-2px);
+}
+
+/* footer*/
+body:has(.botao-inscricao) footer {
+    background-color: #f4f8ff;
+    text-align: center;
+    padding: 25px;
+    color: #667085;
+    font-size: 0.9rem;
+}
