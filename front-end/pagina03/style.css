@@ -1,1 +1,191 @@
+/* PÁGINA 3 — FAÇA SUA INSCRIÇÃO */
+
+body:has(.form-group) {
+    background-color: #f4f8ff;
+}
+
+
+/* Cabeçalho */
+
+body:has(.form-group) header {
+    background-color: #ffffff;
+    padding: 20px 10%;
+    border-bottom: 1px solid #dfe7f5;
+}
+
+
+body:has(.form-group) header h1 {
+    color: #1736a6;
+    font-size: 1.45rem;
+}
+
+
+/* Área principal */
+
+body:has(.form-group) main {
+    padding: 55px 10% 70px;
+}
+
+
+/* Caixa principal */
+
+body:has(.form-group) section {
+    width: 100%;
+
+    max-width: 1050px;
+
+    margin: 0 auto;
+
+    background-color: #ffffff;
+
+    padding: 40px 45px;
+
+    border-radius: 12px;
+
+    border: 1px solid #dfe7f5;
+
+    box-shadow: 0 6px 20px rgba(23, 54, 166, 0.07);
+}
+
+
+/* Título */
+
+body:has(.form-group) section h2 {
+    color: #1736a6;
+
+    font-size: 2.1rem;
+
+    margin-bottom: 10px;
+}
+
+
+/* Descrição */
+
+body:has(.form-group) section > p {
+    color: #596579;
+
+    font-size: 1rem;
+
+    line-height: 1.6;
+
+    margin-bottom: 35px;
+}
+
+
+/* CAMPOS DA INSCRIÇÃO */
+
+.form-group {
+    margin-bottom: 28px;
+
+    padding: 20px 0;
+
+    border-bottom: 1px solid #e8edf5;
+}
+
+
+/* Labels */
+
+.form-group label {
+    display: block;
+
+    color: #344054;
+
+    font-size: 0.9rem;
+
+    font-weight: bold;
+
+    margin-bottom: 9px;
+}
+
+
+/* Select */
+
+.form-group select {
+    width: 100%;
+
+    padding: 14px 15px;
+
+    border: 1px solid #cdd7e8;
+
+    border-radius: 8px;
+
+    background-color: #fbfcff;
+
+    color: #172033;
+
+    font-family: inherit;
+
+    font-size: 0.95rem;
+
+    outline: none;
+}
+
+
+.form-group select:focus {
+    border-color: #2855d9;
+
+    box-shadow: 0 0 0 3px rgba(40, 85, 217, 0.10);
+}
+
+
+/* Texto explicativo */
+
+.description {
+    color: #667085;
+
+    font-size: 0.88rem;
+
+    margin-bottom: 10px;
+}
+
+
+/* Upload */
+
+.form-group input[type="file"] {
+    width: 100%;
+
+    padding: 10px;
+
+    border: 1px solid #cdd7e8;
+
+    border-radius: 8px;
+
+    background-color: #fbfcff;
+
+    color: #596579;
+
+    font-family: inherit;
+}
+
+
+/*BOTÃO CONTINUAR */
+
+body:has(.form-group) .continue-button {
+    display: block;
+
+    width: 100%;
+
+    text-align: center;
+
+    padding: 14px 20px;
+
+    background-color: #1736a6;
+
+    color: white;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    transition: 0.2s ease;
+}
+
+
+body:has(.form-group) .continue-button:hover {
+    background-color: #2855d9;
+
+    transform: translateY(-1px);
+}
 
