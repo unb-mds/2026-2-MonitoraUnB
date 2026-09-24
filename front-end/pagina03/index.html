@@ -1,1 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-br">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitora-UnB</title>
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="inscricao.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Monitora-UnB</h1>
+    </header>
+
+    <main>
+
+        <section>
+
+            <h2>Faça sua inscrição</h2>
+
+            <p>
+                Escolha a disciplina para a qual deseja se candidatar
+                e envie sua documentação.
+            </p>
+
+
+            <!-- Seleção da disciplina -->
+
+            <div class="form-group">
+
+                <label for="disciplina">
+                    Disciplina para monitoria:
+                </label>
+
+                <select id="disciplina" name="disciplina" required>
+
+                    <option value="" disabled selected>
+                        Selecione uma disciplina
+                    </option>
+
+                    <option value="calculo-1">
+                        Cálculo 1
+                    </option>
+
+                    <option value="algebra-linear">
+                        Álgebra Linear
+                    </option>
+
+                    <option value="metodos-desenvolvimento-software">
+                        Métodos de Desenvolvimento de Software
+                    </option>
+
+                    <option value="algoritmos">
+                        Algoritmos e Programação
+                    </option>
+
+                    <option value="estrutura-dados">
+                        Estrutura de Dados
+                    </option>
+
+                    <option value="engenharia-software">
+                        Engenharia de Software
+                    </option>
+
+                    <option value="fisica-1">
+                        Física 1
+                    </option>
+
+                    <option value="matematica-discreta-1">
+                        Matemática Discreta 1
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Upload da documentação -->
+
+            <div class="form-group">
+
+                <label for="historico">
+                    Histórico escolar:
+                </label>
+
+                <p class="description">
+                    Envie seu histórico escolar em formato PDF.
+                </p>
+
+                <input
+                    type="file"
+                    id="historico"
+                    name="historico"
+                    accept=".pdf"
+                    required
+                >
+
+            </div>
+
+
+            <!-- botão para continuar pra proxima página-->
+
+            <a href="pagina 4 index.html" class="continue-button">
+                Continuar para revisão
+            </a>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>
