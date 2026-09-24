@@ -1,1 +1,165 @@
+/*PÁGINA 4 — REVISÃO*/
+
+body:has(.resumo) {
+    background-color: #f4f8ff;
+}
+
+/* Logo */
+body:has(.resumo) .logo {
+    background-color: #ffffff;
+    color: #1736a6;
+    padding: 18px 10%;
+    font-size: 1.45rem;
+    border-bottom: 1px solid #dfe7f5;
+}
+
+body:has(.resumo) .mensagem {
+    background: linear-gradient(
+        135deg,
+        #1736a6,
+        #2855d9
+    );
+
+    padding: 50px 10%;
+    color: white;
+}
+
+
+body:has(.resumo) .mensagem h1 {
+    color: white;
+    font-size: 2.8rem;
+    margin-bottom: 10px;
+}
+
+
+body:has(.resumo) .mensagem p {
+    color: #e8edff;
+    font-size: 1.05rem;
+    line-height: 1.5;
+}
+
+
+/* ÁREA PRINCIPAL */
+
+body:has(.resumo) main {
+    min-height: 65vh;
+    padding: 55px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+/* RESUMO */
+
+.resumo {
+    width: 100%;
+    max-width: 650px;
+    padding: 35px 45px;
+    background-color: #ffffff;
+    border: 1.5px solid #9bc9aa;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(23, 54, 166, 0.08);
+}
+
+
+.resumo h3 {
+    text-align: center;
+    color: #1736a6;
+    font-size: 1.05rem;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+}
+
+
+/* Dados */
+
+.resumo .info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 15px 10px;
+    border-bottom: 1px solid #edf1f4;
+}
+
+
+.resumo .info:last-child {
+    border-bottom: none;
+}
+
+
+.resumo .label {
+    color: #596579;
+    font-size: 0.78rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+
+.resumo .info span:last-child {
+    color: #172033;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+
+/* CONFIRMAÇÃO */
+
+.confirmacao {
+    max-width: 650px;
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+    color: #596579;
+    line-height: 1.6;
+}
+
+
+/* AÇÕES */
+
+.acoes {
+    width: 100%;
+    max-width: 650px;
+    margin-top: 25px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+
+.voltar {
+    flex: 1;
+    text-align: center;
+    padding: 13px 20px;
+    border: 1px solid #1736a6;
+    border-radius: 8px;
+    color: #1736a6;
+    background-color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+.voltar:hover {
+    background-color: #eef3ff;
+}
+
+
+.continuar {
+    flex: 1;
+    text-align: center;
+    padding: 13px 20px;
+    border-radius: 8px;
+    color: white;
+    background-color: #1736a6;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+.continuar:hover {
+    background-color: #2855d9;
+}
 
