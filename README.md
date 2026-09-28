@@ -118,7 +118,7 @@ Os arquivos HTML não funcionam com duplo clique, porque usam módulos JavaScrip
 npx serve
 ```
 
-Depois acesse: <http://localhost:3000/pages/portal.html>
+Depois acesse: <http://http://localhost:3000/front-end/pages/portal>
 
 Como alternativa, use a extensão **Live Server** do VS Code.
 
