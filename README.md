@@ -1,7 +1,3 @@
-# G11-2026-2
-
-Grupo 11 - Métodos de Desenvolvimento de Software 2026/2
-
 # 🎓 Monitora-UnB
 
 > **Candidate-se a uma vaga de monitor e contribua com o aprendizado nas disciplinas que você domina.** Um portal para simplificar a inscrição em monitorias da Universidade de Brasília.
@@ -146,7 +142,7 @@ A documentação detalhada do projeto está disponível na pasta `docs/`
 
 * [Documento de Visão](docs/Documento_de_visao.md)
 * [Requisitos](docs/Documento_de_requisitos.md)
-* [Story Map](xxx)
+* [Story Map](https://www.figma.com/board/uMI0chh0NXErrtzv5eDBgr/FigJam-basics?node-id=0-1&p=f)
 
 ---
 
