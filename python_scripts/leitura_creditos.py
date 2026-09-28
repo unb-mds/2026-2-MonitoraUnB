@@ -57,12 +57,65 @@ def puxar_tabela(texto):
         dados["disciplina"] = " ".join(dados["disciplina"].split())
         dados["ch"] = int(dados["ch"])
         #precisamos dividir as horas em creditos, que no caso seriam dividir as horas por 15
+        dados["creditos"] = dados["ch"] / 15
+        dados["situacao"] = SITUACOES.get(dados["sigla"],  "Situação desconhecida")
+        disciplinas.append(dados)
+        pendente = None
+    if pendente is not None:
+        raise ValueError(
+            f"Não foi possível interpretar {pendente['codigo']} "
+            f"no período {pendente['periodo']}. Confira o layout do PDF."
+                )
+    return disciplinas
+
+def gerar_txt(arquivo_pdf, arquivo_txt=None):
+    arquivo_pdf = Path(arquivo_pdf)
+    if arquivo_txt is None:
+        arquivo_txt = arquivo_pdf.with_name(f"{arquivo_pdf.stem}_disciplinas.txt")
+    arquivo_txt = Path(arquivo_txt)
+    if arquivo_pdf.resolve() == arquivo_txt.resolve()
+        raise ValueError("O arquivo de saída não pode ser o próprio PDF.")
+    if arquivo_txt.suffix.lower() != ".txt":
+        raise ValueError("O arquivo de saída deve ter a extensão .txt.")
+
+    historico = PdfReader(arquivo_pdf)
+    disciplinas = []
+    for numero, pagina in enumerate(historico.pages, start=1):
+        texto = pagina.extract_text(extraction_mode="layout") or ""
+        if not texto.strip():
+            raise ValueError(
+                f"A página {numero} não contém texto extraível. "
+                "Para evitar uma tabela incompleta, a extração foi interrompida. "
+                "Se a página for digitalizada, será necessário OCR."
+            )
+        try:
+            disciplinas.extend(puxar_tabela(texto))
+        except ValueError as erro:
+            raise ValueError(f"Página {numero}: {erro}") from erro
+
+    if not disciplinas:
+        raise ValueError(
+            "Nenhuma disciplina encontrada. Verifique se o PDF é um histórico "
+            "SIGAA com texto selecionável; PDFs digitalizados precisam de OCR."
+        )
+
+    linhas = [["Período", "Código", "Disciplina", "CH (h)", "Créditos", "Menção", "Situação"]]
+    for disciplina in disciplinas:
+        linhas.append([
+            disciplina["periodo"],
+            disciplina["codigo"],
+            disciplina["disciplina"],
+            str(disciplina["ch"]),
+            f'{disciplina["creditos"]:g}',
+            disciplina["mencao"],
+            f'{disciplina["sigla"]} - {disciplina["situacao"]}',
+        ])
+
+    larguras = [max(len(valor) for valor in coluna) for coluna in zip(*linhas)]
+    tabela = [
+            " | ".join(valor.ljust(largura) for valor, largura in zip(linha, larguras))
+            for linha in linhas
+    ]
+    tabela.insert(1, "-+-".join("-"))
 
 
-
-
-    ocorrencias = list(re.finditer(r"\b24\b", texto))
-    primeira_linha = re.findall(r"(\S)\s+(.+?)\s+([\d,]+)\s+(\S+)", texto)
-    print(primeira_linha)
-
-puxar_tabela(texto)
