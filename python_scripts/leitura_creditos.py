@@ -126,4 +126,4 @@ def gerar_txt(arquivo_pdf, arquivo_txt=None):
     arquivo_txt.write_text(cabecalho + "\n".join(tabela) + "\n", enconding = "utf-8")
     return disciplinas
 
-
+#MUDAR O CODIGO PARA IMEDIATAMENTE APAGAR O TXT PARA NAO COMPROMETER AS INFORMCACOES DO ESTUDANTE 
