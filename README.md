@@ -2,13 +2,13 @@
 
 Grupo 11 - Métodos de Desenvolvimento de Software 2026/2
 
-# 🎓 Monitora-UnB
+#  Monitora-UnB
 
 > **Candidate-se a uma vaga de monitor e contribua com o aprendizado nas disciplinas que você domina.** Um portal para simplificar a inscrição em monitorias da Universidade de Brasília.
 
 ---
 
-## 📖 Sobre o Projeto
+##  Sobre o Projeto
 
 O **Monitora-UnB** é um sistema web que organiza o processo de inscrição para monitoria na **Universidade de Brasília**, de forma **simples, guiada e transparente**.
 
@@ -23,26 +23,31 @@ O fluxo do sistema é composto por quatro telas:
 
 **Figma do nosso projeto:** [(https://panic-iso-13327902.figma.site/)]
 
-### 👥 Papéis
+###  Papéis
 
-- **Scrum Master:** [preencher] — [@usuario](https://github.com/usuario)
-- **Product Owner:** [preencher] — [@usuario](https://github.com/usuario)
+- **Scrum Master:** [João Aquila] — [@AnaBiaGuerra](https://github.com/usuario)
+- **Product Owner:** [Ana Beatriz] — [@Aquila27](https://github.com/usuario)
 
 ---
 
-## 👥 Equipe
+##  Equipe
 
 Projeto desenvolvido colaborativamente para a disciplina de **Métodos de Desenvolvimento de Software (MDS)** da **Universidade de Brasília — Faculdade do Gama (FGA)**.
 
 | Nome | GitHub |
 | ---- | ------ |
-| [preencher] | [@usuario](https://github.com/usuario) |
-| [preencher] | [@usuario](https://github.com/usuario) |
-| [Pablo Antonio] | [@pablosousaa](https://github.com/pablosousaa) |
+| Ana Beatriz Nogueira Ferreira Guerra | [@AnaBiaGuerra](https://github.com/AnaBiaGuerra) |
+| Maria Eduarda Macedo Toledo | [@MariaMaacedoToledo](https://github.com/MariaMacedoToledo) |
+| João Áquila | [@Aquila27](https://github.com/Aquila27) |
+| Pablo Antonio | [@pablosousaa](https://github.com/pablosousaa) |
+| Iuri Capanema Souza Koboldt | [@iurikoboldt](https://github.com/iurikoboldt) |
+| Vitor Piau Morhy | [@vitormorhy](https://github.com/vitormorhy) |
+| Vinicius Eugênio Montalvão Silva | [@Vinicius-Eugenio-337](https://github.com/Vinicius-Eugenio-337) |
+
 
 ---
 
-## 🛠️ Tecnologias
+##  Tecnologias
 
 | Camada | Tecnologia |
 | ------ | ---------- |
@@ -51,7 +56,7 @@ Projeto desenvolvido colaborativamente para a disciplina de **Métodos de Desenv
 
 ---
 
-## 🗂️ Estrutura do Repositório
+##  Estrutura do Repositório
 
 ```
 2026-2-MonitoraUnB/
@@ -78,7 +83,7 @@ Projeto desenvolvido colaborativamente para a disciplina de **Métodos de Desenv
 
 ---
 
-## 🚀 Como Executar o Front-end
+##  Como Executar o Front-end
 
 ### Pré-requisitos
 
@@ -118,13 +123,13 @@ Os arquivos HTML não funcionam com duplo clique, porque usam módulos JavaScrip
 npx serve
 ```
 
-Depois acesse: <http://localhost:3000/pages/portal.html>
+Depois acesse: <http://localhost:3000/front-end/pages/portal>
 
 Como alternativa, use a extensão **Live Server** do VS Code.
 
 ---
 
-## 🧪 Como Testar
+## Como Testar
 
 **Fluxo normal**
 
@@ -135,13 +140,13 @@ Como alternativa, use a extensão **Live Server** do VS Code.
 
 > Enquanto o back-end não existe, os dados do resumo (aluno, matrícula e IRA) são fixos, pois a leitura do PDF é simulada.
 
-## 📚 Documentação
+##  Documentação
 
 A documentação detalhada do projeto está disponível na pasta `docs/`
 
 * [Documento de Visão](docs/Documento_de_visao.md)
 * [Requisitos](docs/Documento_de_requisitos.md)
-* [Story Map](xxx)
+* [Story Map](https://www.figma.com/board/uMI0chh0NXErrtzv5eDBgr/FigJam-basics?node-id=0-1&p=f&t=BSS0Q8BY5yVRBwKL-0)
 
 ---
 
