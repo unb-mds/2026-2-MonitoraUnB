@@ -38,7 +38,7 @@ Projeto desenvolvido colaborativamente para a disciplina de **Métodos de Desenv
 | ---- | ------ |
 | [preencher] | [@usuario](https://github.com/usuario) |
 | [preencher] | [@usuario](https://github.com/usuario) |
-| [Pablo Antonio] | [@pablosousaa](https://github.com/pablosousaa) |
+| Pablo Antonio | [@pablosousaa](https://github.com/pablosousaa) |
 
 ---
 
