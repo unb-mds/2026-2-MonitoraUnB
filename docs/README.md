@@ -118,8 +118,8 @@ Como alternativa, use a extensão **Live Server** do VS Code.
 
 A documentação detalhada do projeto está disponível na pasta `docs/`
 
-* [Documento de Visão](docs/Documento_de_visao.md)
+* [Documento de Visão](docswh/Documento_de_visao.md)
 * [Requisitos](docs/Documento_de_requisitos.md)
-* [Story Map](xxx)
+* [Story Map](https://www.figma.com/board/uMI0chh0NXErrtzv5eDBgr/FigJam-basics?node-id=0-1&t=rR0RBrdPOzg5dRKE-1)
 
 ---
