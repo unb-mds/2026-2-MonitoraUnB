@@ -1,0 +1,8 @@
+<script>
+  window.$docsify = {
+    name: 'MonitoraUnB',
+    repo: 'unb-mds/2026-2-MonitoraUnB',
+    loadSidebar: true, 
+    subMaxLevel: 2
+  }
+</script>
