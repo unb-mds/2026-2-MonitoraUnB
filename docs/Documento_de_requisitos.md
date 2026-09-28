@@ -80,9 +80,6 @@ ID | Objetivo | Descrição | Métrica de Sucesso |
 
 ## 7. Product Backlog
 
-- **Épicos:** Envio, leitura e processamento do arquivo, geração da planilha dos candidatos, criação do e-mail com o resultado.
-- **User Stories:** cada épico quebrado em pedaços pequenos, um por comportamento do usuário. Teste: a story cabe em uma sprint? Se não, quebre mais.
-
 ### 7.1 Épicos
 
 | ID | Épico |
