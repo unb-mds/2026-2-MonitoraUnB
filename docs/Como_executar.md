@@ -1,10 +1,10 @@
-# 🎓 Monitora-UnB
+#  Monitora-UnB
 
 > **Candidate-se a uma vaga de monitor e contribua com o aprendizado nas disciplinas que você domina.** Um portal para simplificar a inscrição em monitorias da Universidade de Brasília.
 
 ---
 
-## 📖 Sobre o Projeto
+##  Sobre o Projeto
 
 O **Monitora-UnB** é um sistema web que organiza o processo de inscrição para monitoria na **Universidade de Brasília**, de forma **simples, guiada e transparente**.
 
@@ -22,7 +22,7 @@ O fluxo do sistema é composto por quatro telas:
 ---
 
 
-## 🛠️ Tecnologias
+##  Tecnologias
 
 | Camada | Tecnologia |
 | ------ | ---------- |
@@ -30,7 +30,7 @@ O fluxo do sistema é composto por quatro telas:
 | Back-end (planejado) | Python com FastAPI | API propria (Web Scrapping)
 ---
 
-## 🗂️ Estrutura do Repositório
+##  Estrutura do Repositório
 
 ```
 2026-2-MonitoraUnB/
@@ -57,7 +57,7 @@ O fluxo do sistema é composto por quatro telas:
 
 ---
 
-## 🚀 Como Executar o Front-end
+##  Como Executar o Front-end
 
 ### Pré-requisitos
 
@@ -103,7 +103,7 @@ Como alternativa, use a extensão **Live Server** do VS Code.
 
 ---
 
-## 🧪 Como Testar
+## Como Testar
 
 **Fluxo normal**
 
@@ -114,12 +114,12 @@ Como alternativa, use a extensão **Live Server** do VS Code.
 
 > Enquanto o back-end não existe, os dados do resumo (aluno, matrícula e IRA) são fixos, pois a leitura do PDF é simulada.
 
-## 📚 Documentação
+##  Documentação
 
 A documentação detalhada do projeto está disponível na pasta `docs/`
 
-* [Documento de Visão](docs/Documento_de_visao.md)
-* [Requisitos](docs/Documento_de_requisitos.md)
-* [Story Map](xxx)
+* [Documento de Visão](Documento_de_visao.md)
+* [Requisitos](Documento_de_requisitos.md)
+* [Story Map](https://www.figma.com/board/uMI0chh0NXErrtzv5eDBgr/FigJam-basics?node-id=0-1&t=rR0RBrdPOzg5dRKE-1)
 
 ---

@@ -36,9 +36,14 @@ Projeto desenvolvido colaborativamente para a disciplina de **Métodos de Desenv
 
 | Nome | GitHub |
 | ---- | ------ |
-| [preencher] | [@usuario](https://github.com/usuario) |
-| [preencher] | [@usuario](https://github.com/usuario) |
-| [Pablo Antonio] | [@pablosousaa](https://github.com/pablosousaa) |
+| Ana Beatriz Nogueira Ferreira Guerra | [@AnaBiaGuerra](https://github.com/AnaBiaGuerra) |
+| Maria Eduarda Macedo Toledo | [@MariaMaacedoToledo](https://github.com/MariaMacedoToledo) |
+| João Áquila | [@Aquila27](https://github.com/Aquila27) |
+| Pablo Antonio | [@pablosousaa](https://github.com/pablosousaa) |
+| Iuri Capanema Souza Koboldt | [@iurikoboldt](https://github.com/iurikoboldt) |
+| Vitor Piau Morhy | [@vitormorhy](https://github.com/vitormorhy) |
+| Vinicius Eugênio Montalvão Silva | [@Vinicius-Eugenio-337](https://github.com/Vinicius-Eugenio-337) |
+
 
 ---
 
