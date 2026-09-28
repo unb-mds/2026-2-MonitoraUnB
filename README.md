@@ -1,10 +1,14 @@
+# G11-2026-2
+
+Grupo 11 - Métodos de Desenvolvimento de Software 2026/2
+
 #  Monitora-UnB
 
 > **Candidate-se a uma vaga de monitor e contribua com o aprendizado nas disciplinas que você domina.** Um portal para simplificar a inscrição em monitorias da Universidade de Brasília.
 
 ---
 
-## Sobre o Projeto
+##  Sobre o Projeto
 
 O **Monitora-UnB** é um sistema web que organiza o processo de inscrição para monitoria na **Universidade de Brasília**, de forma **simples, guiada e transparente**.
 
@@ -19,10 +23,10 @@ O fluxo do sistema é composto por quatro telas:
 
 **Figma do nosso projeto:** [(https://panic-iso-13327902.figma.site/)]
 
-### Papéis
+###  Papéis
 
-- **Scrum Master:** [preencher] — [@usuario](https://github.com/usuario)
-- **Product Owner:** [preencher] — [@usuario](https://github.com/usuario)
+- **Scrum Master:** [João Aquila] — [@AnaBiaGuerra](https://github.com/usuario)
+- **Product Owner:** [Ana Beatriz] — [@Aquila27](https://github.com/usuario)
 
 ---
 
@@ -119,13 +123,13 @@ Os arquivos HTML não funcionam com duplo clique, porque usam módulos JavaScrip
 npx serve
 ```
 
-Depois acesse: <http://localhost:3000/pages/portal.html>
+Depois acesse: <http://localhost:3000/front-end/pages/portal>
 
 Como alternativa, use a extensão **Live Server** do VS Code.
 
 ---
 
-##  Como Testar
+## Como Testar
 
 **Fluxo normal**
 
@@ -142,7 +146,7 @@ A documentação detalhada do projeto está disponível na pasta `docs/`
 
 * [Documento de Visão](docs/Documento_de_visao.md)
 * [Requisitos](docs/Documento_de_requisitos.md)
-* [Story Map](https://www.figma.com/board/uMI0chh0NXErrtzv5eDBgr/FigJam-basics?node-id=0-1&p=f)
+* [Story Map](https://www.figma.com/board/uMI0chh0NXErrtzv5eDBgr/FigJam-basics?node-id=0-1&p=f&t=BSS0Q8BY5yVRBwKL-0)
 
 ---
 
