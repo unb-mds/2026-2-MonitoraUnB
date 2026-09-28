@@ -116,6 +116,14 @@ def gerar_txt(arquivo_pdf, arquivo_txt=None):
             " | ".join(valor.ljust(largura) for valor, largura in zip(linha, larguras))
             for linha in linhas
     ]
-    tabela.insert(1, "-+-".join("-"))
+    tabela.insert(1, "-+-".join("-" * largura for largura in larguras))
+    cabecalho = (
+        "DISCIPLINAS DO HISTÓRICO ESCOLAR\n"
+        "Créditos calculados: carga horária / 15 (1 crédito = 15 horas).\n"
+        "Cada linha representa uma tentativa no período indicado.\n"
+        "MATR e TRANC não significam reprovação; '-' indica menção não informada.\n\n"
+        )
+    arquivo_txt.write_text(cabecalho + "\n".join(tabela) + "\n", enconding = "utf-8")
+    return disciplinas
 
 
