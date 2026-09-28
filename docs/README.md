@@ -19,32 +19,15 @@ O fluxo do sistema é composto por quatro telas:
 
 **Figma do nosso projeto:** [(https://panic-iso-13327902.figma.site/)]
 
-### 👥 Papéis
-
-- **Scrum Master:** [preencher] — [@usuario](https://github.com/usuario)
-- **Product Owner:** [preencher] — [@usuario](https://github.com/usuario)
-
 ---
 
-## 👥 Equipe
-
-Projeto desenvolvido colaborativamente para a disciplina de **Métodos de Desenvolvimento de Software (MDS)** da **Universidade de Brasília — Faculdade do Gama (FGA)**.
-
-| Nome | GitHub |
-| ---- | ------ |
-| [preencher] | [@usuario](https://github.com/usuario) |
-| [preencher] | [@usuario](https://github.com/usuario) |
-| [Pablo Antonio] | [@pablosousaa](https://github.com/pablosousaa) |
-
----
 
 ## 🛠️ Tecnologias
 
 | Camada | Tecnologia |
 | ------ | ---------- |
 | Front-end | HTML, CSS e TypeScript |
-| Back-end (planejado) | Python com FastAPI |
-
+| Back-end (planejado) | Python com FastAPI | API propria (Web Scrapping)
 ---
 
 ## 🗂️ Estrutura do Repositório
