@@ -37,7 +37,7 @@ Projeto desenvolvido colaborativamente para a disciplina de **Métodos de Desenv
 | Nome | GitHub |
 | ---- | ------ |
 | Ana Beatriz Nogueira Ferreira Guerra | [@AnaBiaGuerra](https://github.com/AnaBiaGuerra) |
-| Maria Eduarda Macedo Toledo | [@MariaMaacedoToledo](https://github.com/MariaMacedoToledo) |
+| Maria Eduarda Macedo Toledo | [@MariaMacedoToledo](https://github.com/MariaMacedoToledo) |
 | João Áquila | [@Aquila27](https://github.com/Aquila27) |
 | Pablo Antonio | [@pablosousaa](https://github.com/pablosousaa) |
 | Iuri Capanema Souza Koboldt | [@iurikoboldt](https://github.com/iurikoboldt) |
