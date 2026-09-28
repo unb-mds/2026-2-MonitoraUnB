@@ -12,7 +12,7 @@ function iniciar(): void {
 
   // Abriu a revisão sem ter passado pela inscrição: volta pro começo.
   if (!dados) {
-    window.location.href = ".../pages/inscricao.html";
+    window.location.href = "./inscricao.html";
     return;
   }
 
