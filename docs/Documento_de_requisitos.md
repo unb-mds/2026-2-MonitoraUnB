@@ -20,12 +20,12 @@ O MonitoraUnB é um sistema web que automatiza o processo de inscrição para va
 
 ## 2. Objetivos do Projeto
 
-| Objetivo | Descrição | Métrica de Sucesso |
-|---|---|---|
-| **O1** | Facilitar a inscrição dos estudantes da Universidade de Brasília na monitoria semestral. | Aumento na quantidade de monitores em mais disciplinas |
-| **O2** | Tornar a divisão de bolsas de monitoria mais igualitária. | Feedback dos estudantes |
-| **O3** | Evitar o preenchimento de informações pessoais falsas. | Informações dadas batendo com os históricos fornecidos |
-| **O4** | Diminuir as horas de trabalho manual para verificação das informações de cada inscrição. | Menor período de apuração de cada inscrição e menos erros |
+ID | Objetivo | Descrição | Métrica de Sucesso |
+|---|---|---|---|
+| **O1** | Facilitar a inscrição dos estudantes da Universidade de Brasília na monitoria semestral | Aumentar o alcance do processo de inscrição para monitoria | Aumento de 20% no número de disciplinas com monitor ativo em relação ao semestre anterior | 
+| **O2** | Tornar a divisão de bolsas mais igualitária | Garantir que a seleção de monitores seja baseada exclusivamente no coeficiente calculado, sem interferência manual | Avaliação média ≥ 4/5 em pesquisa de satisfação aplicada ao término do processo seletivo |
+| **O3** | Evitar o preenchimento de informações pessoais falsas. | Validar automaticamente os dados informados pelo candidato usando o histórico como base | Taxa de divergência entre dados informados e histórico <= 1% por ciclo de inscrições|
+| **O4** | Reduzir trabalho manual da secretaria | Diminuir o tempo e os erros associados à verificação manual de inscrições | Redução de 80% no tempo médio de apuração por inscrição em relação ao processo anterior |
 
 ---
 
