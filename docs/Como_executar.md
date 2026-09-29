@@ -17,7 +17,7 @@ O fluxo do sistema é composto por quatro telas:
 3. **Revisão:** conferência dos dados (aluno, matrícula, semestre, disciplina e IRA) antes do envio;
 4. **Solicitação:** confirmação de que a inscrição foi registrada e encaminhada para análise.
 
-**Figma do nosso projeto:** [(https://panic-iso-13327902.figma.site/)]
+**Figma do nosso projeto:** [Acessar Protótipo](https://panic-iso-13327902.figma.site/)
 
 ---
 
