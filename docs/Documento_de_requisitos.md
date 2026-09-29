@@ -14,7 +14,7 @@
 
 ## 1. Sumário Executivo
 
-O MonitoraUnB é um sistema web que automatiza o processo de inscrição para vagas de monitoria na UnB. Ele valida automaticamente os dados do candidato contra seu histórico escolar (PDF), calcula o coeficiente de classificação (IRA × 0,6 + Menção × 0,4) e, após autorização da secretaria, notifica cada aluno por e-mail sobre o resultado, assim eliminando a conferência manual e reduzindo erros no processo seletivo.
+O MonitoraUnB é um sistema web que automatiza o processo de inscrição para vagas de monitoria na UnB. Ele valida automaticamente os dados do candidato contra seu histórico escolar (PDF), calcula o coeficiente de classificação (IRA × 0,6 + Menção × 0,4) e, após o período de inscrição, notifica cada aluno por e-mail sobre o resultado, assim eliminando a conferência manual e reduzindo erros no processo seletivo.
 
 ---
 
@@ -115,8 +115,7 @@ ID | Objetivo | Descrição | Métrica de Sucesso |
 | RF-08 | Cálculo automático do coeficiente | O sistema deve calcular o coeficiente de cada candidato usando a fórmula (IRA × 0,6 + MENÇÃO × 0,4). |
 | RF-09 | Ordenação de ranking | O sistema deve ordenar automaticamente a planilha de candidatos em ordem decrescente de coeficiente. |
 | RF-10 | Controle do período de inscrição | O sistema deve permitir inscrições apenas dentro do período configurado (data de início e fim). |
-| RF-11 | Liberação de resultado pela secretaria | O sistema deve permitir que a secretaria autorize a divulgação dos resultados antes do envio dos e-mails. |
-| RF-12 | Envio automático de e-mail de resultado | O sistema deve enviar automaticamente um e-mail a cada candidato informando se foi aprovado ou reprovado, após autorização da secretaria. |
+| RF-11 | Envio automático de e-mail de resultado | O sistema deve enviar automaticamente um e-mail a cada candidato informando se foi aprovado ou reprovado, após autorização da secretaria. |
 
 ---
 
@@ -134,7 +133,7 @@ ID | Objetivo | Descrição | Métrica de Sucesso |
 | RNF-08 | Auditabilidade | Toda tentativa de inscrição (bem-sucedida ou não) deve ficar registrada em log, para fins de auditoria da secretaria. |
 | RNF-09 | Formato de arquivo | O sistema deve aceitar apenas arquivos PDF para upload de histórico, rejeitando outros formatos com mensagem clara. |
 
-> **Nota:** no documento original, os itens de RNF-07 a RNF-09 estavam numerados como "RF-" por engano; a numeração foi corrigida acima para manter a sequência de RNF.
+
 
 ---
 
