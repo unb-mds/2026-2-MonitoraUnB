@@ -1,4 +1,5 @@
-from leiturapdf import texto
-from leitura_creditos import puxar_tabela
+from leiturapdf import processar_historico
 
-puxar_tabela(texto)
+resultado = processar_historico(r"C:\Users\Marcelo\Downloads\historico_251022427.pdf")
+
+print(resultado)
