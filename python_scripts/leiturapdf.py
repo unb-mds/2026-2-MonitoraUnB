@@ -3,11 +3,12 @@ import re
 from pypdf import PdfReader
 from pypdf.generic import NullObject
 
-historico = PdfReader("historico26.2.pdf")
+def ler_pdf(arquivo):
+    historico = PdfReader(arquivo)
+    texto = historico.pages[0].extract_text(extraction_mode="layout")
+    return texto
 
-texto = historico.pages[0].extract_text(extraction_mode="layout")
-
-def ler_ira():
+def ler_ira(texto):
     ira_local = re.search(r"\bIRA:\s*(\d+(?:[.,]\d+)?)", texto)
     if ira_local:
 #        print(ira_local.group(1)) # teste para saber se peguei o ira
@@ -17,7 +18,7 @@ def ler_ira():
         print("Documento Invalido") #colocar acentos
         return None
 
-def ler_nome():
+def ler_nome(texto):
     nome_local = re.search(r"\bNome:\s*(.+?)\s+Matrícula", texto)
     if nome_local:
 #        print(nome_local.group(1)) #teste para saber se peguei o nome
@@ -27,7 +28,7 @@ def ler_nome():
         print("Documento Invalido")
         return None
 
-def ler_matricula():
+def ler_matricula(texto):
     matricula_local = re.search(r"\bMatrícula:\s*(\d+)?", texto)
     if matricula_local:
 #        print(matricula_local.group(1)) # teste para saber se peguei a matricula
@@ -39,14 +40,21 @@ def ler_matricula():
         print("Documento Invalido")
         return None
 
-matricula = ler_matricula()
-nome = ler_nome()
-ira = ler_ira()
-if matricula is not None:
-            semestre = float(matricula)
-            semestre = semestre/10000000 # Aqui eu consigo saber o primeiro semestre do aluno
-            semestre = f"{semestre:.1f}"
-            print(nome)
-            print(matricula)
-            print(semestre)
-            print(ira)
+def processar_historico(arquivo):
+    ler_pdf(arquivo)
+    ler_nome(arquivo)
+    ler_matricula(arquivo)
+    ler_ira(arquivo)
+
+
+# matricula = ler_matricula()
+# nome = ler_nome()
+# ira = ler_ira()
+# if matricula is not None:
+#             semestre = float(matricula)
+#             semestre = semestre/10000000 # Aqui eu consigo saber o primeiro semestre do aluno
+#             semestre = f"{semestre:.1f}"
+#             print(nome)
+#             print(matricula)
+#             print(semestre)
+#             print(ira)
