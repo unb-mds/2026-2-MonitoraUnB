@@ -7,6 +7,9 @@ from leitura_creditos import puxar_tabela
 def ler_pdf(arquivo):
     historico = PdfReader(arquivo)
     texto = historico.pages[0].extract_text(extraction_mode="layout")
+
+    print(repr(texto[:3000]))
+
     return texto
 
 def ler_ira(texto):
