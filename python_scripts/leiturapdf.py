@@ -2,6 +2,7 @@ from logging import NullHandler
 import re
 from pypdf import PdfReader
 from pypdf.generic import NullObject
+from leitura_creditos import puxar_tabela
 
 def ler_pdf(arquivo):
     historico = PdfReader(arquivo)
@@ -41,10 +42,18 @@ def ler_matricula(texto):
         return None
 
 def processar_historico(arquivo):
-    ler_pdf(arquivo)
-    ler_nome(arquivo)
-    ler_matricula(arquivo)
-    ler_ira(arquivo)
+    texto = ler_pdf(arquivo)
+    
+    nome = ler_nome(arquivo)
+    matricula = ler_matricula(arquivo)
+    ira = ler_ira(arquivo)
+
+    return {
+        "Nome": nome,
+        "Matricula": matricula,
+        "IRA": ira
+    }
+
 
 
 # matricula = ler_matricula()
