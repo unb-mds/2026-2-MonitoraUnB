@@ -66,8 +66,12 @@ botaoContinuar.addEventListener("click", async (evento) => {
     });
 
     window.location.href = botaoContinuar.href;
-  } catch {
+  } catch (erro) {
+    if (erro instanceof Error) {
+      mostrarErro(erro.message)
+    } else {
     mostrarErro("Não foi possível ler o histórico. Tente novamente.");
-    definirCarregando(false);
   }
+  definirCarregando(false);
+ }
 });
