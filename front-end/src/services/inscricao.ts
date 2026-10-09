@@ -1,19 +1,24 @@
 import type { DadosHistorico, DadosInscricao } from "../types/inscricao.js";
 
-// ÚNICO arquivo que vai conversar com o back-end (Python/FastAPI).
-// Hoje as duas funções são simuladas; quando a API existir, é só trocar
-// o corpo delas por um fetch() — as páginas não precisam mudar.
-
 const atraso = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
 // RF-03: extrair os dados do PDF do histórico.
-export async function extrairDadosHistorico(_arquivo: File): Promise<DadosHistorico> {
+export async function extrairDadosHistorico(arquivo: File): Promise<DadosHistorico> {
   await atraso(600);
-  return {
-    aluno: "Lucas Almeida Ferreira",
-    matricula: "21/0039482",
-    ira: 4.32,
-  };
+  const formulario = new FormData();
+  formulario.append("arquivo", arquivo);
+  
+  const resposta = await fetch(
+    "http://127.0.0.1:8000/api/histórico",
+    {
+      method: "POST",
+      body: formulario
+    }
+  );
+
+  const dados = await resposta.json();
+
+  return dados;
 }
 
 // RF-07: registrar a inscrição.
