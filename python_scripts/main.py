@@ -26,7 +26,6 @@ def receber_historico(arquivo: UploadFile = File(...)):
             detail="O arquivo enviado deve possuir a extensão PDF."
         )
 
-    
     resultado = processar_historico(arquivo.file)
 
     if (
