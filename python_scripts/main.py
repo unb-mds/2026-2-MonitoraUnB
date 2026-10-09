@@ -1,7 +1,7 @@
 from leiturapdf import processar_historico
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-
+# o CORS está sendo usado para permitir a comunicação da API com o frontend, pois ambos utilizavam portas diferentes
 
 app = FastAPI()
 
