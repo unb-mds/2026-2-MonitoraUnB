@@ -7,16 +7,13 @@ from leitura_creditos import puxar_tabela
 def ler_pdf(arquivo):
     historico = PdfReader(arquivo)
     texto = historico.pages[0].extract_text(extraction_mode="layout")
-
-    print(repr(texto[:3000]))
-
     return texto
 
 def ler_ira(texto):
     ira_local = re.search(r"\bIRA:\s*(\d+(?:[.,]\d+)?)", texto)
     if ira_local:
 #        print(ira_local.group(1)) # teste para saber se peguei o ira
-        ira = float(ira_local.group(1))
+        ira = float(ira_local.group(1).replace("," , "."))
         return ira
     else:
         print("Documento Invalido") #colocar acentos
@@ -26,7 +23,7 @@ def ler_nome(texto):
     nome_local = re.search(r"\bNome:\s*(.+?)\s+Matrícula", texto)
     if nome_local:
 #        print(nome_local.group(1)) #teste para saber se peguei o nome
-        nome = nome_local.group(1)
+        nome = nome_local.group(1).strip()
         return nome
     else:
         print("Documento Invalido")
@@ -36,28 +33,26 @@ def ler_matricula(texto):
     matricula_local = re.search(r"\bMatrícula:\s*(\d+)?", texto)
     if matricula_local:
 #        print(matricula_local.group(1)) # teste para saber se peguei a matricula
-        matricula = int(matricula_local.group(1))
-        semestre = float(matricula)
-        primeiro_semestre = f"{semestre:.1f}"
+        matricula = matricula_local.group(1)
+        # semestre = float(matricula)
+        # primeiro_semestre = f"{semestre:.1f}"
         return matricula
     else:
         print("Documento Invalido")
         return None
 
-def processar_historico(arquivo):
-    texto = ler_pdf(arquivo)
+def processar_historico(texto):
+    texto = ler_pdf(texto)
     
-    nome = ler_nome(arquivo)
-    matricula = ler_matricula(arquivo)
-    ira = ler_ira(arquivo)
+    nome = ler_nome(texto)
+    matricula = ler_matricula(texto)
+    ira = ler_ira(texto)
 
     return {
-        "Nome": nome,
-        "Matricula": matricula,
-        "IRA": ira
+        "aluno": nome,
+        "matricula": matricula,
+        "ira": ira
     }
-
-
 
 # matricula = ler_matricula()
 # nome = ler_nome()
