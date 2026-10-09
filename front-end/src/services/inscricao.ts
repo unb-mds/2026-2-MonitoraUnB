@@ -9,7 +9,7 @@ export async function extrairDadosHistorico(arquivo: File): Promise<DadosHistori
   formulario.append("arquivo", arquivo);
   
   const resposta = await fetch(
-    "http://127.0.0.1:8000/api/histórico",
+    "http://127.0.0.1:8000/api/historico",
     {
       method: "POST",
       body: formulario
