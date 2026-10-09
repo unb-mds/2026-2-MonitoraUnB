@@ -16,6 +16,11 @@ export async function extrairDadosHistorico(arquivo: File): Promise<DadosHistori
     }
   );
 
+  if (!resposta.ok) {
+    const erro = await resposta.json();
+    throw new Error(erro.detail);
+  }
+
   const dados = await resposta.json();
 
   return dados;
