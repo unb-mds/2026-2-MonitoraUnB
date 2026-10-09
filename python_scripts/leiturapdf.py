@@ -16,7 +16,7 @@ def ler_ira(texto):
         ira = float(ira_local.group(1).replace("," , "."))
         return ira
     else:
-        print("Documento Invalido") #colocar acentos
+        # print("Documento Invalido") #colocar acentos
         return None
 
 def ler_nome(texto):
@@ -26,7 +26,7 @@ def ler_nome(texto):
         nome = nome_local.group(1).strip()
         return nome
     else:
-        print("Documento Invalido")
+        # print("Documento Invalido")
         return None
 
 def ler_matricula(texto):
@@ -38,7 +38,7 @@ def ler_matricula(texto):
         # primeiro_semestre = f"{semestre:.1f}"
         return matricula
     else:
-        print("Documento Invalido")
+        # print("Documento Invalido")
         return None
 
 def processar_historico(texto):
