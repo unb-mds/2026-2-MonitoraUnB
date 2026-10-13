@@ -1,6 +1,11 @@
 import re
 from pypdf import PdfReader
-from leiturapdf import texto
+from pypdf import Path
+
+#
+# DICIONARIOS DE SIGLAS
+#
+
 
 SITUACOES = {
     "APR": "Aprovado",
@@ -14,43 +19,97 @@ SITUACOES = {
     "CUMP": "Cumpriu por aproveitamento", 
 }
 
-def puxar_tabela(texto):
-    #Extrai as linhas de disciplinas do historico SIGAA em modo layout
+#
+# o que precisamos colocar, precisamos colocar os erros, caso um aluno coloque uma materia que ele esta cursando, foi reprovado ou foi trancado
+#
 
-    inicio = re.compile(
-            r"^\s*(?P<periodo>\d{4}[./]\d+)\s+"
-            r"(?:[*e&#@§%]\s*)?"
-            r"(?P<codigo>[A-Z]+\d+|\d{4,}|ENADE)\s+"
-            r"(?P<resto>.*)$"
-            )
-    colunas = re.compile(
-            r"(?P<disciplina>.+?)\s+"
-            r"(?P<ch>\d+)\s+\S+\s+(?:\d+(?:[.,]\d+)?|-+)\s+"
-            r"(?P<mencao>[A-Z]+|\d+(?:[.,]\d+)?|-+)\s+(?P<sigla>[A-Z]+)"
-            )
-    disciplinas = []
+MENCOES = {
+    "SS": 5,
+    "MS": 4,
+    "MM": 3,
+    "MI": 2,
+    "II": 1,
+    "SR": 0,
+        }
+
+codigo = input("Digite o codigo da disciplina:")
+
+def buscar_mencao(tabela, codigo):
+    codigo = codigo.strip().upper()
+    global mencao
+    global coef_mencao
+    mencao = None
+    coef_mencao = None
+
+    for disciplina in tabela:
+        if disciplina["codigo"] == codigo:
+
+            situacao = disciplina["situacao"].strip().upper()
+
+            if situacao != "APROVADO" #qualquer coisa diferente de aprovado ele vai negar a possibilidade de matricula naquela materia
+                return None
+
+            mencao = disciplina["mencao"].strip().upper()
+            coef_mencao = MENCOES.get(mencao)
+
+            return {
+                    "codigo": disciplina["codigo"],
+                    "disciplina": disciplina["disciplina"],
+                    "mencao": disciplina["mencao"],
+                    "creditos": disciplina["creditos"]
+                    }
+
+
+
+    return None
+
+def puxar_tabela(texto):
+    padrao_inicio = re.compile(
+        r"^\s*(?P<periodo>\d{4}[./]\d+)\s+"
+        r"(?:[*e&#@§%]\s*)?"
+        r"(?P<codigo>[A-Z]+\d+|\d{4,}|ENADE)\s+"
+        r"(?P<resto>.*)$"
+    )
+
+    padrao_colunas = re.compile(
+        r"(?P<disciplina>.+?)\s+"
+        r"(?P<ch>\d+)\s+\S+\s+"
+        r"(?:\d+(?:[.,]\d+)?|-+)\s+"
+        r"(?P<mencao>[A-Z]+|\d+(?:[.,]\d+)?|-+)\s+"
+        r"(?P<sigla>[A-Z]+)"
+    )
+
+    disciplinas = {}
     pendente = None
-    for linha in texto.splitlines():
-        if re.match(r"^\s*\d{4}[./]\d+/b", linha):
+
+    for linha in texto.sliptlines():
+        inicio = padrao_inicio.fullmatch(linha)
+
+        if inicio is not None:
+
             if pendente is not None:
                 raise ValueError(
-                    f"Não foi possível interpretar {pendente['codigo']} "
-                    f"no período {pendente['periodo']}. Confira o layout do PDF."
-                )
-            registro = inicio.fullmatch(linha)
-            if registro is None:
-                raise ValueError(f"Linha de disciplina não reconhecida: {linha.strip()}")
-            if registro["codigo"] == "ENADE":
-                continue
-            pendente = registro.groupdict()
-        elif pendente is not None:
+                        f"Nao foi possivel interpretar"
+                        f"{pendente['codigo']}."
+                        )
+            if inicio['codigo'] == "ENADE"
+                continue # ignorar a primeira linha da tabela que sempre vai comecar com ENADE
+
+            pendente = inicio.groupdict()
+
+        elif pendete is not None:
             pendente["resto"] += " " + linha.strip()
-        else:
-            continue
-    
-        resultado = colunas.fullmatch(pendente["resto"].strip())
+
+        else: continue
+
+        resultado = padrao_colunas.fullmatch(
+                pendente["resto"].strip()
+                )
+
         if resultado is None:
             continue
+
+
         dados = resultado.groupdict()
         dados["periodo"] = pendente["periodo"].replace("/", ".")
         dados["codigo"] = pendente["codigo"]
@@ -58,9 +117,20 @@ def puxar_tabela(texto):
         dados["ch"] = int(dados["ch"])
         #precisamos dividir as horas em creditos, que no caso seriam dividir as horas por 15
         dados["creditos"] = dados["ch"] / 15
+
         dados["situacao"] = SITUACOES.get(dados["sigla"],  "Situação desconhecida")
-        disciplinas.append(dados)
+        dados["coef_mencao"] = MENCOES.get(mencao)
+        mencao = dados["mencao"].strip().upper()
+
+        codigo = dados["codigo"]
+
+        if codigo not in disciplinas:
+            disciplinas[codigo] = []
+
+        disciplinas[codigo].append(dados)
+
         pendente = None
+
     if pendente is not None:
         raise ValueError(
             f"Não foi possível interpretar {pendente['codigo']} "
@@ -68,62 +138,91 @@ def puxar_tabela(texto):
                 )
     return disciplinas
 
-def gerar_txt(arquivo_pdf, arquivo_txt=None):
-    arquivo_pdf = Path(arquivo_pdf)
-    if arquivo_txt is None:
-        arquivo_txt = arquivo_pdf.with_name(f"{arquivo_pdf.stem}_disciplinas.txt")
-    arquivo_txt = Path(arquivo_txt)
-    if arquivo_pdf.resolve() == arquivo_txt.resolve()
-        raise ValueError("O arquivo de saída não pode ser o próprio PDF.")
-    if arquivo_txt.suffix.lower() != ".txt":
-        raise ValueError("O arquivo de saída deve ter a extensão .txt.")
-
+def ler_tabela(arquivo_pdf):
     historico = PdfReader(arquivo_pdf)
-    disciplinas = []
-    for numero, pagina in enumerate(historico.pages, start=1):
-        texto = pagina.extract_text(extraction_mode="layout") or ""
-        if not texto.strip():
+    disciplinas = {}
+
+    for numero, pagina in enumerate(
+            historico.pages, start = 1
+            ):
+
+        texto = pagina.extract_text(
+                extraction_mode="layout"
+                ) or ""
+
+        if not texto.strip()
             raise ValueError(
-                f"A página {numero} não contém texto extraível. "
-                "Para evitar uma tabela incompleta, a extração foi interrompida. "
-                "Se a página for digitalizada, será necessário OCR."
-            )
+                    f"Pagina {numero} sem texto extraivel"
+                    )
+
         try:
-            disciplinas.extend(puxar_tabela(texto))
+            dados_pagina = puxar_tabela(texto)
+
         except ValueError as erro:
-            raise ValueError(f"Página {numero}: {erro}") from erro
+            raise ValueError(
+                    f"Erro na pagina {numero}: {erro}"
+                    ) from erro
 
-    if not disciplinas:
-        raise ValueError(
-            "Nenhuma disciplina encontrada. Verifique se o PDF é um histórico "
-            "SIGAA com texto selecionável; PDFs digitalizados precisam de OCR."
-        )
+        for codigo, tentativas in dados_pagina.items():
+            if codigo not in disciplinas:
+                disciplinas[codigo] = []
 
-    linhas = [["Período", "Código", "Disciplina", "CH (h)", "Créditos", "Menção", "Situação"]]
-    for disciplina in disciplinas:
-        linhas.append([
-            disciplina["periodo"],
-            disciplina["codigo"],
-            disciplina["disciplina"],
-            str(disciplina["ch"]),
-            f'{disciplina["creditos"]:g}',
-            disciplina["mencao"],
-            f'{disciplina["sigla"]} - {disciplina["situacao"]}',
-        ])
 
-    larguras = [max(len(valor) for valor in coluna) for coluna in zip(*linhas)]
-    tabela = [
-            " | ".join(valor.ljust(largura) for valor, largura in zip(linha, larguras))
-            for linha in linhas
-    ]
-    tabela.insert(1, "-+-".join("-" * largura for largura in larguras))
-    cabecalho = (
-        "DISCIPLINAS DO HISTÓRICO ESCOLAR\n"
-        "Créditos calculados: carga horária / 15 (1 crédito = 15 horas).\n"
-        "Cada linha representa uma tentativa no período indicado.\n"
-        "MATR e TRANC não significam reprovação; '-' indica menção não informada.\n\n"
-        )
-    arquivo_txt.write_text(cabecalho + "\n".join(tabela) + "\n", enconding = "utf-8")
+            disciplinas[codigo].extend(tentativas)
+
+        if not disciplinas:
+            raise ValueError(
+                    "Nenhuma disciplina encontrada no historico."
+                    )
+
     return disciplinas
 
-#MUDAR O CODIGO PARA IMEDIATAMENTE APAGAR O TXT PARA NAO COMPROMETER AS INFORMCACOES DO ESTUDANTE 
+
+def buscar_disciplinas(tabela, codigo):
+    codigo = codigo.strip().upper()
+
+    return tabela.get(codigo, [])
+
+def buscar_mencao(tabela, codigo):
+    tentativas = buscar_disciplina(tabela, codigo) #saber quantas vezes o aluno fez aquela materia
+
+    if not tentativas:
+        raise ValueError(
+                f"Disciplinas {codigo} nao encontrado" #claro ne
+                ) # se tentativas puxa quantas vezes e ele fez zero vezes ent nao existe a disciplina naquele curriculo
+
+    aprovadas = [
+            tentativa
+            for tentativa in tentativas
+            if tentativa["sigla"] == "APR"
+            ]
+
+    def obter_periodo(disciplina):
+        ano, semestre = disciplina["periodo"].split()
+        return (int(ano)), int(semestre))
+
+    def obter_coeficiente(disciplina):
+        return disciplina["coef_mencao"]
+
+    if not aprovadas:
+        ultima = max(tentativas, key=obter_periodo)
+
+        raise ValueError(
+                f"Disciplina {codigo} sem aprovacao."
+                f"Ultima situacao: {ultima['situacao']}."
+                )
+
+        mais_recente = max (
+                aprovadas,
+                key=obter_periodo
+                )
+
+        maior_mencao = max(
+                aprovadas,
+                key=obter_coeficiente
+                )
+
+    return {
+            "mais_recente": mais_recente,
+            "maior_mencao": maior_mencao
+            }
