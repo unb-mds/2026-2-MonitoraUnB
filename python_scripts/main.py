@@ -1,13 +1,12 @@
 from leiturapdf import processar_historico
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
-from leitura_creditos import *
-from leitura_creditos import gerar_txt
-from leiturapdf import arquivo_pdf
-# o CORS está sendo usado para permitir a comunicação da API com o frontend, pois ambos utilizavam portas diferentes
+from leitura_creditos import puxar_tabela, ler_tabela
+# from leitura_creditos import gerar_txt
+
+'''o CORS está sendo usado para permitir a comunicação da API com o frontend, pois ambos utilizavam portas diferentes'''
 
 app = FastAPI()
-
 
 #puxar_tabela(texto)
 # tabela = gerar_txt(arquivo_pdf)
@@ -35,7 +34,11 @@ def raiz():
 
 
 @app.post("/api/historico")
-def receber_historico(arquivo: UploadFile = File(...)):
+def receber_historico(arquivo: UploadFile = File(...),
+                      disciplina: str = Form(...)
+                      ):
+
+    print(disciplina)
 
     if (arquivo.content_type != "application/pdf"):
         raise HTTPException(
