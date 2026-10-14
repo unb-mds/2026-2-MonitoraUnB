@@ -1,6 +1,6 @@
 import re
 from pypdf import PdfReader
-from pypdf import Path
+from pathlib import Path
 
 #
 # DICIONARIOS DE SIGLAS
@@ -31,7 +31,10 @@ MENCOES = {
     "SR": 0,
         }
 
-codigo = input("Digite o codigo da disciplina:")
+def ler_codigo(codigo):
+    pass
+
+# codigo = input("Digite o codigo da disciplina:")
 
 def buscar_mencao(tabela, codigo):
     codigo = codigo.strip().upper()
@@ -81,7 +84,7 @@ def puxar_tabela(texto):
     disciplinas = {}
     pendente = None
 
-    for linha in texto.sliptlines():
+    for linha in texto.splitlines():
         inicio = padrao_inicio.fullmatch(linha)
 
         if inicio is not None:
@@ -118,8 +121,8 @@ def puxar_tabela(texto):
         dados["creditos"] = dados["ch"] / 15
 
         dados["situacao"] = SITUACOES.get(dados["sigla"],  "Situação desconhecida")
-        dados["coef_mencao"] = MENCOES.get(mencao)
         mencao = dados["mencao"].strip().upper()
+        dados["coef_mencao"] = MENCOES.get(mencao)
 
         codigo = dados["codigo"]
 
@@ -197,7 +200,7 @@ def buscar_mencao(tabela, codigo):
             ]
 
     def obter_periodo(disciplina):
-        ano, semestre = disciplina["periodo"].split()
+        ano, semestre = disciplina["periodo"].split(".")
         return (int(ano)), int(semestre)
 
     def obter_coeficiente(disciplina):
