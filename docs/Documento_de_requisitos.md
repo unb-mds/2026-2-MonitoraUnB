@@ -14,18 +14,18 @@
 
 ## 1. Sumário Executivo
 
-O MonitoraUnB é um sistema web que automatiza o processo de inscrição para vagas de monitoria na UnB. Ele valida automaticamente os dados do candidato contra seu histórico escolar (PDF), calcula o coeficiente de classificação (IRA × 0,6 + Menção × 0,4) e, após o período de inscrição, notifica cada aluno por e-mail sobre o resultado, assim eliminando a conferência manual e reduzindo erros no processo seletivo.
+O MonitoraUnB é um sistema web que automatiza o processo de inscrição para vagas de monitoria na UnB. Ele valida automaticamente os dados do candidato contra seu histórico escolar (PDF), calcula o coeficiente de classificação (IRA × 0,6 + Menção × 0,4) e, após autorização da secretaria, notifica cada aluno por e-mail sobre o resultado, assim eliminando a conferência manual e reduzindo erros no processo seletivo.
 
 ---
 
 ## 2. Objetivos do Projeto
 
-ID | Objetivo | Descrição | Métrica de Sucesso |
-|---|---|---|---|
-| **O1** | Facilitar a inscrição dos estudantes da Universidade de Brasília na monitoria semestral | Aumentar o alcance do processo de inscrição para monitoria | Aumento de 20% no número de disciplinas com monitor ativo em relação ao semestre anterior | 
-| **O2** | Tornar a divisão de bolsas mais igualitária | Garantir que a seleção de monitores seja baseada exclusivamente no coeficiente calculado, sem interferência manual | Avaliação média ≥ 4/5 em pesquisa de satisfação aplicada ao término do processo seletivo |
-| **O3** | Evitar o preenchimento de informações pessoais falsas. | Validar automaticamente os dados informados pelo candidato usando o histórico como base | Taxa de divergência entre dados informados e histórico <= 1% por ciclo de inscrições|
-| **O4** | Reduzir trabalho manual da secretaria | Diminuir o tempo e os erros associados à verificação manual de inscrições | Redução de 80% no tempo médio de apuração por inscrição em relação ao processo anterior |
+| Objetivo | Descrição | Métrica de Sucesso |
+|---|---|---|
+| **O1** | Facilitar a inscrição dos estudantes da Universidade de Brasília na monitoria semestral. | Aumento na quantidade de monitores em mais disciplinas |
+| **O2** | Tornar a divisão de bolsas de monitoria mais igualitária. | Feedback dos estudantes |
+| **O3** | Evitar o preenchimento de informações pessoais falsas. | Informações dadas batendo com os históricos fornecidos |
+| **O4** | Diminuir as horas de trabalho manual para verificação das informações de cada inscrição. | Menor período de apuração de cada inscrição e menos erros |
 
 ---
 
@@ -80,6 +80,9 @@ ID | Objetivo | Descrição | Métrica de Sucesso |
 
 ## 7. Product Backlog
 
+- **Épicos:** Envio, leitura e processamento do arquivo, geração da planilha dos candidatos, criação do e-mail com o resultado.
+- **User Stories:** cada épico quebrado em pedaços pequenos, um por comportamento do usuário. Teste: a story cabe em uma sprint? Se não, quebre mais.
+
 ### 7.1 Épicos
 
 | ID | Épico |
@@ -115,7 +118,8 @@ ID | Objetivo | Descrição | Métrica de Sucesso |
 | RF-08 | Cálculo automático do coeficiente | O sistema deve calcular o coeficiente de cada candidato usando a fórmula (IRA × 0,6 + MENÇÃO × 0,4). |
 | RF-09 | Ordenação de ranking | O sistema deve ordenar automaticamente a planilha de candidatos em ordem decrescente de coeficiente. |
 | RF-10 | Controle do período de inscrição | O sistema deve permitir inscrições apenas dentro do período configurado (data de início e fim). |
-| RF-11 | Envio automático de e-mail de resultado | O sistema deve enviar automaticamente um e-mail a cada candidato informando se foi aprovado ou reprovado, após autorização da secretaria. |
+| RF-11 | Liberação de resultado pela secretaria | O sistema deve permitir que a secretaria autorize a divulgação dos resultados antes do envio dos e-mails. |
+| RF-12 | Envio automático de e-mail de resultado | O sistema deve enviar automaticamente um e-mail a cada candidato informando se foi aprovado ou reprovado, após autorização da secretaria. |
 
 ---
 
@@ -133,7 +137,7 @@ ID | Objetivo | Descrição | Métrica de Sucesso |
 | RNF-08 | Auditabilidade | Toda tentativa de inscrição (bem-sucedida ou não) deve ficar registrada em log, para fins de auditoria da secretaria. |
 | RNF-09 | Formato de arquivo | O sistema deve aceitar apenas arquivos PDF para upload de histórico, rejeitando outros formatos com mensagem clara. |
 
-
+> **Nota:** no documento original, os itens de RNF-07 a RNF-09 estavam numerados como "RF-" por engano; a numeração foi corrigida acima para manter a sequência de RNF.
 
 ---
 
