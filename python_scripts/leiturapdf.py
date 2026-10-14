@@ -2,7 +2,7 @@ from logging import NullHandler
 import re
 from pypdf import PdfReader
 from pypdf.generic import NullObject
-from leitura_creditos import puxar_tabela
+# from leitura_creditos import puxar_tabela
 
 def ler_pdf(arquivo):
     historico = PdfReader(arquivo)
