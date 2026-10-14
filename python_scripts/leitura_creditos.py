@@ -6,7 +6,6 @@ from pypdf import Path
 # DICIONARIOS DE SIGLAS
 #
 
-
 SITUACOES = {
     "APR": "Aprovado",
     "REP": "Reprovado por média",
@@ -46,7 +45,7 @@ def buscar_mencao(tabela, codigo):
 
             situacao = disciplina["situacao"].strip().upper()
 
-            if situacao != "APROVADO" #qualquer coisa diferente de aprovado ele vai negar a possibilidade de matricula naquela materia
+            if situacao != "APROVADO": #qualquer coisa diferente de aprovado ele vai negar a possibilidade de matricula naquela materia
                 return None
 
             mencao = disciplina["mencao"].strip().upper()
@@ -92,12 +91,12 @@ def puxar_tabela(texto):
                         f"Nao foi possivel interpretar"
                         f"{pendente['codigo']}."
                         )
-            if inicio['codigo'] == "ENADE"
+            if inicio['codigo'] == "ENADE":
                 continue # ignorar a primeira linha da tabela que sempre vai comecar com ENADE
 
             pendente = inicio.groupdict()
 
-        elif pendete is not None:
+        elif pendente is not None:
             pendente["resto"] += " " + linha.strip()
 
         else: continue
@@ -150,7 +149,7 @@ def ler_tabela(arquivo_pdf):
                 extraction_mode="layout"
                 ) or ""
 
-        if not texto.strip()
+        if not texto.strip():
             raise ValueError(
                     f"Pagina {numero} sem texto extraivel"
                     )
@@ -184,7 +183,7 @@ def buscar_disciplinas(tabela, codigo):
     return tabela.get(codigo, [])
 
 def buscar_mencao(tabela, codigo):
-    tentativas = buscar_disciplina(tabela, codigo) #saber quantas vezes o aluno fez aquela materia
+    tentativas = buscar_disciplinas(tabela, codigo) #saber quantas vezes o aluno fez aquela materia
 
     if not tentativas:
         raise ValueError(
@@ -199,7 +198,7 @@ def buscar_mencao(tabela, codigo):
 
     def obter_periodo(disciplina):
         ano, semestre = disciplina["periodo"].split()
-        return (int(ano)), int(semestre))
+        return (int(ano)), int(semestre)
 
     def obter_coeficiente(disciplina):
         return disciplina["coef_mencao"]
@@ -212,15 +211,15 @@ def buscar_mencao(tabela, codigo):
                 f"Ultima situacao: {ultima['situacao']}."
                 )
 
-        mais_recente = max (
-                aprovadas,
-                key=obter_periodo
-                )
+    mais_recente = max (
+            aprovadas,
+            key=obter_periodo
+            )
 
-        maior_mencao = max(
-                aprovadas,
-                key=obter_coeficiente
-                )
+    maior_mencao = max(
+            aprovadas,
+            key=obter_coeficiente
+            )
 
     return {
             "mais_recente": mais_recente,
