@@ -54,7 +54,7 @@ botaoContinuar.addEventListener("click", async (evento) => {
   definirCarregando(true);
 
   try {
-    const historico = await extrairDadosHistorico(arquivo);
+    const historico = await extrairDadosHistorico(arquivo, selectDisciplina.value);
     const opcao = selectDisciplina.selectedOptions[0];
 
     salvarInscricao({
