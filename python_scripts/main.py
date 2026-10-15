@@ -9,7 +9,7 @@ from leitura_creditos import puxar_tabela, ler_tabela
 app = FastAPI()
 
 #puxar_tabela(texto)
-# tabela = gerar_txt(arquivo_pdf)
+# tabela = ler_tabela(arquivo_pdf)
 
 # buscar_mencao(tabela, FGA0071, MS)
 
