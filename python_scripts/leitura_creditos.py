@@ -1,6 +1,5 @@
 import re
 from pypdf import PdfReader
-from pypdf import Path
 
 #
 # DICIONARIOS DE SIGLAS
@@ -32,9 +31,8 @@ MENCOES = {
     "SR": 0,
         }
 
-codigo = input("Digite o codigo da disciplina:")
 
-def buscar_mencao(tabela, codigo):
+def buscar_aprovacao(tabela, codigo):
     codigo = codigo.strip().upper()
     global mencao
     global coef_mencao
@@ -46,7 +44,9 @@ def buscar_mencao(tabela, codigo):
 
             situacao = disciplina["situacao"].strip().upper()
 
-            if situacao != "APROVADO" #qualquer coisa diferente de aprovado ele vai negar a possibilidade de matricula naquela materia
+            if situacao != "APROVADO":
+            #qualquer coisa diferente de aprovado ele vai negar a possibilidade de matricula naquela materia
+            #obs para o aquila do futuro ou qualquer um que vai usar o codigo, adicionar cumpriu por aproveitamento, mas isso vai estar encaixado no quesito de equivalentes
                 return None
 
             mencao = disciplina["mencao"].strip().upper()
@@ -63,7 +63,7 @@ def buscar_mencao(tabela, codigo):
 
     return None
 
-def puxar_tabela(texto):
+def puxar_tabela(texto): #SINCERAMENTE EU NUNCA VI ALGO TAO DIFICIL QUANTO ESSA COISA, EU DEMOREI DOIS DIAS SO PARA ENTENDER
     padrao_inicio = re.compile(
         r"^\s*(?P<periodo>\d{4}[./]\d+)\s+"
         r"(?:[*e&#@§%]\s*)?"
@@ -82,7 +82,7 @@ def puxar_tabela(texto):
     disciplinas = {}
     pendente = None
 
-    for linha in texto.sliptlines():
+    for linha in texto.splitlines():
         inicio = padrao_inicio.fullmatch(linha)
 
         if inicio is not None:
@@ -92,12 +92,12 @@ def puxar_tabela(texto):
                         f"Nao foi possivel interpretar"
                         f"{pendente['codigo']}."
                         )
-            if inicio['codigo'] == "ENADE"
+            if inicio['codigo'] == "ENADE":
                 continue # ignorar a primeira linha da tabela que sempre vai comecar com ENADE
 
             pendente = inicio.groupdict()
 
-        elif pendete is not None:
+        elif pendente is not None:
             pendente["resto"] += " " + linha.strip()
 
         else: continue
@@ -119,8 +119,9 @@ def puxar_tabela(texto):
         dados["creditos"] = dados["ch"] / 15
 
         dados["situacao"] = SITUACOES.get(dados["sigla"],  "Situação desconhecida")
-        dados["coef_mencao"] = MENCOES.get(mencao)
         mencao = dados["mencao"].strip().upper()
+        dados["coef_mencao"] = MENCOES.get(mencao)
+
 
         codigo = dados["codigo"]
 
@@ -138,8 +139,7 @@ def puxar_tabela(texto):
                 )
     return disciplinas
 
-def ler_tabela(arquivo_pdf):
-    historico = PdfReader(arquivo_pdf)
+def ler_tabela(historico):
     disciplinas = {}
 
     for numero, pagina in enumerate(
@@ -150,7 +150,7 @@ def ler_tabela(arquivo_pdf):
                 extraction_mode="layout"
                 ) or ""
 
-        if not texto.strip()
+        if not texto.strip():
             raise ValueError(
                     f"Pagina {numero} sem texto extraivel"
                     )
@@ -184,7 +184,7 @@ def buscar_disciplinas(tabela, codigo):
     return tabela.get(codigo, [])
 
 def buscar_mencao(tabela, codigo):
-    tentativas = buscar_disciplina(tabela, codigo) #saber quantas vezes o aluno fez aquela materia
+    tentativas = buscar_disciplinas(tabela, codigo) #saber quantas vezes o aluno fez aquela materia
 
     if not tentativas:
         raise ValueError(
@@ -195,11 +195,12 @@ def buscar_mencao(tabela, codigo):
             tentativa
             for tentativa in tentativas
             if tentativa["sigla"] == "APR"
+            and tentativa["coef_mencao"] is not None
             ]
 
     def obter_periodo(disciplina):
-        ano, semestre = disciplina["periodo"].split()
-        return (int(ano)), int(semestre))
+        ano, semestre = disciplina["periodo"].split(".")
+        return (int(ano), int(semestre))
 
     def obter_coeficiente(disciplina):
         return disciplina["coef_mencao"]
@@ -212,17 +213,19 @@ def buscar_mencao(tabela, codigo):
                 f"Ultima situacao: {ultima['situacao']}."
                 )
 
-        mais_recente = max (
-                aprovadas,
-                key=obter_periodo
-                )
+    #mais_recente = max (
+    #            aprovadas,
+    #            key=obter_periodo
+    #            )
 
-        maior_mencao = max(
+    maior_mencao = max(
                 aprovadas,
                 key=obter_coeficiente
                 )
 
-    return {
-            "mais_recente": mais_recente,
-            "maior_mencao": maior_mencao
-            }
+    return maior_mencao
+
+
+# verificar se o aluno possui materias como matriculado e se o estado tiver como ativo
+# foi feito e corrigido
+
