@@ -1,10 +1,10 @@
 import re
 from pypdf import PdfReader
-from pathlib import Path
 
 #
 # DICIONARIOS DE SIGLAS
 #
+
 
 SITUACOES = {
     "APR": "Aprovado",
@@ -31,12 +31,8 @@ MENCOES = {
     "SR": 0,
         }
 
-def ler_codigo(codigo):
-    pass
 
-# codigo = input("Digite o codigo da disciplina:")
-
-def buscar_mencao(tabela, codigo):
+def buscar_aprovacao(tabela, codigo):
     codigo = codigo.strip().upper()
     global mencao
     global coef_mencao
@@ -48,7 +44,9 @@ def buscar_mencao(tabela, codigo):
 
             situacao = disciplina["situacao"].strip().upper()
 
-            if situacao != "APROVADO": #qualquer coisa diferente de aprovado ele vai negar a possibilidade de matricula naquela materia
+            if situacao != "APROVADO":
+            #qualquer coisa diferente de aprovado ele vai negar a possibilidade de matricula naquela materia
+            #obs para o aquila do futuro ou qualquer um que vai usar o codigo, adicionar cumpriu por aproveitamento, mas isso vai estar encaixado no quesito de equivalentes
                 return None
 
             mencao = disciplina["mencao"].strip().upper()
@@ -65,7 +63,7 @@ def buscar_mencao(tabela, codigo):
 
     return None
 
-def puxar_tabela(texto):
+def puxar_tabela(texto): #SINCERAMENTE EU NUNCA VI ALGO TAO DIFICIL QUANTO ESSA COISA, EU DEMOREI DOIS DIAS SO PARA ENTENDER
     padrao_inicio = re.compile(
         r"^\s*(?P<periodo>\d{4}[./]\d+)\s+"
         r"(?:[*e&#@§%]\s*)?"
@@ -124,6 +122,7 @@ def puxar_tabela(texto):
         mencao = dados["mencao"].strip().upper()
         dados["coef_mencao"] = MENCOES.get(mencao)
 
+
         codigo = dados["codigo"]
 
         if codigo not in disciplinas:
@@ -140,8 +139,7 @@ def puxar_tabela(texto):
                 )
     return disciplinas
 
-def ler_tabela(arquivo_pdf):
-    historico = PdfReader(arquivo_pdf)
+def ler_tabela(historico):
     disciplinas = {}
 
     for numero, pagina in enumerate(
@@ -197,11 +195,12 @@ def buscar_mencao(tabela, codigo):
             tentativa
             for tentativa in tentativas
             if tentativa["sigla"] == "APR"
+            and tentativa["coef_mencao"] is not None
             ]
 
     def obter_periodo(disciplina):
         ano, semestre = disciplina["periodo"].split(".")
-        return (int(ano)), int(semestre)
+        return (int(ano), int(semestre))
 
     def obter_coeficiente(disciplina):
         return disciplina["coef_mencao"]

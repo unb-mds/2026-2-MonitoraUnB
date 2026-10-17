@@ -1,8 +1,23 @@
-from logging import NullHandler
 import re
 from pypdf import PdfReader
 from pypdf.generic import NullObject
-# from leitura_creditos import puxar_tabela
+from pathlib import Path
+
+
+def ler_status(texto):           # o aluno precisa obrigatoriamente estar com o status como ativo para poder se matricular
+    status_local = re.search(
+            r"\b(ATIVO|FORMANDO|TRANCADO|CADASTRADO|CANCELADO|DESLIGADO)\b",
+            texto,
+            re.IGNORECASE
+            )
+
+    if status_local:
+        status = status_local.group(1).strip().upper()
+        return status
+
+    return None
+
+#quero vir aqui deixar a minha indignacao sobre essa leitura de pdf que PELO AMOR DE DEUS QUE COISA DIFICIL EU DEMOREI DOIS DIAS PARA PEGAR NOME IRA E MATRICULA
 
 def ler_pdf(arquivo):
     historico = PdfReader(arquivo)
@@ -13,10 +28,10 @@ def ler_ira(texto):
     ira_local = re.search(r"\bIRA:\s*(\d+(?:[.,]\d+)?)", texto)
     if ira_local:
 #        print(ira_local.group(1)) # teste para saber se peguei o ira
-        ira = float(ira_local.group(1).replace("," , "."))
+        ira = float(ira_local.group(1).replace(",", "."))
         return ira
     else:
-        # print("Documento Invalido") #colocar acentos
+        print("Documento Invalido") #colocar acentos #ainda nao coloquei acentos, estou com preguica do teclado us
         return None
 
 def ler_nome(texto):

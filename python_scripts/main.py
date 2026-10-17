@@ -2,6 +2,22 @@ from leiturapdf import processar_historico
 from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
 from leitura_creditos import puxar_tabela, ler_tabela
+from leiturapdf import (
+        arquivo_pdf,
+        ler_status,
+        ler_matricula,
+        ler_nome,
+        ler_ira,
+        texto
+        )
+
+from leitura_creditos import (
+        buscar_mencao,
+        ler_tabela
+        )
+
+from calcular_coeficiente import calcular_coeficiente
+
 # from leitura_creditos import gerar_txt
 
 '''o CORS está sendo usado para permitir a comunicação da API com o frontend, pois ambos utilizavam portas diferentes'''
@@ -68,4 +84,20 @@ def receber_historico(arquivo: UploadFile = File(...),
 # resultado = processar_historico(r"C:\Users\Marcelo\Downloads\historico_251022427.pdf")
 # print(f"{resultado}")
 
+# try:
+#     resultado = buscar_mencao(tabela, codigo)
 
+#     coeficiente = calcular_coeficiente(
+#         ira,
+#         resultado["coef_mencao"]
+#         )
+# except ValueError as erro:
+#     print("DEU ERRO")
+#        print(resultado["disciplina"])
+#        print(resultado["codigo"])
+#        print(resultado["mencao"])
+#        print(resultado["coef_mencao"])
+#        print(resultado["creditos"])
+#        print(resultado["periodo"])
+#        print(resultado["situacao"])        tudo aqui foi teste para saber se estava funcionando
+#        print(coeficiente)
