@@ -1,7 +1,7 @@
 from leiturapdf import processar_historico
 from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
-from leitura_creditos import puxar_tabela, ler_tabela, buscar_mencao
+from leitura_creditos import buscar_disciplinas, puxar_tabela, ler_tabela, buscar_mencao
 #from leiturapdf import (
 # arquivo_pdf,
 # ler_status,
@@ -10,9 +10,9 @@ from leitura_creditos import puxar_tabela, ler_tabela, buscar_mencao
 # ler_ira,
 # texto
 # )
+# from calcular_coeficiente import calcular_coeficiente
 
 
-from calcular_coeficiente import calcular_coeficiente
 
 # from leitura_creditos import gerar_txt
 
@@ -50,7 +50,7 @@ def receber_historico(arquivo: UploadFile = File(...),
                       disciplina: str = Form(...)
                       ):
 
-    print(disciplina)
+    # print(disciplina)
 
     if (arquivo.content_type != "application/pdf"):
         raise HTTPException(
@@ -76,7 +76,25 @@ def receber_historico(arquivo: UploadFile = File(...),
             detail="O arquivo PDF enviado não é um histórico válido."
         )
 
+    # campo de códigos de teste
+    arquivo.file.seek(0)
+    
+    tabela = ler_tabela(arquivo.file)
+    tentativas = buscar_disciplinas(tabela, disciplina)
+
+    if not tentativas:
+        raise HTTPException(
+            status_code=422,
+            detail="A disciplina selecionada não foi encontrada."
+        )
+
+    print(tentativas)
+
+
+    
     return resultado
+
+
 # resultado = processar_historico(r"C:\Users\Marcelo\Downloads\historico_251022427.pdf")
 # print(f"{resultado}")
 
