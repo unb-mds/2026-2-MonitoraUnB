@@ -1,5 +1,5 @@
 import re
-# from pypdf import PdfReader (não está sendo utilizado)
+from pypdf import PdfReader 
 
 #
 # DICIONARIOS DE SIGLAS
@@ -89,7 +89,7 @@ def puxar_tabela(texto): #SINCERAMENTE EU NUNCA VI ALGO TAO DIFICIL QUANTO ESSA 
 
             if pendente is not None:
                 raise ValueError(
-                        f"Nao foi possivel interpretar"
+                        f"Não foi possível interpretar"
                         f"{pendente['codigo']}."
                         )
             if inicio['codigo'] == "ENADE":
@@ -139,7 +139,9 @@ def puxar_tabela(texto): #SINCERAMENTE EU NUNCA VI ALGO TAO DIFICIL QUANTO ESSA 
                 )
     return disciplinas
 
-def ler_tabela(historico):
+def ler_tabela(arquivo_pdf):
+    historico = PdfReader(arquivo_pdf)
+
     disciplinas = {}
 
     for numero, pagina in enumerate(
@@ -152,7 +154,7 @@ def ler_tabela(historico):
 
         if not texto.strip():
             raise ValueError(
-                    f"Pagina {numero} sem texto extraivel"
+                    f"Página {numero} sem texto extraível"
                     )
 
         try:
@@ -160,7 +162,7 @@ def ler_tabela(historico):
 
         except ValueError as erro:
             raise ValueError(
-                    f"Erro na pagina {numero}: {erro}"
+                    f"Erro na página {numero}: {erro}"
                     ) from erro
 
         for codigo, tentativas in dados_pagina.items():
@@ -172,7 +174,7 @@ def ler_tabela(historico):
 
         if not disciplinas:
             raise ValueError(
-                    "Nenhuma disciplina encontrada no historico."
+                    "Nenhuma disciplina encontrada no histórico."
                     )
         # talvez mexer esse bloco uma indentaçao para tras para que nao falhe na primeira pagina 
     return disciplinas
@@ -188,7 +190,7 @@ def buscar_mencao(tabela, codigo):
 
     if not tentativas:
         raise ValueError(
-                f"Disciplinas {codigo} nao encontrado" #claro ne
+                f"Disciplina {codigo} não encontrada" #claro ne
                 ) # se tentativas puxa quantas vezes e ele fez zero vezes ent nao existe a disciplina naquele curriculo
 
     aprovadas = [
@@ -209,8 +211,8 @@ def buscar_mencao(tabela, codigo):
         ultima = max(tentativas, key=obter_periodo)
 
         raise ValueError(
-                f"Disciplina {codigo} sem aprovacao."
-                f"Ultima situacao: {ultima['situacao']}."
+                f"Disciplina {codigo} sem aprovação."
+                f"Última situação: {ultima['situacao']}."
                 )
 
     mais_recente = max (
