@@ -31,7 +31,7 @@ def ler_ira(texto):
         ira = float(ira_local.group(1).replace(",", "."))
         return ira
     else:
-        print("Documento Invalido") #colocar acentos #ainda nao coloquei acentos, estou com preguica do teclado us
+        # print("Documento Inválido") 
         return None
 
 def ler_nome(texto):
@@ -67,7 +67,8 @@ def processar_historico(arquivo):
     return {
         "aluno": nome,
         "matricula": matricula,
-        "ira": ira
+        "ira": ira,
+        "status": status
     }
 
 # matricula = ler_matricula()
