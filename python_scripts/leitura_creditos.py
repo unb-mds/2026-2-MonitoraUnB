@@ -1,5 +1,5 @@
 import re
-from pypdf import PdfReader
+# from pypdf import PdfReader (não está sendo utilizado)
 
 #
 # DICIONARIOS DE SIGLAS
@@ -174,7 +174,7 @@ def ler_tabela(historico):
             raise ValueError(
                     "Nenhuma disciplina encontrada no historico."
                     )
-
+        # talvez mexer esse bloco uma indentaçao para tras para que nao falhe na primeira pagina 
     return disciplinas
 
 

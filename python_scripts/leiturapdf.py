@@ -56,9 +56,10 @@ def ler_matricula(texto):
         # print("Documento Invalido")
         return None
 
-def processar_historico(texto):
-    texto = ler_pdf(texto)
-    
+def processar_historico(arquivo):
+    texto = ler_pdf(arquivo)
+
+    status = ler_status(texto)
     nome = ler_nome(texto)
     matricula = ler_matricula(texto)
     ira = ler_ira(texto)

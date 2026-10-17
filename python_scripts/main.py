@@ -1,20 +1,16 @@
 from leiturapdf import processar_historico
 from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
-from leitura_creditos import puxar_tabela, ler_tabela
-from leiturapdf import (
-        arquivo_pdf,
-        ler_status,
-        ler_matricula,
-        ler_nome,
-        ler_ira,
-        texto
-        )
+from leitura_creditos import puxar_tabela, ler_tabela, buscar_mencao
+#from leiturapdf import (
+# arquivo_pdf,
+# ler_status,
+# ler_matricula,
+# ler_nome,
+# ler_ira,
+# texto
+# )
 
-from leitura_creditos import (
-        buscar_mencao,
-        ler_tabela
-        )
 
 from calcular_coeficiente import calcular_coeficiente
 
