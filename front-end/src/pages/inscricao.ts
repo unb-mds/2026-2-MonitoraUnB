@@ -54,7 +54,7 @@ botaoContinuar.addEventListener("click", async (evento) => {
   definirCarregando(true);
 
   try {
-    const historico = await extrairDadosHistorico(arquivo);
+    const historico = await extrairDadosHistorico(arquivo, selectDisciplina.value);
     const opcao = selectDisciplina.selectedOptions[0];
 
     salvarInscricao({
@@ -66,8 +66,12 @@ botaoContinuar.addEventListener("click", async (evento) => {
     });
 
     window.location.href = botaoContinuar.href;
-  } catch {
+  } catch (erro) {
+    if (erro instanceof Error) {
+      mostrarErro(erro.message)
+    } else {
     mostrarErro("Não foi possível ler o histórico. Tente novamente.");
-    definirCarregando(false);
   }
+  definirCarregando(false);
+ }
 });

@@ -213,19 +213,17 @@ def buscar_mencao(tabela, codigo):
                 f"Ultima situacao: {ultima['situacao']}."
                 )
 
-    #mais_recente = max (
-    #            aprovadas,
-    #            key=obter_periodo
-    #            )
+    mais_recente = max (
+            aprovadas,
+            key=obter_periodo
+            )
 
     maior_mencao = max(
-                aprovadas,
-                key=obter_coeficiente
-                )
+            aprovadas,
+            key=obter_coeficiente
+            )
 
-    return maior_mencao
-
-
-# verificar se o aluno possui materias como matriculado e se o estado tiver como ativo
-# foi feito e corrigido
-
+    return {
+            "mais_recente": mais_recente,
+            "maior_mencao": maior_mencao
+            }
