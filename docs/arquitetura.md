@@ -1,150 +1,116 @@
-# Arquitetura
+# Documento de Arquitetura — MonitoraUnB
 
-## Visão Geral
+## 1. Introdução
 
-A arquitetura do **MonitoraUnB** é composta por duas aplicações principais: o **backend** e o **frontend**.
+Este documento apresenta a arquitetura de software do MonitoraUnB, descrevendo seus componentes, responsabilidades, tecnologias e formas de comunicação.
 
-O backend será responsável por fornecer uma **API REST**, que permitirá o acesso às informações necessárias para o funcionamento do sistema de monitorias. Entre essas informações estão os dados das disciplinas da Universidade de Brasília, obtidos a partir do SIGAA.
+O objetivo é estabelecer uma estrutura modular que facilite o desenvolvimento, a manutenção, os testes e a expansão do sistema.
 
-O frontend será responsável por consumir a API REST e apresentar essas informações ao usuário por meio da interface do MonitoraUnB.
+## 2. Visão Geral da Arquitetura
 
-De forma geral, a comunicação do sistema seguirá o seguinte fluxo:
+O sistema adota uma arquitetura cliente-servidor, com separação entre frontend, backend, processamento de históricos acadêmicos e persistência de dados.
 
-```text
-SIGAA → Backend/API → Frontend → Usuário
-```
-
----
-
-## Design do Sistema
-
-O sistema será estruturado de forma que o frontend seja responsável pela interação com o usuário, enquanto o backend será responsável pelo processamento das requisições, leitura dos históricos escolares e acesso aos dados das disciplinas.
-
-O fluxo da aplicação ocorrerá da seguinte forma:
-
-1. O usuário acessa o MonitoraUnB.
-2. O frontend apresenta a interface da aplicação.
-3. O usuário insere seu histórico escolar na aplicação.
-4. O histórico é enviado para o backend, onde sua leitura e processamento são realizados utilizando Python.
-5. O sistema extrai do histórico as informações necessárias, incluindo os códigos das disciplinas.
-6. O backend utiliza os códigos identificados para consultar as disciplinas disponíveis no banco de dados.
-7. O banco de dados contém as informações das disciplinas obtidas previamente do SIGAA, principalmente o código e o nome de cada disciplina.
-8. A API retorna para o frontend as informações necessárias após o processamento.
-9. O frontend apresenta o resultado ao usuário.
-
-O fluxo de processamento do histórico pode ser representado da seguinte forma:
+**Fluxo principal:**
 
 ```text
-Histórico Escolar
-       ↓
-Frontend
-       ↓
-Backend (Python)
-       ↓
-Leitura e extração dos códigos
-       ↓
-Banco de Dados
-       ↓
-Identificação das disciplinas
-       ↓
-API REST
-       ↓
-Frontend
-       ↓
 Usuário
+   │
+   ▼
+Frontend
+   │ HTTP/JSON
+   ▼
+API REST (FastAPI)
+   │
+   ├── Processamento de históricos PDF
+   │
+   ├── Regras de negócio de monitoria
+   │
+   ├── Integração com scraping do SIGAA
+   │
+   └── Banco de dados MySQL
 ```
 
-Os dados das disciplinas utilizados nesse processo serão obtidos previamente a partir do SIGAA e armazenados no banco de dados, evitando a necessidade de realizar uma nova consulta ao SIGAA para cada histórico processado.
+## 3. Componentes do Sistema
 
----
+### 3.1 Frontend
 
-## Backend e API REST
+Responsável pela interface com o usuário, incluindo seleção de disciplinas, envio de históricos acadêmicos e inscrição em monitorias.
 
-O backend do MonitoraUnB será responsável pelo processamento dos dados utilizados pela aplicação e pela comunicação entre o frontend e o banco de dados.
+Comunica-se com o backend por meio de requisições HTTP.
 
-A comunicação entre o frontend e o backend será realizada através de uma **API REST**.
+### 3.2 Backend — API REST
 
-Entre as principais responsabilidades do backend estão:
+Desenvolvido em Python com FastAPI.
 
-- Receber o histórico escolar enviado pelo usuário;
-- Realizar a leitura e o processamento do histórico utilizando Python;
-- Identificar os códigos das disciplinas presentes no histórico;
-- Consultar no banco de dados as informações correspondentes às disciplinas identificadas;
-- Disponibilizar os dados das disciplinas para o frontend através da API REST;
-- Realizar a coleta e o tratamento dos dados de disciplinas provenientes do SIGAA.
+Responsabilidades:
 
-### API de Disciplinas
+- Disponibilizar endpoints REST.
+- Receber e validar requisições.
+- Coordenar a execução dos serviços.
+- Aplicar as regras de negócio.
+- Retornar respostas estruturadas ao frontend.
 
-A API permitirá consultar as informações das disciplinas armazenadas no banco de dados.
+### 3.3 Processamento de Históricos
 
-Inicialmente, poderão ser disponibilizadas operações como:
+Responsável pela leitura e interpretação dos históricos acadêmicos em PDF, utilizando Python, `pypdf` e expressões regulares.
 
-```http
-GET /api/disciplinas
-```
+Principais módulos:
 
-Retorna as disciplinas disponíveis no banco de dados.
+- `leiturapdf.py`: extrai dados acadêmicos do estudante.
+- `leitura_creditos.py`: identifica disciplinas, menções, créditos e períodos.
+- `calcular_coeficiente.py`: calcula o coeficiente utilizado na inscrição, conforme a regra de negócio definida.
 
-Também será possível realizar a consulta de uma disciplina específica utilizando seu código:
+### 3.4 Scraping do SIGAA
 
-```http
-GET /api/disciplinas/{codigo}
-```
+Responsável pela coleta de informações públicas sobre disciplinas disponibilizadas pelo SIGAA da UnB.
 
-Por exemplo:
+A integração deve ser modular, permitindo sua manutenção e eventual execução independente do restante do backend.
 
-```http
-GET /api/disciplinas/FGA0001
-```
+### 3.5 Banco de Dados
 
-A resposta da API poderá seguir uma estrutura semelhante a:
+O MySQL será utilizado para armazenar informações persistentes do sistema, incluindo disciplinas e outros registros necessários às funcionalidades futuras.
 
-```json
-{
-  "codigo": "FGA0001",
-  "nome": "Nome da Disciplina"
-}
-```
-
-### Processamento do Histórico
-
-O backend também será responsável por receber e processar o histórico escolar enviado pelo usuário.
-
-O processamento será realizado utilizando Python, que fará a leitura do documento e identificará os códigos das disciplinas presentes no histórico.
-
-Após a identificação dos códigos, o backend poderá utilizar os dados armazenados no banco para relacionar cada código à sua respectiva disciplina.
-
-O histórico escolar será utilizado para processamento das informações necessárias para a aplicação, não sendo necessário armazenar o documento no banco de dados.
-
----
-
-## Obtenção dos Dados do SIGAA
-
-Para que o MonitoraUnB consiga identificar as disciplinas presentes no histórico escolar do usuário, será necessário manter uma base contendo as disciplinas da Universidade de Brasília.
-
-Essas informações serão obtidas a partir do SIGAA e utilizadas para relacionar o código de uma disciplina ao seu respectivo nome.
-
-Inicialmente, serão coletadas principalmente as seguintes informações:
-
-- Código da disciplina;
-- Nome da disciplina.
-
-O processo de obtenção dos dados seguirá, de forma geral, o seguinte fluxo:
+## 4. Organização do Código
 
 ```text
-SIGAA
-  ↓
-Coleta dos dados
-  ↓
-Tratamento com Python
-  ↓
-Código + Nome da disciplina
-  ↓
-Banco de Dados
+backend/
+├── main.py
+├── routers/
+│   ├── historico.py
+│   ├── disciplinas.py
+│   └── inscricoes.py
+├── services/
+│   └── historico/
+│       ├── leiturapdf.py
+│       ├── leitura_creditos.py
+│       └── calcular_coeficiente.py
+├── scraping/
+│   └── sigaa.py
+└── database/
 ```
 
-Após a coleta, os dados serão tratados e organizados antes de serem armazenados no banco de dados.
+## 5. Comunicação entre Componentes
 
-Dessa forma, quando o backend identificar um código de disciplina durante a leitura de um histórico escolar, poderá consultar a base de dados do MonitoraUnB para identificar a disciplina correspondente.
+O frontend envia requisições HTTP para a API REST.
 
-A coleta dos dados do SIGAA será realizada separadamente das requisições dos usuários. Assim, não será necessário acessar o SIGAA sempre que um histórico for processado ou uma disciplina for consultada.
+Os endpoints delegam o processamento aos serviços correspondentes, evitando concentrar regras de negócio diretamente nas rotas.
+
+Após o processamento, a API retorna respostas JSON, incluindo os dados extraídos ou mensagens de erro.
+
+## 6. Decisões Arquiteturais
+
+- **FastAPI:** framework escolhido para implementar a API REST.
+- **Python:** linguagem utilizada no backend e no processamento dos históricos.
+- **MySQL:** banco de dados relacional planejado para persistência.
+- **Modularização:** separação entre rotas, serviços, scraping e persistência.
+- **Separação de responsabilidades:** a lógica acadêmica permanece independente da camada HTTP.
+
+## 7. Evolução da Arquitetura
+
+A estrutura proposta deve permitir a incorporação gradual de novas funcionalidades, como autenticação de professores e administradores, gerenciamento de inscrições, integração com banco de dados e ampliação da coleta de dados do SIGAA.
+
+O scraping poderá futuramente ser executado como serviço independente, caso seus requisitos de processamento ou implantação justifiquem essa separação.
+
+## 8. Considerações Finais
+
+A arquitetura proposta busca manter o MonitoraUnB organizado e expansível, permitindo que diferentes integrantes desenvolvam e testem seus componentes de maneira independente, com menor acoplamento entre as funcionalidades.
