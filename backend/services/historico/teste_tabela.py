@@ -1,4 +1,4 @@
-from leitura_creditos import ler_tabela
+from backend.services.historico.leitura_creditos import ler_tabela
 from pypdf import PdfReader
 
 historico = PdfReader(

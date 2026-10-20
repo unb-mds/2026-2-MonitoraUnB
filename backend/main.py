@@ -1,7 +1,7 @@
-from leiturapdf import processar_historico
+from backend.leiturapdf import processar_historico
 from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
-from leitura_creditos import buscar_disciplinas, puxar_tabela, ler_tabela, buscar_mencao
+from backend.services.historico.leitura_creditos import buscar_disciplinas, puxar_tabela, ler_tabela, buscar_mencao
 #from leiturapdf import (
 # arquivo_pdf,
 # ler_status,
