@@ -1,25 +1,16 @@
-from backend.leiturapdf import processar_historico
-from fastapi import FastAPI, UploadFile, File, HTTPException, Form
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.services.historico.leitura_creditos import buscar_disciplinas, puxar_tabela, ler_tabela, buscar_mencao
-#from leiturapdf import (
-# arquivo_pdf,
-# ler_status,
-# ler_matricula,
-# ler_nome,
-# ler_ira,
-# texto
-# )
-# from calcular_coeficiente import calcular_coeficiente
+
 '''o CORS está sendo usado para permitir a comunicação da API com o frontend, pois ambos utilizavam portas diferentes'''
 
+from backend.routers import (
+    disciplinas,
+    historico,
+    inscricoes
+)
+
+
 app = FastAPI()
-
-#puxar_tabela(texto)
-# tabela = ler_tabela(arquivo_pdf)
-
-# buscar_mencao(tabela, FGA0071, MS)
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -32,6 +23,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(
+    historico.router,
+    prefix="/api"
+)
+
+app.include_router(
+    disciplinas.router,
+    prefix="/api"
+)
+
+app.include_router(
+    inscricoes.router,
+    prefix="/api"
+)
 
 @app.get("/")
 def raiz():
@@ -40,76 +45,3 @@ def raiz():
     }
 
 
-@app.post("/api/historico")
-def receber_historico(arquivo: UploadFile = File(...),
-                      disciplina: str = Form(...)
-                      ):
-
-    # print(disciplina)
-
-    if (arquivo.content_type != "application/pdf"):
-        raise HTTPException(
-            status_code=400,
-            detail="O arquivo enviado deve ser um PDF."
-        )
-
-    if not (arquivo.filename or "").lower().endswith(".pdf"):
-        raise HTTPException(
-            status_code=400,
-            detail="O arquivo enviado deve possuir a extensão PDF."
-        )
-
-    resultado = processar_historico(arquivo.file)
-
-    if (
-        resultado["aluno"] is None
-        or resultado["matricula"] is None
-        or resultado["ira"] is None
-        or resultado["status"] is None
-    ):
-        raise HTTPException(
-            status_code=422,
-            detail="O arquivo PDF enviado não é um histórico válido."
-        )
-
-
-
-    # campo de códigos de teste
-    arquivo.file.seek(0)
-    
-    # tabela = ler_tabela(arquivo.file)
-    # tentativas = buscar_disciplinas(tabela, disciplina)
-
-    # if not tentativas:
-    #     raise HTTPException(
-    #         status_code=422,
-    #         detail="A disciplina selecionada não foi encontrada."
-    #     )
-
-    # print(tentativas)
-
-
-    
-    return resultado
-
-
-# resultado = processar_historico(r"C:\Users\Marcelo\Downloads\historico_251022427.pdf")
-# print(f"{resultado}")
-
-# try:
-#     resultado = buscar_mencao(tabela, codigo)
-
-#     coeficiente = calcular_coeficiente(
-#         ira,
-#         resultado["coef_mencao"]
-#         )
-# except ValueError as erro:
-#     print("DEU ERRO")
-#        print(resultado["disciplina"])
-#        print(resultado["codigo"])
-#        print(resultado["mencao"])
-#        print(resultado["coef_mencao"])
-#        print(resultado["creditos"])
-#        print(resultado["periodo"])
-#        print(resultado["situacao"])        tudo aqui foi teste para saber se estava funcionando
-#        print(coeficiente)
