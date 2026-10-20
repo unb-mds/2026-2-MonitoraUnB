@@ -1,9 +1,11 @@
 from fastapi import APIRouter, UploadFile, Form, File, HTTPException 
 from backend.services.historico.leiturapdf import processar_historico
-from backend.services.historico.leitura_creditos
+from backend.services.historico.leitura_creditos import ler_tabela, buscar_disciplinas
 
 
-@app.post("/api/historico")
+router = APIRouter()
+
+@router.post("/api/historico")
 def receber_historico(arquivo: UploadFile = File(...),
                       disciplina: str = Form(...)
                       ):
@@ -37,20 +39,18 @@ def receber_historico(arquivo: UploadFile = File(...),
 
 
 
-    # campo de códigos de teste
+    """Campo de códigos de teste"""
     arquivo.file.seek(0)
     
-    # tabela = ler_tabela(arquivo.file)
-    # tentativas = buscar_disciplinas(tabela, disciplina)
+    tabela = ler_tabela(arquivo.file)
+    tentativas = buscar_disciplinas(tabela, disciplina)
 
-    # if not tentativas:
-    #     raise HTTPException(
-    #         status_code=422,
-    #         detail="A disciplina selecionada não foi encontrada."
-    #     )
+    if not tentativas:
+        raise HTTPException(
+            status_code=422,
+            detail="A disciplina selecionada não foi encontrada."
+        )
 
-    # print(tentativas)
+    print(tentativas)
 
-
-    
     return resultado
