@@ -11,11 +11,6 @@ from leitura_creditos import buscar_disciplinas, puxar_tabela, ler_tabela, busca
 # texto
 # )
 # from calcular_coeficiente import calcular_coeficiente
-
-
-
-# from leitura_creditos import gerar_txt
-
 '''o CORS está sendo usado para permitir a comunicação da API com o frontend, pois ambos utilizavam portas diferentes'''
 
 app = FastAPI()
@@ -70,25 +65,28 @@ def receber_historico(arquivo: UploadFile = File(...),
         resultado["aluno"] is None
         or resultado["matricula"] is None
         or resultado["ira"] is None
+        or resultado["status"] is None
     ):
         raise HTTPException(
             status_code=422,
             detail="O arquivo PDF enviado não é um histórico válido."
         )
 
+
+
     # campo de códigos de teste
     arquivo.file.seek(0)
     
-    tabela = ler_tabela(arquivo.file)
-    tentativas = buscar_disciplinas(tabela, disciplina)
+    # tabela = ler_tabela(arquivo.file)
+    # tentativas = buscar_disciplinas(tabela, disciplina)
 
-    if not tentativas:
-        raise HTTPException(
-            status_code=422,
-            detail="A disciplina selecionada não foi encontrada."
-        )
+    # if not tentativas:
+    #     raise HTTPException(
+    #         status_code=422,
+    #         detail="A disciplina selecionada não foi encontrada."
+    #     )
 
-    print(tentativas)
+    # print(tentativas)
 
 
     
