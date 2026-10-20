@@ -1,10 +1,7 @@
 import re
 from pypdf import PdfReader 
 
-#
-# DICIONARIOS DE SIGLAS
-#
-
+'''Dicionário de Siglas'''
 
 SITUACOES = {
     "APR": "Aprovado",
@@ -63,7 +60,7 @@ def buscar_aprovacao(tabela, codigo):
 
     return None
 
-def puxar_tabela(texto): #SINCERAMENTE EU NUNCA VI ALGO TAO DIFICIL QUANTO ESSA COISA, EU DEMOREI DOIS DIAS SO PARA ENTENDER
+def puxar_tabela(texto): 
     padrao_inicio = re.compile(
         r"^\s*(?P<periodo>\d{4}[./]\d+)\s+"
         r"(?:[*e&#@§%]\s*)?"
@@ -93,7 +90,7 @@ def puxar_tabela(texto): #SINCERAMENTE EU NUNCA VI ALGO TAO DIFICIL QUANTO ESSA 
                         f"{pendente['codigo']}."
                         )
             if inicio['codigo'] == "ENADE":
-                continue # ignorar a primeira linha da tabela que sempre vai comecar com ENADE
+                continue
 
             pendente = inicio.groupdict()
 
@@ -115,13 +112,12 @@ def puxar_tabela(texto): #SINCERAMENTE EU NUNCA VI ALGO TAO DIFICIL QUANTO ESSA 
         dados["codigo"] = pendente["codigo"]
         dados["disciplina"] = " ".join(dados["disciplina"].split())
         dados["ch"] = int(dados["ch"])
-        #precisamos dividir as horas em creditos, que no caso seriam dividir as horas por 15
+        '''Divide-se as horas por 15 para obter os créditos'''
         dados["creditos"] = dados["ch"] / 15
 
         dados["situacao"] = SITUACOES.get(dados["sigla"],  "Situação desconhecida")
         mencao = dados["mencao"].strip().upper()
         dados["coef_mencao"] = MENCOES.get(mencao)
-
 
         codigo = dados["codigo"]
 
@@ -176,7 +172,6 @@ def ler_tabela(arquivo_pdf):
             raise ValueError(
                     "Nenhuma disciplina encontrada no histórico."
                     )
-        # talvez mexer esse bloco uma indentaçao para tras para que nao falhe na primeira pagina 
     return disciplinas
 
 
@@ -186,12 +181,12 @@ def buscar_disciplinas(tabela, codigo):
     return tabela.get(codigo, [])
 
 def buscar_mencao(tabela, codigo):
-    tentativas = buscar_disciplinas(tabela, codigo) #saber quantas vezes o aluno fez aquela materia
+    tentativas = buscar_disciplinas(tabela, codigo)
 
     if not tentativas:
         raise ValueError(
-                f"Disciplina {codigo} não encontrada" #claro ne
-                ) # se tentativas puxa quantas vezes e ele fez zero vezes ent nao existe a disciplina naquele curriculo
+                f"Disciplina {codigo} não encontrada"
+                )
 
     aprovadas = [
             tentativa
