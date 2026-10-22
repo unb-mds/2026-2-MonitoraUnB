@@ -5,7 +5,7 @@ from backend.services.historico.leitura_creditos import ler_tabela, buscar_disci
 
 router = APIRouter()
 
-@router.post("/api/historico")
+@router.post("/historico")
 def receber_historico(arquivo: UploadFile = File(...),
                       disciplina: str = Form(...)
                       ):

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 
-router = APIRouter
+router = APIRouter()
 
 @router.get("/inscricoes")
 def criar_inscricao():
