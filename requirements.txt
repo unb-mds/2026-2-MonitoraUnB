@@ -2,3 +2,7 @@ fastapi
 uvicorn
 pypdf
 python-multipart
+sqlalchemy
+pydantic-settings
+httpx
+beautifulsoup4
