@@ -14,8 +14,8 @@ import httpx
 from bs4 import BeautifulSoup
 from sqlalchemy.orm import Session
 
-from app.config import get_settings
-from app.models import Departamento, Disciplina, ScrapingLog
+from backend.config import get_settings
+from backend.database.models import Departamento, Disciplina, ScrapingLog
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
