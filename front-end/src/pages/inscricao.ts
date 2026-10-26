@@ -5,7 +5,7 @@ import { ehPdf } from "../utils/validadores.js";
 const SEMESTRE_ATUAL = "2026/2";
 
 const inputHistorico = document.getElementById("historico") as HTMLInputElement;
-const selectDisciplina = document.getElementById("disciplina") as HTMLSelectElement;
+const campoDisciplina = document.getElementById("disciplina") as HTMLInputElement;
 const botaoContinuar = document.querySelector<HTMLAnchorElement>(".continue-button")!;
 const textoOriginalBotao = botaoContinuar.textContent;
 
@@ -46,7 +46,7 @@ botaoContinuar.addEventListener("click", async (evento) => {
     mostrarErro("O histórico precisa estar em formato PDF.");
     return;
   }
-  if (!selectDisciplina.value) {
+  if (!campoDisciplina.value.trim()) {
     mostrarErro("Selecione a disciplina para a monitoria.");
     return;
   }
@@ -55,19 +55,18 @@ botaoContinuar.addEventListener("click", async (evento) => {
 
   try {
     const historico = await extrairDadosHistorico(arquivo);
-    const opcao = selectDisciplina.selectedOptions[0];
-
     salvarInscricao({
       ...historico,
       semestre: SEMESTRE_ATUAL,
-      disciplina: selectDisciplina.value,
-      disciplinaNome: (opcao.textContent ?? "").replace(/\s+/g, " ").trim(),
+      disciplina: campoDisciplina.value.trim(),
+      disciplinaNome: campoDisciplina.value.trim(),
       arquivoHistorico: arquivo.name,
     });
 
     window.location.href = botaoContinuar.href;
-  } catch {
-    mostrarErro("Não foi possível ler o histórico. Tente novamente.");
+  } catch (erro) {
+    const detalhe = erro instanceof Error ? erro.message : "Falha ao processar o arquivo.";
+    mostrarErro(`Não foi possível ler o histórico. ${detalhe}`);
     definirCarregando(false);
   }
 });

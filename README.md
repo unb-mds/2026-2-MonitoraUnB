@@ -76,7 +76,7 @@ Projeto desenvolvido colaborativamente para a disciplina de **Métodos de Desenv
 
 - **`front-end/pages`:** as telas HTML (`portal`, `inscricao`, `revisao` e `solicitacao`);
 - **`src/pages`:** o código TypeScript de cada tela;
-- **`src/services`:** único ponto de comunicação com o back-end. Hoje a leitura do histórico e o envio da inscrição são simulados, e a troca por chamadas reais à API não exige mudanças nas telas;
+- **`src/services`:** extrai texto real dos PDFs no navegador com PDF.js. O envio definitivo ainda depende da API de inscrições, que não está implementada;
 - **`src/types`:** os tipos que descrevem os dados que passam entre as telas;
 - **`src/utils`:** funções auxiliares (validação de PDF, formatação do IRA e armazenamento temporário no navegador).
 
@@ -135,9 +135,9 @@ Como alternativa, use a extensão **Live Server** do VS Code.
 1. No portal, clique em **Fazer inscrição**;
 2. Escolha um PDF e uma disciplina e clique em **Continuar para revisão**;
 3. Confira o resumo na tela de revisão;
-4. Clique em **Enviar** e verifique a tela de confirmação.
+4. O botão **Enviar** informa que a gravação ainda depende da API de inscrições.
 
-> Enquanto o back-end não existe, os dados do resumo (aluno, matrícula e IRA) são fixos, pois a leitura do PDF é simulada.
+> A leitura usa o texto embutido no PDF e procura nome, matrícula e IRA. PDFs digitalizados como imagem precisam de OCR, que ainda não está implementado. O envio definitivo também depende da API de inscrições.
 
 ##  Documentação
 
