@@ -6,7 +6,7 @@ const SEMESTRE_ATUAL = "2026/2";
 
 const inputHistorico = document.getElementById("historico") as HTMLInputElement;
 const campoDisciplina = document.getElementById("disciplina") as HTMLInputElement;
-const botaoContinuar = document.querySelector<HTMLAnchorElement>(".continue-button")!;
+const botaoContinuar = document.querySelector<HTMLButtonElement>(".continue-button")!;
 const textoOriginalBotao = botaoContinuar.textContent;
 
 function mostrarErro(mensagem: string): void {
@@ -27,13 +27,13 @@ function limparErro(): void {
 }
 
 function definirCarregando(carregando: boolean): void {
-  botaoContinuar.setAttribute("aria-disabled", String(carregando));
+  botaoContinuar.disabled = carregando;
   botaoContinuar.textContent = carregando ? "Lendo histórico..." : textoOriginalBotao;
 }
 
 botaoContinuar.addEventListener("click", async (evento) => {
   evento.preventDefault(); // o <a> só navega depois de validar
-  if (botaoContinuar.getAttribute("aria-disabled") === "true") return;
+  if (botaoContinuar.disabled) return;
   limparErro();
 
   const arquivo = inputHistorico.files?.[0];
@@ -63,7 +63,7 @@ botaoContinuar.addEventListener("click", async (evento) => {
       arquivoHistorico: arquivo.name,
     });
 
-    window.location.href = botaoContinuar.href;
+    window.location.href = "./revisao.html";
   } catch (erro) {
     const detalhe = erro instanceof Error ? erro.message : "Falha ao processar o arquivo.";
     mostrarErro(`Não foi possível ler o histórico. ${detalhe}`);

@@ -54,14 +54,21 @@
                 <input type="text" id="disciplina" name="disciplina" placeholder="Ex.: MAT0025" required>
             </div>
 
-            <a href="./revisao.html" class="continue-button">
+            <button type="button" class="continue-button">
                 Continuar para revisão
-            </a>
+            </button>
 
         </section>
 
     </main>
 
+    <script type="importmap">
+        {
+            "imports": {
+                "pdfjs-dist": "../node_modules/pdfjs-dist/build/pdf.mjs"
+            }
+        }
+    </script>
     <script type="module" src="../dist/pages/inscricao.js"></script>
 
 </body>
