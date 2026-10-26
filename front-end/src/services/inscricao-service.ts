@@ -1,5 +1,5 @@
 import * as pdfjsLib from "pdfjs-dist";
-import type { DadosHistorico, DadosInscricao } from "../types/inscricao.js";
+import type { DadosHistorico, DadosInscricao } from "../types/dados-inscricao.js";
 
 // O worker é servido junto com a dependência instalada em front-end/node_modules.
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(

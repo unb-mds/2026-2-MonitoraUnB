@@ -1,4 +1,4 @@
-import { extrairDadosHistorico } from "../services/inscricao.js";
+import { extrairDadosHistorico } from "../services/inscricao-service.js";
 import { salvarInscricao } from "../utils/storage.js";
 import { ehPdf } from "../utils/validadores.js";
 
@@ -32,7 +32,7 @@ function definirCarregando(carregando: boolean): void {
 }
 
 botaoContinuar.addEventListener("click", async (evento) => {
-  evento.preventDefault(); // o <a> só navega depois de validar
+  evento.preventDefault(); // o botão só avança depois de validar
   if (botaoContinuar.disabled) return;
   limparErro();
 

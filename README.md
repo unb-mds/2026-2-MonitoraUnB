@@ -105,13 +105,13 @@ npm install
 ### 3. Compilar o TypeScript
 
 ```
-npx tsc
+npm run build
 ```
 
 Isso gera a pasta `dist` com os arquivos JavaScript usados pelas páginas. Para recompilar automaticamente a cada alteração:
 
 ```
-npx tsc --watch
+npm run watch
 ```
 
 ### 4. Abrir no navegador
@@ -119,12 +119,12 @@ npx tsc --watch
 Os arquivos HTML não funcionam com duplo clique, porque usam módulos JavaScript. Sirva o projeto por um servidor local:
 
 ```
-npx serve
+npx serve .
 ```
 
-Depois acesse: <http://localhost:3000/front-end/pages/portal>
+Execute o comando dentro de `front-end`. Depois abra o endereço mostrado no terminal, seguido de `/pages/portal.html` (por exemplo: <http://localhost:3000/pages/portal.html>).
 
-Como alternativa, use a extensão **Live Server** do VS Code.
+Como alternativa, use a extensão **Live Server** do VS Code. Mantenha as pastas `dist` e `node_modules` dentro de `front-end`, pois a página de inscrição carrega os módulos compilados e o PDF.js a partir delas.
 
 ---
 
