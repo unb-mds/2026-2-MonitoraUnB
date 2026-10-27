@@ -1,4 +1,4 @@
-* [Início](Como_executar.md)
+* [Início](README.md)
 * [Arquitetura](arquitetura.md)
 * [Sprints]()
   * [Sprint 1](sprints/sprint0.md)

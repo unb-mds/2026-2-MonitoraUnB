@@ -54,7 +54,13 @@ botaoContinuar.addEventListener("click", async (evento) => {
   definirCarregando(true);
 
   try {
+<<<<<<< HEAD:front-end/src/pages/inscricao.ts
+    const historico = await extrairDadosHistorico(arquivo, selectDisciplina.value);
+    const opcao = selectDisciplina.selectedOptions[0];
+
+=======
     const historico = await extrairDadosHistorico(arquivo);
+>>>>>>> origin/develop:front-end/src/pages/formulario-inscricao.ts
     salvarInscricao({
       ...historico,
       semestre: SEMESTRE_ATUAL,
@@ -63,10 +69,21 @@ botaoContinuar.addEventListener("click", async (evento) => {
       arquivoHistorico: arquivo.name,
     });
 
+<<<<<<< HEAD:front-end/src/pages/inscricao.ts
+    window.location.href = botaoContinuar.href;
+  } catch (erro) {
+    if (erro instanceof Error) {
+      mostrarErro(erro.message)
+    } else {
+    mostrarErro("Não foi possível ler o histórico. Tente novamente.");
+=======
     window.location.href = "./revisao.html";
   } catch (erro) {
     const detalhe = erro instanceof Error ? erro.message : "Falha ao processar o arquivo.";
     mostrarErro(`Não foi possível ler o histórico. ${detalhe}`);
     definirCarregando(false);
+>>>>>>> origin/develop:front-end/src/pages/formulario-inscricao.ts
   }
+  definirCarregando(false);
+ }
 });
