@@ -1,4 +1,4 @@
-import type { DadosInscricao } from "../types/inscricao.js";
+import type { DadosInscricao } from "../types/dados-inscricao.js";
 
 // Como o site tem várias páginas .html, usamos o sessionStorage do navegador
 // pra levar os dados de uma tela pra outra. Some quando a aba é fechada.

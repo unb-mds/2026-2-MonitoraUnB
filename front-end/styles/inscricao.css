@@ -98,9 +98,9 @@ body:has(.form-group) section > p {
 }
 
 
-/* Select */
+/* input */
 
-.form-group select {
+.form-group input {
     width: 100%;
 
     padding: 14px 15px;

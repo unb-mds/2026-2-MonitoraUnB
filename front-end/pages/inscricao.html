@@ -27,9 +27,7 @@
             </p>
 
 
-            <!-- Seleção da disciplina -->
-
-            <!-- Upload da documentação -->
+            <!-- O TypeScript procura estes mesmos IDs para validar o formulário. -->
 
             <div class="form-group">
 
@@ -50,65 +48,28 @@
                 >
 
             </div>
-        <div class="form-group">
 
-                <label for="disciplina">
-                    Disciplina para monitoria:
-                </label>
-
-                <select id="disciplina" name="disciplina" required>
-
-                    <option value="" disabled selected>
-                        Selecione uma disciplina
-                    </option>
-
-                    <option value="calculo-1">
-                        Cálculo 1
-                    </option>
-
-                    <option value="algebra-linear">
-                        Álgebra Linear
-                    </option>
-
-                    <option value="metodos-desenvolvimento-software">
-                        Métodos de Desenvolvimento de Software
-                    </option>
-
-                    <option value="algoritmos">
-                        Algoritmos e Programação
-                    </option>
-
-                    <option value="estrutura-dados">
-                        Estrutura de Dados
-                    </option>
-
-                    <option value="engenharia-software">
-                        Engenharia de Software
-                    </option>
-
-                    <option value="fisica-1">
-                        Física 1
-                    </option>
-
-                    <option value="matematica-discreta-1">
-                        Matemática Discreta 1
-                    </option>
-
-                </select>
-
+            <div class="form-group">
+                <label for="disciplina">Código da disciplina pretendida:</label>
+                <input type="text" id="disciplina" name="disciplina" placeholder="Ex.: MAT0025" required>
             </div>
 
-
-
-            <a href="./revisao.html" class="continue-button">
+            <button type="button" class="continue-button">
                 Continuar para revisão
-            </a>
+            </button>
 
         </section>
 
     </main>
 
-    <script type="module" src="../dist/pages/inscricao.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "pdfjs-dist": "../node_modules/pdfjs-dist/build/pdf.mjs"
+            }
+        }
+    </script>
+    <script type="module" src="../dist/pages/formulario-inscricao.js"></script>
 
 </body>
 

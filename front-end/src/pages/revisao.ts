@@ -1,4 +1,4 @@
-import { enviarInscricao } from "../services/inscricao.js";
+import { enviarInscricao } from "../services/inscricao-service.js";
 import { lerInscricao } from "../utils/storage.js";
 import { formatarIra } from "../utils/validadores.js";
 
