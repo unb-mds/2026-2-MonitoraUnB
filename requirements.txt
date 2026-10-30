@@ -6,3 +6,4 @@ sqlalchemy
 pydantic-settings
 httpx
 beautifulsoup4
+pytest
