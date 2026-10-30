@@ -22,6 +22,14 @@ class Settings(BaseSettings):
     SCRAPER_DELAY: float = 1.5
     SIGAA_BASE_URL: str = "https://sigaa.unb.br/sigaa"
 
+    # Email (SMTP)
+    SMTP_HOST: str = "smtp.gmail.com"
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM: str = ""
+    SMTP_USE_TLS: bool = True
+
     @property
     def DATABASE_URL(self) -> str:
         if self.DATABASE_URL_OVERRIDE:
