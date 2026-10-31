@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitora-UnB — Inscrição</title>
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="inscricao.css">
+    <link rel="icon"  type="image/x-icon" href="as_bas_cor.jpg">
+</head>
+
+<body>
+
+    <header class="topbar">
+        <a href="pagina_1_index.html" class="logo">Monitora<span>-UnB</span></a>
+    </header>
+
+    <section class="hero">
+        <div class="hero-conteudo">
+            <h1>Faça sua inscrição</h1>
+            <p>Escolha a disciplina para a qual deseja se candidatar e envie sua documentação.</p>
+            <ol class="etapas">
+                <li class="ativa">1. Inscrição</li>
+                <li>2. Revisão</li>
+                <li>3. Envio</li>
+            </ol>
+        </div>
+    </section>
+
+    <main class="conteudo">
+        <div class="coluna">
+            <section class="card">
+
+                <div class="campo">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" placeholder="seu.email@institucional.com ou @pessoal.com" required>
+                </div>
+
+                <div class="campo">
+                    <label for="historico">Histórico:</label>
+                    <p class="dica">Envie seu histórico em formato PDF.</p>
+                    <input type="file" id="historico" name="historico" accept=".pdf" required>
+                </div>
+
+                <div class="campo">
+                    <label for="disciplina">Código da disciplina:</label>
+                    <p class="dica">Digite o código da disciplina para a qual deseja ser monitor (ex.: MAT0001).</p>
+                    <input type="text" id="disciplina" name="disciplina" placeholder="ex: MAT0025" autocomplete="off" maxlength="10" required>
+                </div>
+
+                <div class="campo">
+                    <label for="professor">Professor com quem deseja ser monitor (opcional):</label>
+                    <p class="dica">Digite o nome do professor.</p>
+                    <input type="text" id="professor" name="professor" placeholder="Nome do professor" autocomplete="off" required>
+                </div>
+
+                <div class="campo">
+                    <label for="matricula">Matrícula:</label>
+                    <input type="text" id="matricula" name="matricula" inputmode="numeric" placeholder="ex: 241000000" required>
+                </div>
+
+                <div class="campo-check">
+                    <input type="checkbox" id="concordo" name="concordo" required>
+                    <label for="concordo">Concordo que não recebo nenhuma outra bolsa.</label>
+                </div>
+
+                <a href="pagina_4_index.html" class="btn btn-primario btn-bloco">Continuar para revisão</a>
+
+            </section>
+        </div>
+    </main>
+
+    <footer class="rodape">
+        <p>&copy; 2026 Monitora-UnB. Todos os direitos reservados ao Grupo 11.</p>
+    </footer>
+
+</body>
+
+</html>
