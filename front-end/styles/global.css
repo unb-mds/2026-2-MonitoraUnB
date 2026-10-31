@@ -1,0 +1,361 @@
+/* ==================================================
+   GLOBAL — base visual compartilhada por todas as páginas
+================================================== */
+
+:root {
+    --azul-escuro: #1736a6;
+    --azul: #2855d9;
+    --azul-claro: #eef3ff;
+    --verde: #8bd3a5;
+    --verde-borda: #9bc9aa;
+    --vermelho: #b42318;
+    --vermelho-claro: #fef3f2;
+    --fundo: #f4f8ff;
+    --texto: #172033;
+    --texto-suave: #596579;
+    --borda: #dfe7f5;
+    --sombra: 0 8px 28px rgba(23, 54, 166, 0.09);
+    --largura: 720px;
+    --largura-larga: 1050px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", system-ui, Arial, Helvetica, sans-serif;
+    background-color: var(--fundo);
+    color: var(--texto);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.5;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 3px solid rgba(40, 85, 217, 0.35);
+    outline-offset: 2px;
+}
+
+
+/* ---------- Barra superior ---------- */
+
+.topbar {
+    background-color: #ffffff;
+    padding: 18px 10%;
+    border-bottom: 1px solid var(--borda);
+}
+
+.logo {
+    color: var(--azul-escuro);
+    font-size: 1.45rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.logo span {
+    color: var(--azul);
+}
+
+
+/* ---------- Faixa azul (hero) ---------- */
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--azul-escuro), var(--azul));
+    color: #ffffff;
+    padding: 55px 10% 100px;
+}
+
+.hero::before,
+.hero::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.hero::before {
+    width: 380px;
+    height: 380px;
+    right: -90px;
+    top: -140px;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.hero::after {
+    width: 220px;
+    height: 220px;
+    left: -60px;
+    bottom: -110px;
+    background: rgba(139, 211, 165, 0.16);
+}
+
+.hero-conteudo {
+    position: relative;
+    z-index: 1;
+    max-width: var(--largura-larga);
+    margin: 0 auto;
+}
+
+.hero h1 {
+    font-size: 2.7rem;
+    line-height: 1.15;
+    margin-bottom: 12px;
+}
+
+.hero p {
+    color: #e8edff;
+    font-size: 1.1rem;
+    max-width: 620px;
+}
+
+.eyebrow {
+    display: block;
+    color: var(--verde);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+
+/* ---------- Etapas (3 → 4 → 5) ---------- */
+
+.etapas {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 28px;
+}
+
+.etapas li {
+    padding: 7px 16px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #dbe4ff;
+    background-color: rgba(255, 255, 255, 0.14);
+}
+
+.etapas li.feita {
+    background-color: rgba(139, 211, 165, 0.28);
+    color: #ffffff;
+}
+
+.etapas li.ativa {
+    background-color: #ffffff;
+    color: var(--azul-escuro);
+}
+
+
+/* ---------- Conteúdo e cards ---------- */
+
+.conteudo {
+    flex: 1;
+    padding: 0 20px 70px;
+}
+
+.coluna,
+.coluna-larga {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    margin: -55px auto 0;
+}
+
+.coluna { max-width: var(--largura); }
+.coluna-larga { max-width: var(--largura-larga); }
+
+.card {
+    background-color: #ffffff;
+    border: 1px solid var(--borda);
+    border-radius: 16px;
+    padding: 40px 45px;
+    box-shadow: var(--sombra);
+}
+
+.card h2 {
+    color: var(--azul-escuro);
+    font-size: 1.7rem;
+    margin-bottom: 8px;
+}
+
+.card > p {
+    color: var(--texto-suave);
+    line-height: 1.6;
+}
+
+.aviso {
+    margin-top: 20px;
+    padding: 0 10px;
+    text-align: center;
+    color: var(--texto-suave);
+    line-height: 1.6;
+}
+
+
+/* ---------- Botões ---------- */
+
+.btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border: 1.5px solid transparent;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-bloco {
+    display: block;
+    width: 100%;
+}
+
+.btn-primario {
+    background-color: var(--azul-escuro);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(23, 54, 166, 0.22);
+}
+
+.btn-primario:hover {
+    background-color: var(--azul);
+}
+
+.btn-secundario {
+    background-color: #ffffff;
+    color: var(--azul-escuro);
+    border-color: var(--azul-escuro);
+}
+
+.btn-secundario:hover {
+    background-color: var(--azul-claro);
+}
+
+.btn-claro {
+    background-color: #ffffff;
+    color: var(--azul-escuro);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.btn-claro:hover {
+    background-color: var(--azul-claro);
+}
+
+.btn-contorno {
+    background-color: transparent;
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.75);
+}
+
+.btn-contorno:hover {
+    background-color: rgba(255, 255, 255, 0.14);
+}
+
+.acoes {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.acoes .btn {
+    flex: 1;
+}
+
+
+/* ---------- Formulários ---------- */
+
+.campo {
+    margin-bottom: 24px;
+}
+
+.campo label {
+    display: block;
+    color: #344054;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.dica {
+    color: #667085;
+    font-size: 0.88rem;
+    margin-bottom: 10px;
+}
+
+.campo input[type="text"],
+.campo input[type="email"],
+.campo input[type="password"],
+.campo input[type="file"],
+.campo select {
+    width: 100%;
+    padding: 14px 15px;
+    border: 1px solid #cdd7e8;
+    border-radius: 10px;
+    background-color: #fbfcff;
+    color: var(--texto);
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: 0.2s ease;
+}
+
+.campo input[type="file"] {
+    padding: 10px;
+    color: var(--texto-suave);
+}
+
+.campo input:focus,
+.campo select:focus {
+    outline: none;
+    border-color: var(--azul);
+    box-shadow: 0 0 0 3px rgba(40, 85, 217, 0.12);
+}
+
+
+/* ---------- Rodapé ---------- */
+
+.rodape {
+    background-color: #ffffff;
+    border-top: 1px solid var(--borda);
+    text-align: center;
+    padding: 22px;
+    color: #667085;
+    font-size: 0.9rem;
+}
+
+
+/* ---------- Responsividade (todas as páginas) ---------- */
+
+@media (max-width: 700px) {
+
+    .topbar { padding: 16px 7%; }
+
+    .hero { padding: 40px 7% 85px; }
+
+    .hero h1 { font-size: 2.1rem; }
+
+    .hero p { font-size: 1rem; }
+
+    .conteudo { padding: 0 15px 50px; }
+
+    .card { padding: 30px 22px; }
+
+    .acoes { flex-direction: column; }
+}

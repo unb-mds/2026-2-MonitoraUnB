@@ -1,0 +1,37 @@
+/* PÁGINA 8 — NÃO APTO */
+
+.nao-apto-card {
+    text-align: center;
+    border-color: #f0b8b1;
+}
+
+.icone-alerta {
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--vermelho-claro);
+    border: 2px solid #f0b8b1;
+    color: var(--vermelho);
+    font-size: 2.3rem;
+    font-weight: 700;
+}
+
+.nao-apto-card h2 {
+    color: var(--vermelho);
+    font-size: 1.05rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.nao-apto-card > p {
+    margin-bottom: 10px;
+}
+
+.nao-apto-card > p:empty {
+    display: none;
+}

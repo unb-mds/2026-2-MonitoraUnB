@@ -1,0 +1,40 @@
+/* PÁGINA 3 — FAÇA SUA INSCRIÇÃO */
+
+.card .campo {
+    padding-bottom: 22px;
+    border-bottom: 1px solid #e8edf5;
+}
+
+.card > p {
+    margin-bottom: 30px;
+}
+
+.campo-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding: 16px 18px;
+    border-radius: 10px;
+    background-color: var(--azul-claro);
+    border: 1px solid var(--borda);
+}
+
+.campo-check input {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: var(--azul-escuro);
+    flex-shrink: 0;
+}
+
+.campo-check label {
+    color: #344054;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+#disciplina {
+    text-transform: uppercase;
+}

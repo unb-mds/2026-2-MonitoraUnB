@@ -1,0 +1,220 @@
+/* PÁGINA 7 — RANKING DOS ALUNOS */
+
+.ranking-card {
+    padding: 0;
+    overflow: hidden;
+    border-color: var(--verde-borda);
+}
+
+.ranking-tabela {
+    overflow-x: auto;
+}
+
+.ranking-tabela table {
+    width: 100%;
+    min-width: 960px;
+    border-collapse: collapse;
+}
+
+.ranking-tabela th {
+    background-color: var(--azul-claro);
+    color: var(--azul-escuro);
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 18px 14px;
+    border-bottom: 1px solid var(--borda);
+}
+
+.ranking-tabela td {
+    text-align: center;
+    padding: 16px 14px;
+    font-weight: 600;
+    border-bottom: 1px solid #edf1f4;
+    transition: background-color 0.2s ease;
+}
+
+/* nome, disciplina e professor alinhados à esquerda */
+.ranking-tabela th:nth-child(2),
+.ranking-tabela td:nth-child(2),
+.ranking-tabela th:nth-child(3),
+.ranking-tabela td:nth-child(3),
+.ranking-tabela th:nth-child(4),
+.ranking-tabela td:nth-child(4) {
+    text-align: left;
+}
+
+.ranking-tabela td:nth-child(3),
+.ranking-tabela td:nth-child(4) {
+    color: var(--texto-suave);
+    font-weight: 500;
+}
+
+.ranking-tabela td:first-child {
+    width: 60px;
+    color: var(--texto-suave);
+}
+
+/* destaque para os 3 primeiros */
+.ranking-tabela tbody tr:nth-child(-n+3) td:first-child {
+    color: var(--azul-escuro);
+    font-weight: 800;
+}
+
+.ranking-tabela tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.ranking-tabela tbody tr:hover {
+    background-color: #fbfcff;
+}
+
+
+/* ---------- Situação ---------- */
+
+.situacao {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background-color: #fff6e0;
+    color: #8a5a00;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+tr.aprovado .situacao {
+    background-color: #e6f6ec;
+    color: #217346;
+}
+
+tr.reprovado .situacao {
+    background-color: var(--vermelho-claro);
+    color: var(--vermelho);
+}
+
+tr.aprovado td { background-color: #f6fcf8; }
+tr.reprovado td { background-color: #fffafa; }
+
+
+/* ---------- Botões Aprovar / Reprovar ---------- */
+
+.botoes-acao {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-acao {
+    padding: 9px 16px;
+    border-radius: 8px;
+    border: 1.5px solid transparent;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.btn-acao:hover {
+    transform: translateY(-1px);
+}
+
+/* Aprovar: verde */
+.btn-aprovar {
+    background-color: #ffffff;
+    color: #217346;
+    border-color: #217346;
+}
+
+.btn-aprovar:hover,
+.btn-aprovar[aria-pressed="true"] {
+    background-color: #217346;
+    color: #ffffff;
+}
+
+/* Reprovar: vermelho */
+.btn-reprovar {
+    background-color: #ffffff;
+    color: var(--vermelho);
+    border-color: var(--vermelho);
+}
+
+.btn-reprovar:hover,
+.btn-reprovar[aria-pressed="true"] {
+    background-color: var(--vermelho);
+    color: #ffffff;
+}
+
+
+/* ---------- Rodapé da tabela ---------- */
+
+.acoes-ranking {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+@media (max-width: 700px) {
+    .acoes-ranking { flex-direction: column; }
+    .acoes-ranking .btn { width: 100%; }
+}
+
+
+/* ---------- Filtros ---------- */
+
+.filtros {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 24px 28px 6px;
+    margin-bottom: 20px;
+}
+
+.filtros .campo {
+    margin-bottom: 18px;
+}
+
+.barra-tabela {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.botoes-barra {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn-baixar {
+    padding: 11px 22px;
+    font-size: 0.95rem;
+}
+
+.contador {
+    margin: 0 4px;
+    color: var(--texto-suave);
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.vazio {
+    padding: 40px 14px !important;
+    color: var(--texto-suave);
+    font-weight: 500 !important;
+}
+
+@media (max-width: 900px) {
+    .filtros { grid-template-columns: 1fr; padding: 22px 22px 4px; }
+}
+
+@media (max-width: 700px) {
+    .barra-tabela { flex-direction: column; align-items: stretch; }
+    .botoes-barra { flex-direction: column; }
+    .btn-baixar { width: 100%; }
+}

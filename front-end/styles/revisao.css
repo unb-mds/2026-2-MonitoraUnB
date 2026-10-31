@@ -1,0 +1,58 @@
+/* PÁGINA 4 — REVISÃO */
+
+.resumo {
+    border-color: var(--verde-borda);
+}
+
+.resumo h2 {
+    text-align: center;
+    font-size: 1.05rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.resumo .info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 6px;
+    border-bottom: 1px solid #edf1f4;
+}
+
+.resumo .info:last-child {
+    border-bottom: none;
+}
+
+.resumo .label {
+    color: var(--texto-suave);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+}
+
+.resumo .info span:last-child {
+    color: var(--texto);
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* selo de status */
+#status {
+    padding: 6px 14px;
+    border-radius: 999px;
+    background-color: #fff6e0;
+    color: #8a5a00 !important;
+    font-size: 0.85rem !important;
+}
+
+@media (max-width: 700px) {
+    .resumo .info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    .resumo .info span:last-child { text-align: left; }
+}
