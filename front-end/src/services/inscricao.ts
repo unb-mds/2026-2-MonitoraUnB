@@ -1,4 +1,4 @@
-import type { DadosHistorico, DadosInscricao } from "../types/inscricao.js";
+import type { DadosHistorico, DadosInscricao } from "../types/dados-inscricao.js";
 
 const atraso = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
@@ -21,8 +21,14 @@ export async function extrairDadosHistorico(
   );
 
   if (!resposta.ok) {
-    const erro = await resposta.json();
-    throw new Error(erro.detail);
+    let detalhe = "Não foi possível ler o histórico.";
+    try {
+      const erro = await resposta.json() as { detail?: unknown };
+      if (typeof erro.detail === "string" && erro.detail.trim()) detalhe = erro.detail;
+    } catch {
+      // a API respondeu sem JSON
+    }
+    throw new Error(detalhe);
   }
 
   const dados = await resposta.json();

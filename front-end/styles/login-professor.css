@@ -1,0 +1,177 @@
+/* PÁGINA 6 — LOGIN DO PROFESSOR */
+
+.coluna.login {
+    max-width: 480px;
+}
+
+.login > .card > p {
+    margin-bottom: 28px;
+}
+
+.login .btn {
+    margin-top: 8px;
+}
+
+.link-voltar {
+    display: block;
+    margin-top: 18px;
+    text-align: center;
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.link-voltar:hover {
+    color: var(--azul-escuro);
+}
+
+
+/* ---------- Mensagem de erro do login ---------- */
+
+.erro {
+    min-height: 1.2em;
+    margin-bottom: 14px;
+    color: var(--vermelho);
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.erro:empty {
+    display: none;
+}
+
+form + .link-voltar {
+    margin-top: 18px;
+}
+
+
+/* ---------- Janela de troca de senha ---------- */
+
+.modal {
+    width: calc(100% - 30px);
+    max-width: 460px;
+    margin: auto;
+    padding: 0;
+    border: none;
+    border-radius: 16px;
+    background-color: #ffffff;
+    color: var(--texto);
+    font-family: inherit;
+    box-shadow: 0 20px 60px rgba(23, 32, 51, 0.35);
+}
+
+.modal::backdrop {
+    background: rgba(23, 32, 51, 0.6);
+    backdrop-filter: blur(3px);
+}
+
+.modal-conteudo {
+    padding: 36px 34px 32px;
+}
+
+.icone-modal {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--azul-claro);
+    border: 2px solid var(--borda);
+    font-size: 1.7rem;
+}
+
+.modal-conteudo h2 {
+    text-align: center;
+    color: var(--azul-escuro);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.modal-texto {
+    text-align: center;
+    color: var(--texto-suave);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.modal .campo {
+    margin-bottom: 18px;
+}
+
+/* lista de requisitos */
+.requisitos {
+    list-style: none;
+    margin: 4px 0 18px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background-color: var(--fundo);
+    border: 1px solid var(--borda);
+}
+
+.requisitos li {
+    position: relative;
+    padding-left: 26px;
+    margin: 4px 0;
+    color: #667085;
+    font-size: 0.88rem;
+}
+
+.requisitos li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #cdd7e8;
+    background-color: #ffffff;
+    transition: 0.2s ease;
+}
+
+.requisitos li.ok {
+    color: #217346;
+    font-weight: 600;
+}
+
+.requisitos li.ok::before {
+    content: "\2713";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-color: #217346;
+    background-color: #217346;
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 700;
+}
+
+.mostrar-senhas {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 22px;
+    color: #344054;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.mostrar-senhas input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--azul-escuro);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+@media (max-width: 700px) {
+    .modal-conteudo { padding: 28px 22px 24px; }
+}

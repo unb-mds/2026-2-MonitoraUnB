@@ -94,7 +94,7 @@ Durante o desenvolvimento, é recomendado ter pelo menos quatro terminais aberto
 
 ```powershell
 cd python_scripts
-python -m uvicorn main:app --reload
+python -m uvicorn backend.main:app --reload
 ```
 
 Mantém a API disponível em:

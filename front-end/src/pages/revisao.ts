@@ -1,4 +1,4 @@
-import { enviarInscricao } from "../services/inscricao-service.js";
+import { enviarInscricao } from "../services/inscricao.js";
 import { lerInscricao } from "../utils/storage.js";
 import { formatarIra } from "../utils/validadores.js";
 
@@ -10,9 +10,8 @@ function definirTexto(id: string, valor: string): void {
 function iniciar(): void {
   const dados = lerInscricao();
 
-  // Abriu a revisão sem ter passado pela inscrição: volta pro começo.
   if (!dados) {
-    window.location.href = "./inscricao.html";
+    window.location.href = "inscricao.html";
     return;
   }
 
@@ -20,9 +19,11 @@ function iniciar(): void {
   definirTexto("matricula", dados.matricula);
   definirTexto("semestre", dados.semestre);
   definirTexto("disciplina", dados.disciplinaNome);
+  definirTexto("professor", dados.professor || "Não informado");
   definirTexto("ira", formatarIra(dados.ira));
 
-  const botaoEnviar = document.querySelector<HTMLAnchorElement>(".continuar")!;
+  const botaoEnviar = document.getElementById("enviar");
+  if (!(botaoEnviar instanceof HTMLAnchorElement)) return;
 
   botaoEnviar.addEventListener("click", async (evento) => {
     evento.preventDefault();
@@ -34,10 +35,10 @@ function iniciar(): void {
 
     try {
       await enviarInscricao(dados);
-      window.location.href = botaoEnviar.href;
+      window.location.href = "solicitacao-registrada.html";
     } catch {
       botaoEnviar.setAttribute("aria-disabled", "false");
-      botaoEnviar.textContent = "Enviar";
+      botaoEnviar.textContent = "Enviar inscrição";
       definirTexto("status", "Erro ao enviar. Tente novamente.");
     }
   });
