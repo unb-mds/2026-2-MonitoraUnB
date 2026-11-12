@@ -38,3 +38,10 @@
 #disciplina {
     text-transform: uppercase;
 }
+
+.erro {
+    margin-bottom: 16px;
+    color: var(--vermelho);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
