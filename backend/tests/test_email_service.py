@@ -1,10 +1,10 @@
-
-from types import SimpleNamespace
-from unittest.mock import MagicMock
-
+import smtplib
 import pytest
 
 from backend.services import email_service
+from types import SimpleNamespace
+from unittest.mock import MagicMock
+
 
 
 def test_send_email_without_credentials(monkeypatch):
