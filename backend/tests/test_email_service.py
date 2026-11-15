@@ -72,6 +72,9 @@ def test_send_email_success(monkeypatch):
     message = smtp_server.send_message.call_args.args[0]
     assert message["To"] == "destinatario@example.com"
     assert message["Subject"] == "Teste SMTP"
+
+
+
 @pytest.fixture
 def smtp_settings(monkeypatch):
     settings = SimpleNamespace(
@@ -128,4 +131,28 @@ def test_send_email_authentication_failure(monkeypatch, smtp_settings):
         )
 
     smtp_server.send_message.assert_not_called()
+
+def test_send_email_with_attachment(monkeypatch, smtp_settings):
+    smtp_server = MagicMock()
+    smtp_context = MagicMock()
+    smtp_context.__enter__.return_value = smtp_server
+
+    monkeypatch.setattr(
+        email_service.smtplib, "SMTP", lambda *args, **kwargs: smtp_context
+    )
+
+    email_service.send_email(
+        "destinatario@example.com",
+        "Planilha",
+        "Segue em anexo.",
+        attachment=b"dados-da-planilha",
+        attachment_name="monitoria.xlsx",
+    )
+
+    message = smtp_server.send_message.call_args.args[0]
+    attachments = list(message.iter_attachments())
+
+    assert len(attachments) == 1
+    assert attachments[0].get_filename() == "monitoria.xlsx"
+    assert attachments[0].get_content() == b"dados-da-planilha"
 
