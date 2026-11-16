@@ -1,0 +1,3 @@
+-r rest-pdf.txt
+-r scraping.txt
+-r database.txt
