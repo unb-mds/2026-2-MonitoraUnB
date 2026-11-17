@@ -4,11 +4,9 @@ Serviço de autenticação do professor (credencial única + hash bcrypt).
 
 from __future__ import annotations
 
-from passlib.context import CryptContext
+import bcrypt
 
 from backend.config import Settings, get_settings
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 SESSION_FLAG = "professor_authenticated"
 SESSION_USERNAME = "professor_username"
@@ -29,7 +27,9 @@ def verificar_credenciais(
         return False
 
     try:
-        return pwd_context.verify(password, settings.PROFESSOR_PASSWORD_HASH)
+        senha_bytes = password.encode("utf-8")
+        hash_bytes = settings.PROFESSOR_PASSWORD_HASH.encode("utf-8")
+        return bcrypt.checkpw(senha_bytes, hash_bytes)
     except (ValueError, TypeError):
         return False
 

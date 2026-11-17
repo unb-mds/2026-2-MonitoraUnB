@@ -14,9 +14,7 @@ from __future__ import annotations
 import sys
 from getpass import getpass
 
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+import bcrypt
 
 
 def main() -> int:
@@ -31,15 +29,17 @@ def main() -> int:
         print("Erro: as senhas não coincidem.", file=sys.stderr)
         return 1
 
+    senha_bytes = senha.encode("utf-8")
+
     # bcrypt limita a 72 bytes; avisa se a senha for maior
-    if len(senha.encode("utf-8")) > 72:
+    if len(senha_bytes) > 72:
         print(
             "Erro: a senha excede 72 bytes (limite do bcrypt).",
             file=sys.stderr,
         )
         return 1
 
-    hash_gerado = pwd_context.hash(senha)
+    hash_gerado = bcrypt.hashpw(senha_bytes, bcrypt.gensalt()).decode("utf-8")
     print()
     print("Cole no .env:")
     print(f"PROFESSOR_PASSWORD_HASH={hash_gerado}")

@@ -248,10 +248,16 @@ PROFESSOR_PASSWORD_HASH=
 SESSION_SECRET=
 ```
 
-1. Instale as dependências (inclui `passlib` e `bcrypt`):
+1. Instale as dependências (inclui `bcrypt`):
 
 ```powershell
 pip install -r requirements.txt
+```
+
+Se você já tinha instalado `passlib` antes, pode removê-lo do venv (não é mais usado):
+
+```powershell
+pip uninstall passlib -y
 ```
 
 2. Gere o hash da senha (não digite a senha no histórico do shell — o script pede no prompt):
