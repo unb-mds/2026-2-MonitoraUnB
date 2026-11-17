@@ -5,15 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitora-UnB — Login do professor</title>
-    <link rel="stylesheet" href="../styles/global.css">
-    <link rel="stylesheet" href="../styles/login-professor.css">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="login-professor.css">
     <link rel="icon"  type="image/x-icon" href="as_bas_cor.jpg">
 </head>
 
 <body>
 
     <header class="topbar">
-        <a href="inicio.html" class="logo">Monitora<span>-UnB</span></a>
+        <a href="pagina_1_index.html" class="logo">Monitora<span>-UnB</span></a>
     </header>
 
     <section class="hero">
@@ -45,7 +45,7 @@
 
                 </form>
 
-                <a href="inicio.html" class="link-voltar">&larr; Voltar ao início</a>
+                <a href="pagina_1_index.html" class="link-voltar">&larr; Voltar ao início</a>
 
             </section>
         </div>
@@ -54,49 +54,6 @@
     <footer class="rodape">
         <p>&copy; 2026 Monitora-UnB. Todos os direitos reservados ao Grupo 11.</p>
     </footer>
-
-
-    <!-- Janela de troca de senha (primeiro acesso) -->
-    <dialog id="modal-senha" class="modal" aria-labelledby="titulo-modal">
-        <form id="form-nova-senha" class="modal-conteudo" novalidate>
-
-            <div class="icone-modal">&#128274;</div>
-
-            <h2 id="titulo-modal">Crie sua nova senha</h2>
-
-            <p class="modal-texto">
-                Este é o seu primeiro acesso. Por segurança, troque a senha
-                temporária por uma de sua preferência para continuar.
-            </p>
-
-            <div class="campo">
-                <label for="nova-senha">Nova senha:</label>
-                <input type="password" id="nova-senha" autocomplete="new-password">
-            </div>
-
-            <div class="campo">
-                <label for="confirmar-senha">Confirmar nova senha:</label>
-                <input type="password" id="confirmar-senha" autocomplete="new-password">
-            </div>
-
-            <ul class="requisitos">
-                <li data-req="tamanho">Pelo menos 8 caracteres</li>
-                <li data-req="mistura">Letras e números</li>
-                <li data-req="diferente">Diferente da senha temporária</li>
-                <li data-req="igual">As duas senhas coincidem</li>
-            </ul>
-
-            <label class="mostrar-senhas">
-                <input type="checkbox" id="mostrar-senhas">
-                Mostrar senhas
-            </label>
-
-            <button type="submit" id="salvar-senha" class="btn btn-primario btn-bloco" disabled>
-                Salvar nova senha e entrar
-            </button>
-
-        </form>
-    </dialog>
 
 
     <script>
