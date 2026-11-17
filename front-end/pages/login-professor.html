@@ -5,15 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitora-UnB — Login do professor</title>
-<link rel="stylesheet" href="../styles/global.css">
-<link rel="stylesheet" href="../styles/login-professor.css">
-    <link rel="icon"  type="image/x-icon" href="as_bas_cor.jpg">
+    <link rel="stylesheet" href="../styles/global.css">
+    <link rel="stylesheet" href="../styles/login-professor.css">
+    <link rel="icon" type="image/x-icon" href="as_bas_cor.jpg">
 </head>
 
 <body>
 
     <header class="topbar">
-        <a href="pagina_1_index.html" class="logo">Monitora<span>-UnB</span></a>
+        <a href="inicio.html" class="logo">Monitora<span>-UnB</span></a>
     </header>
 
     <section class="hero">
@@ -45,7 +45,7 @@
 
                 </form>
 
-                <a href="pagina_1_index.html" class="link-voltar">&larr; Voltar ao início</a>
+                <a href="inicio.html" class="link-voltar">&larr; Voltar ao início</a>
 
             </section>
         </div>
@@ -55,93 +55,7 @@
         <p>&copy; 2026 Monitora-UnB. Todos os direitos reservados ao Grupo 11.</p>
     </footer>
 
-
-    <script>
-        /* No sistema final, esta informação virá do banco de dados
-           (por exemplo, uma coluna "primeiro_acesso" na tabela de professores).
-           Aqui fica fixa em true para você ver a janela aparecendo. */
-        var PRIMEIRO_ACESSO = true;
-
-        var DESTINO = "ranking.html";
-
-        var formLogin  = document.getElementById("form-login");
-        var erroLogin  = document.getElementById("erro-login");
-        var modal      = document.getElementById("modal-senha");
-        var formSenha  = document.getElementById("form-nova-senha");
-        var novaSenha  = document.getElementById("nova-senha");
-        var confirmar  = document.getElementById("confirmar-senha");
-        var salvar     = document.getElementById("salvar-senha");
-        var mostrar    = document.getElementById("mostrar-senhas");
-
-        var senhaTemporaria = "";
-
-        /* ----- Login ----- */
-        formLogin.addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            var login = document.getElementById("login").value.trim();
-            var senha = document.getElementById("senha").value;
-
-            if (!login || !senha) {
-                erroLogin.textContent = "Preencha o login e a senha.";
-                return;
-            }
-            erroLogin.textContent = "";
-
-            if (PRIMEIRO_ACESSO) {
-                senhaTemporaria = senha;
-                formSenha.reset();
-                validar();
-                modal.showModal();
-                novaSenha.focus();
-            } else {
-                window.location.href = DESTINO;
-            }
-        });
-
-        /* A janela é obrigatória: Esc não fecha */
-        modal.addEventListener("cancel", function (e) { e.preventDefault(); });
-
-        /* ----- Regras da nova senha ----- */
-        function validar() {
-            var s = novaSenha.value;
-            var regras = {
-                tamanho:   s.length >= 8,
-                mistura:   /[A-Za-z]/.test(s) && /[0-9]/.test(s),
-                diferente: s.length > 0 && s !== senhaTemporaria,
-                igual:     s.length > 0 && s === confirmar.value
-            };
-
-            var tudoOk = true;
-            document.querySelectorAll(".requisitos li").forEach(function (li) {
-                var ok = regras[li.dataset.req];
-                li.classList.toggle("ok", ok);
-                if (!ok) tudoOk = false;
-            });
-
-            salvar.disabled = !tudoOk;
-            return tudoOk;
-        }
-
-        novaSenha.addEventListener("input", validar);
-        confirmar.addEventListener("input", validar);
-
-        mostrar.addEventListener("change", function () {
-            var tipo = mostrar.checked ? "text" : "password";
-            novaSenha.type = tipo;
-            confirmar.type = tipo;
-        });
-
-        formSenha.addEventListener("submit", function (e) {
-            e.preventDefault();
-            if (!validar()) return;
-
-            /* Aqui o servidor gravaria a nova senha (criptografada) no banco
-               e marcaria primeiro_acesso = false. */
-            window.location.href = DESTINO;
-        });
-    </script>
-
+    <script type="module" src="../dist/pages/login-professor.js"></script>
 </body>
 
 </html>
