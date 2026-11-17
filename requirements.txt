@@ -9,3 +9,4 @@ beautifulsoup4
 pytest
 passlib[bcrypt]
 bcrypt
+itsdangerous
