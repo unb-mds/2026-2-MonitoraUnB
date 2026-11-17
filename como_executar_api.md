@@ -233,3 +233,35 @@ Response
 Para interromper qualquer processo no terminal, aperte `Ctrl + C`.
 
 Para sair do ambiente virtual, digite `deactivate`.
+
+---
+
+# 9. Credencial do professor (.env)
+
+O login do professor usa **uma** credencial, configurada no `.env` na raiz do projeto (copie de `.env.example` se ainda não tiver o arquivo).
+
+Variáveis:
+
+```text
+PROFESSOR_USERNAME=professor
+PROFESSOR_PASSWORD_HASH=
+SESSION_SECRET=
+```
+
+1. Instale as dependências (inclui `passlib` e `bcrypt`):
+
+```powershell
+pip install -r requirements.txt
+```
+
+2. Gere o hash da senha (não digite a senha no histórico do shell — o script pede no prompt):
+
+```powershell
+python backend/scripts/gerar_hash_senha.py
+```
+
+3. Cole a linha impressa em `PROFESSOR_PASSWORD_HASH` no seu `.env`.
+
+4. Defina também `SESSION_SECRET` com uma string longa e aleatória (ex.: um GUID ou texto gerado localmente).
+
+**Não** versionar o `.env` nem colocar a senha em texto puro no repositório. O `.env.example` só traz os nomes das variáveis.

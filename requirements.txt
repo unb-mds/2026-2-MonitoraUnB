@@ -7,3 +7,5 @@ pydantic-settings
 httpx
 beautifulsoup4
 pytest
+passlib[bcrypt]
+bcrypt
