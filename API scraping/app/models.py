@@ -23,7 +23,7 @@ from app.database import Base
 disciplina_professores = Table(
     "disciplina_professores",
     Base.metadata,
-    Column("disciplina_id", Integer, ForeignKey("disciplinas.id", ondelete="CASCADE"), primary_key=True),
+    Column("disciplina_id", Integer, ForeignKey("disciplina.id_disciplina", ondelete="CASCADE"), primary_key=True),
     Column("professor_id", Integer, ForeignKey("professores.id", ondelete="CASCADE"), primary_key=True),
 )
 
@@ -95,7 +95,7 @@ class Turma(Base):
     local = Column(String(300), nullable=True, comment="Local das aulas")
     vagas_ofertadas = Column(Integer, nullable=True)
     vagas_ocupadas = Column(Integer, nullable=True)
-    disciplina_id = Column(Integer, ForeignKey("disciplinas.id", ondelete="CASCADE"), nullable=False)
+    disciplina_id = Column(Integer, ForeignKey("disciplina.id_disciplina", ondelete="CASCADE"), nullable=False)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
@@ -118,10 +118,10 @@ class Turma(Base):
 class Disciplina(Base):
     """Componente curricular (disciplina) da UnB."""
 
-    __tablename__ = "disciplinas"
+    __tablename__ = "disciplina"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    codigo = Column(String(20), nullable=False, index=True, comment="Código da disciplina (ex: CIC0004)")
+    id = Column("id_disciplina", Integer, primary_key=True, autoincrement=True)
+    codigo = Column(String(30), nullable=False, unique=True, index=True, comment="Código da disciplina (ex: CIC0004)")
     nome = Column(String(300), nullable=False, comment="Nome da disciplina")
     tipo = Column(String(50), nullable=True, comment="Tipo: DISCIPLINA, ATIVIDADE, BLOCO, MÓDULO")
     nivel = Column(String(50), nullable=True, comment="Nível de ensino: GRADUAÇÃO, STRICTO SENSU, etc.")
@@ -148,8 +148,7 @@ class Disciplina(Base):
     )
 
     __table_args__ = (
-        UniqueConstraint("codigo", "nivel", name="uq_codigo_nivel"),
-        Index("idx_nome", "nome"),
+        Index("idx_disciplina_nome", "nome"),
     )
 
     def __repr__(self):
