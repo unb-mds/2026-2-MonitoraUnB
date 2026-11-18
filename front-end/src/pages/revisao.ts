@@ -18,7 +18,7 @@ function iniciar(): void {
   definirTexto("aluno", dados.aluno);
   definirTexto("matricula", dados.matricula);
   definirTexto("semestre", dados.semestre);
-  definirTexto("disciplina", dados.disciplinaNome);
+  definirTexto("disciplina", `${dados.disciplina} — ${dados.disciplinaNome}`);
   definirTexto("professor", dados.professor || "Não informado");
   definirTexto("ira", formatarIra(dados.ira));
 
@@ -34,12 +34,16 @@ function iniciar(): void {
     definirTexto("status", "Enviando...");
 
     try {
-      await enviarInscricao(dados);
-      window.location.href = "solicitacao-registrada.html";
-    } catch {
+      const mensagem = await enviarInscricao(dados);
+      botaoEnviar.textContent = "Dados validados";
+      definirTexto("status", mensagem);
+    } catch (erro) {
       botaoEnviar.setAttribute("aria-disabled", "false");
       botaoEnviar.textContent = "Enviar inscrição";
-      definirTexto("status", "Erro ao enviar. Tente novamente.");
+      definirTexto(
+        "status",
+        erro instanceof Error ? erro.message : "Erro ao enviar. Tente novamente.",
+      );
     }
   });
 }
