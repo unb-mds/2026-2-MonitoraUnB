@@ -13,11 +13,22 @@ from __future__ import annotations
 
 import sys
 from getpass import getpass
-
+#import re
 import bcrypt
 
 
 def main() -> int:
+    # TESTE PARA CRIACAO DO HASH 
+    # consiste em comentar a parte do usuario que vai para o setup.sh
+    # Criar um login de acordo com o usuario com login e senha novas
+#    usuario = input("Usuário do professor [professor]: ").strip()
+#    usuario = usuario or "professor"
+
+#    if not re.fullmatch(r"[a-zA-Z0-9_.@-]+", usuario):
+#        print("Erro: usuário inválido.", file=sys.stderr)
+#        return 1
+
+    # Cria a senha desse novo usuario
     senha = getpass("Senha do professor: ")
     confirma = getpass("Confirme a senha: ")
 
@@ -40,9 +51,7 @@ def main() -> int:
         return 1
 
     hash_gerado = bcrypt.hashpw(senha_bytes, bcrypt.gensalt()).decode("utf-8")
-    print()
-    print("Cole no .env:")
-    print(f"PROFESSOR_PASSWORD_HASH={hash_gerado}")
+    print(hash_gerado)
     return 0
 
 
