@@ -9,21 +9,3 @@ lxml==5.3.0
 pydantic==2.9.2
 pydantic-settings==2.5.2
 python-dotenv==1.0.1
-
-
-Commands:
-
-# Criação do ambiente virtual
-python -m venv venv
-
-# Ativação no Windows (PowerShell)
-.\venv\Scripts\Activate.ps1
-
-# Instalação de dependências
-pip install -r requirements.txt
-   python setup_db.py
-
-#inicialização do servidor
-uvicorn main:app --reload --port 8000
-
-*Swagger disponível em: `http://localhost:8000/docs`*
