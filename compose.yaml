@@ -47,13 +47,21 @@ services:
       DB_USER: ${DB_USER:-monitora}
       DB_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no .env}
 
+      # --- E-mail (SMTP) ---
+      # Servidor SMTP usado para enviar os e-mails (Gmail por padrão)
       SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      # Porta do servidor SMTP (587 = conexão segura com STARTTLS)
       SMTP_PORT: ${SMTP_PORT:-587}
+      # E-mail da conta que envia as mensagens (login no SMTP)
       SMTP_USER: ${SMTP_USER:-}
+      # Senha de app de 16 letras gerada no Google (secreta, só no .env)
       SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      # Remetente exibido no e-mail (se vazio, usa o SMTP_USER)
       SMTP_FROM: ${SMTP_FROM:-}
+      # Liga a conexão segura (starttls) antes do login
       SMTP_USE_TLS: ${SMTP_USE_TLS:-true}
 
+      
       PROFESSOR_USERNAME: ${PROFESSOR_USERNAME:-professor}
       PROFESSOR_PASSWORD_HASH: ${PROFESSOR_PASSWORD_HASH:?Defina PROFESSOR_PASSWORD_HASH no .env}
       SESSION_SECRET: ${SESSION_SECRET:?Defina SESSION_SECRET no .env}
