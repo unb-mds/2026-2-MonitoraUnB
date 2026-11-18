@@ -3,8 +3,10 @@ export type DadosInscricao = {
   aluno: string;
   matricula: string;
   semestre: string;
-  disciplina: string; // valor do <select> (ex.: "calculo-1")
-  disciplinaNome: string; // texto exibido (ex.: "Cálculo 1")
+  disciplina: string; // código informado (ex.: "MAT0025")
+  disciplinaNome: string; // texto exibido na revisão
+  professor: string;
+  email: string;
   ira: number;
   arquivoHistorico: string; // só o nome do arquivo enviado
 };
