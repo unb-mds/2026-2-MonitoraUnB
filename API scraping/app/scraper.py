@@ -652,7 +652,7 @@ def _salvar_disciplina(
     """
     existing = (
         db.query(Disciplina)
-        .filter_by(codigo=disc_data["codigo"], nivel=disc_data["nivel"])
+        .filter_by(codigo=disc_data["codigo"])
         .first()
     )
 
