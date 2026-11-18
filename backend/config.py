@@ -30,6 +30,11 @@ class Settings(BaseSettings):
     SMTP_FROM: str = ""
     SMTP_USE_TLS: bool = True
 
+    # Auth do professor (login exclusivo — uma credencial)
+    PROFESSOR_USERNAME: str = ""
+    PROFESSOR_PASSWORD_HASH: str = ""
+    SESSION_SECRET: str = ""
+
     @property
     def DATABASE_URL(self) -> str:
         if self.DATABASE_URL_OVERRIDE:
