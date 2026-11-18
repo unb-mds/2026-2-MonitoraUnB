@@ -23,7 +23,9 @@ COPY --from=build /app/styles /usr/share/nginx/html/styles
 
 COPY --from=build /app/dist /usr/share/nginx/html/dist
 
-COPY --from=build /app/pages/inicio.html /usr/share/nginx/html/index.html
+# Não copiar inicio.html para a raiz: os hrefs relativos (inscricao.html etc.)
+# e os ../styles|../dist só funcionam sob /pages/.
+COPY front-end/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 

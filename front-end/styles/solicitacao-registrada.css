@@ -1,42 +1,83 @@
-/* PÁGINA 5 — SOLICITAÇÃO REGISTRADA */
+/* PÁGINA — Solicitação registrada (passo 3) */
 
-.confirmacao-card {
+.registro-coluna {
+    max-width: 520px;
     text-align: center;
 }
 
+.registro-sucesso {
+    padding: 24px 0 8px;
+}
+
 .icone-sucesso {
-    width: 76px;
-    height: 76px;
-    margin: 0 auto 22px;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: #e6f6ec;
-    border: 2px solid var(--verde-borda);
-    color: #217346;
-    font-size: 2.3rem;
+    background: var(--sucesso);
+    color: #ffffff;
+    font-size: 2rem;
     font-weight: 700;
 }
 
-.confirmacao-card h2 {
-    font-size: 1.6rem;
-    margin-bottom: 14px;
-}
-
-.confirmacao-card > p {
+.registro-sucesso h1 {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--texto);
     margin-bottom: 10px;
 }
 
-.link-voltar {
-    display: block;
-    margin-top: 18px;
-    text-align: center;
+.registro-sucesso p {
     color: var(--texto-suave);
-    font-size: 0.9rem;
-    text-decoration: none;
+    font-size: 0.98rem;
+    line-height: 1.55;
+    max-width: 420px;
+    margin: 0 auto;
 }
 
-.link-voltar:hover {
-    color: var(--azul-escuro);
+.resumo-card {
+    text-align: left;
+    margin-top: 28px;
+}
+
+.resumo-card[hidden] {
+    display: none !important;
+}
+
+.resumo-card h2 {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.resumo-card .dado {
+    padding: 12px 0;
+    border-bottom: 1px solid #edf1f4;
+}
+
+.resumo-card .dado:last-child {
+    border-bottom: none;
+}
+
+.resumo-card .dado-label {
+    display: block;
+    color: var(--texto-suave);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+}
+
+.resumo-card .dado-valor {
+    display: block;
+    color: var(--texto);
+    font-size: 1rem;
+    font-weight: 700;
 }

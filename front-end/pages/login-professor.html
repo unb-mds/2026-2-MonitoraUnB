@@ -4,55 +4,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitora-UnB — Login do professor</title>
+    <title>MonitoraUnB — Login do professor</title>
     <link rel="stylesheet" href="../styles/global.css">
     <link rel="stylesheet" href="../styles/login-professor.css">
     <link rel="icon" type="image/x-icon" href="as_bas_cor.jpg">
 </head>
 
-<body>
+<body class="tema-professor">
 
-    <header class="topbar">
-        <a href="inicio.html" class="logo">Monitora<span>-UnB</span></a>
+    <header class="site-header tema-professor">
+        <a href="inicio.html" class="brand">
+            <span class="brand-logo">Un<span class="b-underline">B</span></span>
+        </a>
+        <a href="inicio.html" class="btn-trocar">← Trocar Portal</a>
     </header>
 
-    <section class="hero">
-        <div class="hero-conteudo">
-            <h1>Área do professor</h1>
-            <p>Entre para consultar o ranking dos candidatos às monitorias.</p>
-        </div>
-    </section>
-
-    <main class="conteudo">
+    <main class="conteudo login-conteudo">
         <div class="coluna login">
-            <section class="card">
 
+            <div class="login-intro">
+                <div class="icone-caixa verde login-icone" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <h1>Acesso do Professor</h1>
+                <p>Insira suas credenciais institucionais para continuar</p>
+            </div>
+
+            <section class="card">
                 <form id="form-login" novalidate>
 
                     <div class="campo">
-                        <label for="login">Login:</label>
-                        <input type="text" id="login" name="login" autocomplete="username" required>
+                        <label for="login">Usuário</label>
+                        <input type="text" id="login" name="login" autocomplete="username" placeholder="seu.usuario" required>
                     </div>
 
                     <div class="campo">
-                        <label for="senha">Senha:</label>
-                        <input type="password" id="senha" name="senha" autocomplete="current-password" required>
+                        <label for="senha">Senha</label>
+                        <div class="campo-senha">
+                            <input type="password" id="senha" name="senha" autocomplete="current-password" required>
+                            <button type="button" class="btn-olho" id="toggle-senha" aria-label="Mostrar senha" title="Mostrar senha">👁</button>
+                        </div>
                     </div>
 
                     <p class="erro" id="erro-login" role="alert"></p>
 
-                    <button type="submit" class="btn btn-primario btn-bloco">Entrar</button>
+                    <button type="submit" class="btn btn-verde btn-bloco">Entrar no Portal</button>
 
                 </form>
-
-                <a href="inicio.html" class="link-voltar">&larr; Voltar ao início</a>
-
             </section>
+
         </div>
     </main>
 
     <footer class="rodape">
-        <p>&copy; 2026 Monitora-UnB. Todos os direitos reservados ao Grupo 11.</p>
+        <div class="rodape-inner">
+            <p>Sistema de Monitoria · Universidade de Brasília</p>
+            <p>DEG — Decanato de Ensino de Graduação · 2026/2</p>
+        </div>
     </footer>
 
     <script type="module" src="../dist/pages/login-professor.js"></script>

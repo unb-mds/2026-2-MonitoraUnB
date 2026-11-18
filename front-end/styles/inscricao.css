@@ -1,60 +1,190 @@
-/* PÁGINA 3 — FAÇA SUA INSCRIÇÃO */
+/* PÁGINA — Inscrição (passo 1: Seleção) */
 
-.card .campo {
-    padding-bottom: 22px;
-    border-bottom: 1px solid #e8edf5;
-}
-
-.card > p {
-    margin-bottom: 30px;
-}
-
-.campo-check {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 28px;
-    padding: 16px 18px;
-    border-radius: 10px;
-    background-color: var(--azul-claro);
-    border: 1px solid var(--borda);
-}
-
-.campo-check input {
-    width: 20px;
-    height: 20px;
-    margin-top: 2px;
-    accent-color: var(--azul-escuro);
-    flex-shrink: 0;
-}
-
-.campo-check label {
-    color: #344054;
-    font-size: 0.92rem;
-    line-height: 1.5;
-    cursor: pointer;
+.form-card {
+    margin-top: 8px;
 }
 
 #disciplina {
     text-transform: uppercase;
 }
 
-.erro {
-    margin-bottom: 16px;
-    color: var(--vermelho);
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
-.link-voltar {
-    display: block;
-    margin-top: 18px;
-    text-align: center;
+.secao-divisor {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 8px 0 22px;
     color: var(--texto-suave);
-    font-size: 0.9rem;
-    text-decoration: none;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
-.link-voltar:hover {
-    color: var(--azul-escuro);
+.secao-divisor::before,
+.secao-divisor::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--borda);
+}
+
+.campo-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 8px 0 24px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    background: var(--unb-azul-claro);
+    border: 1px solid var(--unb-azul-suave);
+}
+
+.campo-check input {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: var(--unb-azul);
+    flex-shrink: 0;
+}
+
+.campo-check label {
+    color: var(--texto);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: normal;
+    line-height: 1.45;
+    cursor: pointer;
+    margin: 0;
+}
+
+/* Upload estilizado */
+.upload-zona {
+    position: relative;
+    border: 1.5px dashed #c5d0de;
+    border-radius: 10px;
+    background: #fafbfd;
+    min-height: 72px;
+    overflow: hidden;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.upload-zona:hover,
+.upload-zona:focus-within {
+    border-color: var(--unb-azul);
+    background: var(--unb-azul-claro);
+}
+
+.upload-zona.carregado {
+    border-style: solid;
+    border-color: var(--sucesso);
+    background: var(--sucesso-bg);
+}
+
+.upload-zona input[type="file"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+.upload-vazio,
+.upload-ok {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    pointer-events: none;
+}
+
+.upload-vazio {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.upload-titulo {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--texto);
+}
+
+.upload-sub {
+    font-size: 0.82rem;
+    color: var(--texto-suave);
+}
+
+.upload-ok[hidden] {
+    display: none !important;
+}
+
+.upload-check {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--sucesso);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.upload-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.upload-meta strong {
+    font-size: 0.92rem;
+    color: var(--texto);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.upload-meta span {
+    font-size: 0.8rem;
+    color: var(--texto-suave);
+}
+
+.upload-badge {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--sucesso);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.form-acoes {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.form-acoes .btn {
+    min-width: 150px;
+}
+
+@media (max-width: 700px) {
+    .form-acoes .btn {
+        width: 100%;
+    }
+
+    .upload-ok {
+        flex-wrap: wrap;
+    }
 }

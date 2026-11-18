@@ -11,7 +11,33 @@ const campoProfessor = document.getElementById("professor") as HTMLInputElement;
 const campoMatricula = document.getElementById("matricula") as HTMLInputElement;
 const campoConcordo = document.getElementById("concordo") as HTMLInputElement;
 const botaoContinuar = document.getElementById("continuar") as HTMLAnchorElement;
-const textoOriginalBotao = botaoContinuar.textContent ?? "Continuar para revisão";
+const uploadZona = document.getElementById("upload-zona");
+const uploadVazio = document.getElementById("upload-vazio");
+const uploadOk = document.getElementById("upload-ok");
+const uploadNome = document.getElementById("upload-nome");
+const uploadDetalhe = document.getElementById("upload-detalhe");
+const textoOriginalBotao = botaoContinuar.textContent ?? "Continuar →";
+
+function formatarTamanho(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function atualizarUploadUI(): void {
+  const arquivo = inputHistorico.files?.[0];
+
+  if (!arquivo || !uploadZona || !uploadVazio || !uploadOk) return;
+
+  uploadZona.classList.add("carregado");
+  uploadVazio.hidden = true;
+  uploadOk.hidden = false;
+
+  if (uploadNome) uploadNome.textContent = arquivo.name;
+  if (uploadDetalhe) {
+    uploadDetalhe.textContent = `${formatarTamanho(arquivo.size)} · PDF`;
+  }
+}
 
 function mostrarErro(mensagem: string): void {
   let elemento = document.getElementById("mensagem-erro");
@@ -20,7 +46,12 @@ function mostrarErro(mensagem: string): void {
     elemento = document.createElement("p");
     elemento.id = "mensagem-erro";
     elemento.className = "erro";
-    botaoContinuar.before(elemento);
+    const acoes = botaoContinuar.closest(".form-acoes");
+    if (acoes) {
+      acoes.before(elemento);
+    } else {
+      botaoContinuar.before(elemento);
+    }
   }
 
   elemento.textContent = mensagem;
@@ -38,6 +69,11 @@ function definirCarregando(carregando: boolean): void {
 function disciplinaNaoEncontrada(mensagem: string): boolean {
   return /n[aã]o foi encontrada/i.test(mensagem);
 }
+
+inputHistorico.addEventListener("change", () => {
+  limparErro();
+  atualizarUploadUI();
+});
 
 botaoContinuar.addEventListener("click", async (evento) => {
   evento.preventDefault();

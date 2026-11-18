@@ -4,29 +4,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitora-UnB — Ranking dos alunos</title>
+    <title>MonitoraUnB — Painel do Professor</title>
     <link rel="stylesheet" href="../styles/global.css">
     <link rel="stylesheet" href="../styles/ranking.css">
-    <link rel="icon"  type="image/x-icon" href="as_bas_cor.jpg">
+    <link rel="icon" type="image/x-icon" href="as_bas_cor.jpg">
 </head>
 
-<body>
+<body class="tema-professor">
 
-    <header class="topbar">
-        <a href="inicio.html" class="logo">Monitora<span>-UnB</span></a>
+    <header class="site-header tema-professor">
+        <a href="inicio.html" class="brand">
+            <span class="brand-logo">Un<span class="b-underline">B</span></span>
+            <span class="brand-divider" aria-hidden="true"></span>
+            <span class="brand-text">
+                <span class="brand-sistema">Sistema de Monitoria</span>
+                <span class="brand-portal">Portal do Professor</span>
+            </span>
+        </a>
+        <a href="inicio.html" class="btn-trocar" id="link-trocar-portal">← Trocar Portal</a>
     </header>
-
-    <section class="hero">
-        <div class="hero-conteudo">
-            <h1>Ranking dos alunos</h1>
-            <p>Filtre por disciplina, veja quantos alunos se inscreveram e aprove ou reprove as candidaturas.</p>
-        </div>
-    </section>
 
     <main class="conteudo">
         <div class="coluna-larga">
 
-            <!-- Filtros -->
+            <div class="painel-topo">
+                <div>
+                    <h1 class="painel-titulo">Painel do Professor</h1>
+                    <p class="painel-sub" id="painel-subtitulo">Ranking de candidatos às monitorias</p>
+                </div>
+                <button type="button" class="btn btn-secundario" id="btn-sair">Sair</button>
+            </div>
+
+            <section class="stats-grid" aria-label="Resumo dos candidatos">
+                <div class="stat-card stat-total">
+                    <span class="stat-valor" id="stat-total">0</span>
+                    <span class="stat-label">Total de candidatos</span>
+                </div>
+                <div class="stat-card stat-pendente">
+                    <span class="stat-valor" id="stat-pendente">0</span>
+                    <span class="stat-label">Pendentes</span>
+                </div>
+                <div class="stat-card stat-aprovado">
+                    <span class="stat-valor" id="stat-aprovado">0</span>
+                    <span class="stat-label">Aprovados</span>
+                </div>
+                <div class="stat-card stat-reprovado">
+                    <span class="stat-valor" id="stat-reprovado">0</span>
+                    <span class="stat-label">Recusados</span>
+                </div>
+            </section>
+
             <section class="card filtros">
                 <div class="campo">
                     <label for="filtro-disciplina">Disciplina</label>
@@ -45,23 +72,24 @@
             <div class="barra-tabela">
                 <p class="contador" id="contador"></p>
                 <div class="botoes-barra">
-                    <button type="button" class="btn btn-primario btn-baixar" id="btn-baixar">&#11015; Baixar planilha</button>
+                    <button type="button" class="btn btn-verde btn-baixar" id="btn-baixar">↓ Baixar planilha</button>
+                    <!-- Sem backend de e-mail ainda: botão permanece, ação no TS é no-op / aviso. -->
+                    <button type="button" class="btn btn-secundario" id="btn-email" disabled title="Envio de e-mail ainda sem API">✉ Enviar e-mail aos aprovados</button>
                 </div>
             </div>
 
-            <!-- Tabela -->
             <section class="card ranking-card">
                 <div class="ranking-tabela">
                     <table>
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Nome completo</th>
+                                <th>Aluno</th>
                                 <th>Disciplina</th>
                                 <th>Professor</th>
                                 <th>IRA</th>
                                 <th>COEF</th>
-                                <th>Situação</th>
+                                <th>Status</th>
                                 <th>Ação</th>
                             </tr>
                         </thead>
@@ -70,19 +98,14 @@
                 </div>
             </section>
 
-            <div class="acoes-ranking">
-                <button type="button" class="btn btn-secundario" id="btn-sair">Sair</button>
-
-                <!-- BOTÃO SEM FUNÇÃO POR ENQUANTO: o envio será feito pelo pessoal do TypeScript/back-end/banco.
-                     Regra: enviar o e-mail apenas para os alunos com situação "Aprovado". -->
-                <button type="button" class="btn btn-primario" id="btn-email">&#9993; Enviar e-mail aos aprovados</button>
-            </div>
-
         </div>
     </main>
 
     <footer class="rodape">
-        <p>&copy; 2026 Monitora-UnB. Todos os direitos reservados ao Grupo 11.</p>
+        <div class="rodape-inner">
+            <p>Sistema de Monitoria · Universidade de Brasília</p>
+            <p>DEG — Decanato de Ensino de Graduação · 2026/2</p>
+        </div>
     </footer>
 
     <script type="module" src="../dist/pages/ranking-guard.js"></script>

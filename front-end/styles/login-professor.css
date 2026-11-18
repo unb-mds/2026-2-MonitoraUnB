@@ -1,49 +1,69 @@
-/* PÁGINA 6 — LOGIN DO PROFESSOR */
+/* PÁGINA — Login do professor */
 
-.coluna.login {
-    max-width: 480px;
+.login-conteudo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 48px;
 }
 
-.login > .card > p {
-    margin-bottom: 28px;
+.coluna.login {
+    max-width: 420px;
+}
+
+.login-intro {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.login-icone {
+    margin: 0 auto 16px;
+}
+
+.login-intro h1 {
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: var(--texto);
+    margin-bottom: 6px;
+}
+
+.login-intro p {
+    color: var(--texto-suave);
+    font-size: 0.95rem;
+}
+
+.campo-senha {
+    position: relative;
+}
+
+.campo-senha input {
+    padding-right: 44px;
+}
+
+.btn-olho {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 6px 8px;
+    font-size: 1rem;
+    line-height: 1;
+    opacity: 0.65;
+}
+
+.btn-olho:hover {
+    opacity: 1;
 }
 
 .login .btn {
-    margin-top: 8px;
-}
-
-.link-voltar {
-    display: block;
-    margin-top: 18px;
-    text-align: center;
-    color: var(--texto-suave);
-    font-size: 0.9rem;
-    text-decoration: none;
-}
-
-.link-voltar:hover {
-    color: var(--azul-escuro);
-}
-
-
-/* ---------- Mensagem de erro do login ---------- */
-
-.erro {
-    min-height: 1.2em;
-    margin-bottom: 14px;
-    color: var(--vermelho);
-    font-size: 0.88rem;
-    font-weight: 600;
-}
-
-.erro:empty {
-    display: none;
-}
-
-form + .link-voltar {
-    margin-top: 18px;
+    margin-top: 4px;
 }
 
 @media (max-width: 700px) {
-    .modal-conteudo { padding: 28px 22px 24px; }
+    .login-conteudo {
+        padding-top: 28px;
+    }
 }

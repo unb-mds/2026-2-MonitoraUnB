@@ -1,9 +1,108 @@
-/* PÁGINA 7 — RANKING DOS ALUNOS */
+/* PÁGINA — Painel / Ranking do professor */
 
+.painel-topo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+}
+
+.painel-titulo {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--texto);
+    margin-bottom: 4px;
+}
+
+.painel-sub {
+    color: var(--texto-suave);
+    font-size: 0.95rem;
+}
+
+/* Stats */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    padding: 16px 18px;
+    border-left: 4px solid var(--borda);
+    box-shadow: var(--sombra-card);
+}
+
+.stat-total { border-left-color: var(--unb-azul); }
+.stat-pendente { border-left-color: #e8a838; }
+.stat-aprovado { border-left-color: var(--sucesso); }
+.stat-reprovado { border-left-color: var(--vermelho); }
+
+.stat-valor {
+    display: block;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--texto);
+    line-height: 1.1;
+}
+
+.stat-label {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.8rem;
+    color: var(--texto-suave);
+    font-weight: 600;
+}
+
+/* Filtros */
+.filtros {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 22px 24px 4px;
+    margin-bottom: 16px;
+}
+
+.filtros .campo {
+    margin-bottom: 18px;
+}
+
+.barra-tabela {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.botoes-barra {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn-baixar {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+}
+
+.contador {
+    margin: 0 4px;
+    color: var(--texto-suave);
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+/* Tabela */
 .ranking-card {
     padding: 0;
     overflow: hidden;
-    border-color: var(--verde-borda);
 }
 
 .ranking-tabela {
@@ -17,25 +116,23 @@
 }
 
 .ranking-tabela th {
-    background-color: var(--azul-claro);
-    color: var(--azul-escuro);
-    font-size: 0.78rem;
-    letter-spacing: 1px;
+    background: #f7faf8;
+    color: var(--prof-verde-escuro);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     text-align: center;
-    padding: 18px 14px;
+    padding: 14px 12px;
     border-bottom: 1px solid var(--borda);
 }
 
 .ranking-tabela td {
     text-align: center;
-    padding: 16px 14px;
+    padding: 14px 12px;
     font-weight: 600;
     border-bottom: 1px solid #edf1f4;
-    transition: background-color 0.2s ease;
 }
 
-/* nome, disciplina e professor alinhados à esquerda */
 .ranking-tabela th:nth-child(2),
 .ranking-tabela td:nth-child(2),
 .ranking-tabela th:nth-child(3),
@@ -51,53 +148,46 @@
     font-weight: 500;
 }
 
+.ranking-tabela td:nth-child(5) {
+    color: var(--sucesso);
+    font-weight: 800;
+}
+
 .ranking-tabela td:first-child {
-    width: 60px;
+    width: 52px;
     color: var(--texto-suave);
 }
 
-/* destaque para os 3 primeiros */
-.ranking-tabela tbody tr:nth-child(-n+3) td:first-child {
-    color: var(--azul-escuro);
-    font-weight: 800;
+.ranking-tabela tbody tr:hover {
+    background: #fbfcff;
 }
 
 .ranking-tabela tbody tr:last-child td {
     border-bottom: none;
 }
 
-.ranking-tabela tbody tr:hover {
-    background-color: #fbfcff;
-}
-
-
-/* ---------- Situação ---------- */
-
 .situacao {
     display: inline-block;
-    padding: 5px 14px;
+    padding: 4px 12px;
     border-radius: 999px;
-    background-color: #fff6e0;
-    color: #8a5a00;
-    font-size: 0.8rem;
+    background: var(--pendente-bg);
+    color: var(--pendente-texto);
+    font-size: 0.78rem;
     font-weight: 700;
 }
 
 tr.aprovado .situacao {
-    background-color: #e6f6ec;
-    color: #217346;
+    background: var(--sucesso-bg);
+    color: var(--sucesso);
 }
 
 tr.reprovado .situacao {
-    background-color: var(--vermelho-claro);
+    background: var(--vermelho-claro);
     color: var(--vermelho);
 }
 
-tr.aprovado td { background-color: #f6fcf8; }
-tr.reprovado td { background-color: #fffafa; }
-
-
-/* ---------- Botões Aprovar / Reprovar ---------- */
+tr.aprovado td { background: #f6fcf8; }
+tr.reprovado td { background: #fffafa; }
 
 .botoes-acao {
     display: flex;
@@ -106,101 +196,43 @@ tr.reprovado td { background-color: #fffafa; }
 }
 
 .btn-acao {
-    padding: 9px 16px;
+    padding: 8px 14px;
     border-radius: 8px;
     border: 1.5px solid transparent;
     font-family: inherit;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 700;
     cursor: pointer;
-    transition: 0.2s ease;
+    transition: 0.15s ease;
 }
 
-.btn-acao:hover {
-    transform: translateY(-1px);
-}
-
-/* Aprovar: verde */
 .btn-aprovar {
-    background-color: #ffffff;
-    color: #217346;
-    border-color: #217346;
+    background: var(--prof-verde);
+    color: #ffffff;
+    border-color: var(--prof-verde);
 }
 
 .btn-aprovar:hover,
 .btn-aprovar[aria-pressed="true"] {
-    background-color: #217346;
-    color: #ffffff;
+    background: var(--prof-verde-escuro);
 }
 
-/* Reprovar: vermelho */
 .btn-reprovar {
-    background-color: #ffffff;
+    background: #ffffff;
     color: var(--vermelho);
     border-color: var(--vermelho);
 }
 
 .btn-reprovar:hover,
 .btn-reprovar[aria-pressed="true"] {
-    background-color: var(--vermelho);
+    background: var(--vermelho);
     color: #ffffff;
 }
 
-
-/* ---------- Rodapé da tabela ---------- */
-
-.acoes-ranking {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    margin-top: 25px;
-}
-
-@media (max-width: 700px) {
-    .acoes-ranking { flex-direction: column; }
-    .acoes-ranking .btn { width: 100%; }
-}
-
-
-/* ---------- Filtros ---------- */
-
-.filtros {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    padding: 24px 28px 6px;
-    margin-bottom: 20px;
-}
-
-.filtros .campo {
-    margin-bottom: 18px;
-}
-
-.barra-tabela {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-bottom: 14px;
-}
-
-.botoes-barra {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.btn-baixar {
-    padding: 11px 22px;
-    font-size: 0.95rem;
-}
-
-.contador {
-    margin: 0 4px;
-    color: var(--texto-suave);
-    font-size: 0.95rem;
-    font-weight: 700;
+/* Aprovar/Recusar: só estado local (mock). Sem persistência na API. */
+.btn-acao[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
 }
 
 .vazio {
@@ -209,12 +241,47 @@ tr.reprovado td { background-color: #fffafa; }
     font-weight: 500 !important;
 }
 
+#btn-email:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
 @media (max-width: 900px) {
-    .filtros { grid-template-columns: 1fr; padding: 22px 22px 4px; }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filtros {
+        grid-template-columns: 1fr;
+        padding: 18px 18px 4px;
+    }
 }
 
 @media (max-width: 700px) {
-    .barra-tabela { flex-direction: column; align-items: stretch; }
-    .botoes-barra { flex-direction: column; }
-    .btn-baixar { width: 100%; }
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .barra-tabela {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .botoes-barra {
+        flex-direction: column;
+    }
+
+    .btn-baixar,
+    #btn-email {
+        width: 100%;
+    }
+
+    .painel-topo {
+        flex-direction: column;
+    }
+
+    #btn-sair {
+        width: 100%;
+    }
 }

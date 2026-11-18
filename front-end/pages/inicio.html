@@ -4,29 +4,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitora-UnB</title>
+    <title>MonitoraUnB — Sistema de Monitoria</title>
     <link rel="stylesheet" href="../styles/global.css">
     <link rel="stylesheet" href="../styles/inicio.css">
-    <link rel="icon"  type="image/x-icon" href="as_bas_cor.jpg">
+    <link rel="icon" type="image/x-icon" href="as_bas_cor.jpg">
 </head>
 
-<body>
+<body class="pagina-inicio">
 
-    <header class="hero hero-grande">
-        <div class="hero-conteudo">
-            <span class="eyebrow">Universidade de Brasília</span>
-            <h1>Monitora-UnB</h1>
-            <p>Candidate-se a uma vaga de monitor e contribua com o aprendizado nas disciplinas que você domina.</p>
-
-            <div class="hero-acoes">
-                <a href="inscricao.html" class="btn btn-claro">Sou aluno &rarr;</a>
-                <a href="login-professor.html" class="btn btn-contorno">Sou professor</a>
-            </div>
+    <header class="portal-hero">
+        <div class="portal-hero-inner">
+            <div class="portal-logo">Un<span class="b-underline">B</span></div>
+            <p class="portal-universidade">UNIVERSIDADE DE BRASÍLIA</p>
+            <h1>Sistema de Monitoria</h1>
+            <p class="portal-sub">Selecione seu perfil de acesso para continuar</p>
         </div>
     </header>
 
+    <main class="conteudo portal-conteudo">
+        <div class="portal-cards">
+
+            <a href="inscricao.html" class="portal-card portal-card-aluno">
+                <div class="portal-card-icone" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="28" height="28">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </div>
+                <h2>Portal do Aluno</h2>
+                <p>Solicite sua vaga como monitor, envie seu histórico e acompanhe sua candidatura.</p>
+                <span class="portal-card-cta">Acessar →</span>
+            </a>
+
+            <a href="login-professor.html" class="portal-card portal-card-professor">
+                <div class="portal-card-icone" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="28" height="28">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <path d="M9 15l2 2 4-4"/>
+                    </svg>
+                </div>
+                <h2>Portal do Professor</h2>
+                <p>Visualize os candidatos qualificados para suas disciplinas e selecione os monitores.</p>
+                <span class="portal-card-cta">Acessar →</span>
+            </a>
+
+        </div>
+    </main>
+
     <footer class="rodape">
-        <p>&copy; 2026 Monitora-UnB. Todos os direitos reservados ao Grupo 11.</p>
+        <div class="rodape-inner">
+            <p>Sistema de Monitoria · Universidade de Brasília</p>
+            <p>DEG — Decanato de Ensino de Graduação · 2026/2</p>
+        </div>
     </footer>
 
 </body>

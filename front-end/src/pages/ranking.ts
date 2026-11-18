@@ -35,6 +35,11 @@ const selOrdenar = document.getElementById("ordenar") as HTMLSelectElement;
 const corpo = document.getElementById("ranking-corpo") as HTMLTableSectionElement;
 const contador = document.getElementById("contador") as HTMLParagraphElement;
 const btnBaixar = document.getElementById("btn-baixar") as HTMLButtonElement;
+const statTotal = document.getElementById("stat-total");
+const statPendente = document.getElementById("stat-pendente");
+const statAprovado = document.getElementById("stat-aprovado");
+const statReprovado = document.getElementById("stat-reprovado");
+const painelSubtitulo = document.getElementById("painel-subtitulo");
 
 /** Linhas que estão aparecendo agora (usadas na planilha). */
 let visiveis: LinhaVisivel[] = [];
@@ -42,7 +47,7 @@ let visiveis: LinhaVisivel[] = [];
 const ROTULOS: Record<StatusInscricao, string> = {
   pendente: "Pendente",
   aprovado: "Aprovado",
-  reprovado: "Reprovado",
+  reprovado: "Recusado",
 };
 
 function fmt(n: number): string {
@@ -72,8 +77,26 @@ function porRanking(a: InscricaoRanking, b: InscricaoRanking): number {
   return b.ira - a.ira || b.coef - a.coef;
 }
 
+function atualizarStats(lista: InscricaoRanking[]): void {
+  const pendentes = lista.filter((i) => i.status === "pendente").length;
+  const aprovados = lista.filter((i) => i.status === "aprovado").length;
+  const reprovados = lista.filter((i) => i.status === "reprovado").length;
+
+  if (statTotal) statTotal.textContent = String(lista.length);
+  if (statPendente) statPendente.textContent = String(pendentes);
+  if (statAprovado) statAprovado.textContent = String(aprovados);
+  if (statReprovado) statReprovado.textContent = String(reprovados);
+
+  if (painelSubtitulo) {
+    painelSubtitulo.textContent = selDisciplina.value
+      ? `${selDisciplina.value} — ranking filtrado`
+      : "Ranking de candidatos às monitorias";
+  }
+}
+
 function desenhar(): void {
   const lista = filtradas();
+  atualizarStats(lista);
 
   // posição no ranking (por IRA) dentro do filtro atual
   const posicao: Record<number, number> = {};
@@ -102,6 +125,7 @@ function desenhar(): void {
     return;
   }
 
+  // Aprovar/Recusar: só atualizam estado local (mock). Sem endpoint de persistência.
   corpo.innerHTML = ordenada
     .map(
       (i) =>
@@ -115,7 +139,7 @@ function desenhar(): void {
         `<td><span class="situacao">${ROTULOS[i.status]}</span></td>` +
         `<td><div class="botoes-acao">` +
         `<button type="button" class="btn-acao btn-aprovar" data-acao="aprovado" aria-pressed="${i.status === "aprovado"}">Aprovar</button>` +
-        `<button type="button" class="btn-acao btn-reprovar" data-acao="reprovado" aria-pressed="${i.status === "reprovado"}">Reprovar</button>` +
+        `<button type="button" class="btn-acao btn-reprovar" data-acao="reprovado" aria-pressed="${i.status === "reprovado"}">Recusar</button>` +
         `</div></td>` +
         `</tr>`,
     )

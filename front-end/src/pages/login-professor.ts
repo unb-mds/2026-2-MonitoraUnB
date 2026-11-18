@@ -9,7 +9,8 @@ const erroLogin = document.getElementById("erro-login") as HTMLParagraphElement;
 const botaoEntrar = formLogin.querySelector(
   'button[type="submit"]',
 ) as HTMLButtonElement;
-const textoOriginalBotao = botaoEntrar.textContent ?? "Entrar";
+const toggleSenha = document.getElementById("toggle-senha");
+const textoOriginalBotao = botaoEntrar.textContent ?? "Entrar no Portal";
 
 function mostrarErro(mensagem: string): void {
   erroLogin.textContent = mensagem;
@@ -24,6 +25,18 @@ function definirCarregando(carregando: boolean): void {
   botaoEntrar.textContent = carregando ? "Entrando..." : textoOriginalBotao;
 }
 
+if (toggleSenha instanceof HTMLButtonElement) {
+  toggleSenha.addEventListener("click", () => {
+    const revelado = campoSenha.type === "text";
+    campoSenha.type = revelado ? "password" : "text";
+    toggleSenha.setAttribute(
+      "aria-label",
+      revelado ? "Mostrar senha" : "Ocultar senha",
+    );
+    toggleSenha.title = revelado ? "Mostrar senha" : "Ocultar senha";
+  });
+}
+
 formLogin.addEventListener("submit", async (evento) => {
   evento.preventDefault();
   if (botaoEntrar.disabled) return;
@@ -34,7 +47,7 @@ formLogin.addEventListener("submit", async (evento) => {
   const password = campoSenha.value;
 
   if (!username || !password) {
-    mostrarErro("Preencha o login e a senha.");
+    mostrarErro("Preencha o usuário e a senha.");
     return;
   }
 
