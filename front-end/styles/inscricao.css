@@ -45,3 +45,16 @@
     font-size: 0.9rem;
     font-weight: 600;
 }
+
+.link-voltar {
+    display: block;
+    margin-top: 18px;
+    text-align: center;
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.link-voltar:hover {
+    color: var(--azul-escuro);
+}
