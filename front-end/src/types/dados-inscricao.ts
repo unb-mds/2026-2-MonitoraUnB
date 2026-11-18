@@ -16,4 +16,13 @@ export type DadosHistorico = {
   aluno: string;
   matricula: string;
   ira: number;
+  status: string;
+  disciplina: {
+    codigo: string;
+    nome: string;
+    mencao: string;
+    situacao: string;
+    periodo: string;
+    coef_mencao: number;
+  }
 };
