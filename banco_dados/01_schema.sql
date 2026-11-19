@@ -65,27 +65,6 @@ END)::numeric)), 2))),
 );
 
 
-CREATE TABLE public.inscricao (
-    id_inscricao integer NOT NULL,
-    id_aluno integer NOT NULL,
-    id_disciplina integer NOT NULL,
-    id_processo integer NOT NULL,
-    ira numeric(4,2) NOT NULL,
-    mencao character varying(10) NOT NULL,
-    coeficiente numeric(4,2) NOT NULL,
-    caminho_historico text NOT NULL,
-    data_inscricao timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    CONSTRAINT chk_coeficiente_calculo CHECK ((coeficiente = round(((0.6 * ira) + (0.4 * (
-        CASE mencao
-            WHEN 'MM'::text THEN 3
-            WHEN 'MS'::text THEN 4
-            WHEN 'SS'::text THEN 5
-            ELSE NULL::integer
-        END)::numeric)), 2))),
-    CONSTRAINT chk_ira_limite CHECK (((ira >= (0)::numeric) AND (ira <= (5)::numeric))),
-    CONSTRAINT chk_mencao CHECK (((mencao)::text = ANY ((ARRAY['MM'::character varying, 'MS'::character varying, 'SS'::character varying])::text[])))
-);
-
 ALTER TABLE ONLY public.inscricao
     ADD CONSTRAINT inscricao_pkey PRIMARY KEY (id_inscricao);
 
@@ -154,19 +133,6 @@ ALTER TABLE ONLY public.processo_seletivo
 
 
 
-CREATE TABLE public.usuario_administrador (
-    id_usuario integer NOT NULL,
-    email character varying(150) NOT NULL,
-    senha_hash text NOT NULL,
-    ativo boolean DEFAULT true NOT NULL
-);
-
-ALTER TABLE ONLY public.usuario_administrador
-    ADD CONSTRAINT uq_usuario_admin_email UNIQUE (email);
-
-ALTER TABLE ONLY public.usuario_administrador
-    ADD CONSTRAINT usuario_administrador_pkey PRIMARY KEY (id_usuario);
-
 ALTER TABLE public.usuario_administrador ALTER COLUMN id_usuario ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME public.usuario_administrador_id_usuario_seq
     START WITH 1
@@ -175,12 +141,6 @@ ALTER TABLE public.usuario_administrador ALTER COLUMN id_usuario ADD GENERATED A
     NO MAXVALUE
     CACHE 1
 );
-
-ALTER TABLE ONLY public.processo_seletivo
-    ADD CONSTRAINT fk_processo_usuario
-    FOREIGN KEY (id_usuario)
-    REFERENCES public.usuario_administrador(id_usuario);
-
 
 CREATE TABLE public.resultado (
     id_resultado integer NOT NULL,
