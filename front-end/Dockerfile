@@ -9,21 +9,22 @@ RUN npm ci
 
 COPY front-end/ ./
 
+# Compila o TypeScript
 RUN npx tsc
 
 
-# Etapa 2: Servidor web
+# Etapa 2: Servidor Nginx
 FROM nginx:alpine
 
 RUN rm -f /usr/share/nginx/html/index.html
+
+COPY front-end/nginx/default.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=build /app/pages /usr/share/nginx/html/pages
 
 COPY --from=build /app/styles /usr/share/nginx/html/styles
 
 COPY --from=build /app/dist /usr/share/nginx/html/dist
-
-COPY --from=build /app/pages/inicio.html /usr/share/nginx/html/index.html
 
 EXPOSE 80
 
