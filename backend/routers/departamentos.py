@@ -9,7 +9,6 @@ from backend.database.models import Departamento, Disciplina
 from backend.schemas.schemas import DepartamentoResponse, DisciplinaResponse
 from backend.scraping.sigaa import sincronizar_departamentos
 
-
 router = APIRouter(
     prefix="/departamentos",
     tags=["Departamentos"]
