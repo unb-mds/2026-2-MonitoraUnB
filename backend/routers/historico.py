@@ -50,6 +50,12 @@ def receber_historico(arquivo: UploadFile = File(...),
                 detail="O arquivo PDF enviado não é um histórico válido."
             )
 
+        if resultado["status"].strip().upper() != "ATIVO":
+            raise HTTPException(
+                status_code=422,
+                detail="Somente estudantes com status acadêmico ATIVO podem se inscrever.",
+            )
+
         matricula_pdf = re.sub(r"\D", "", resultado["matricula"])
         matricula_informada = re.sub(r"\D", "", matricula)
         if not matricula_informada or matricula_informada != matricula_pdf:

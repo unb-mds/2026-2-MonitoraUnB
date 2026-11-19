@@ -25,6 +25,12 @@ def criar_inscricao(dados: InscricaoRequest) -> InscricaoResponse:
             detail=str(erro),
         ) from erro
 
+    if historico.status.strip().upper() != "ATIVO":
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Somente estudantes com status acadêmico ATIVO podem se inscrever.",
+        )
+
     return InscricaoResponse(
         status="validada",
         mensagem=(
