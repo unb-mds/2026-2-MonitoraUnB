@@ -4,19 +4,19 @@ Configurações da aplicação carregadas via variáveis de ambiente (.env).
 
 from pydantic_settings import BaseSettings
 from functools import lru_cache
+from sqlalchemy.engine import URL
 
 
 class Settings(BaseSettings):
     """Configurações da aplicação."""
 
     # Database
-    DB_TYPE: str = "sqlite"  # "sqlite" ou "mysql"
     DB_HOST: str = "localhost"
-    DB_PORT: int = 3306
-    DB_USER: str = "root"
+    DB_PORT: int = 5432
+    DB_USER: str = "monitora"
     DB_PASSWORD: str = ""
-    DB_NAME: str = "sigaa_unb"
-    DATABASE_URL_OVERRIDE: str | None = None
+    DB_NAME: str = "monitora_unb"
+
 
     # Scraper
     SCRAPER_DELAY: float = 1.5
@@ -37,15 +37,14 @@ class Settings(BaseSettings):
 
     @property
     def DATABASE_URL(self) -> str:
-        if self.DATABASE_URL_OVERRIDE:
-            return self.DATABASE_URL_OVERRIDE
-        if self.DB_TYPE.lower() == "mysql":
-            return (
-                f"mysql+pymysql://{self.DB_USER}:{self.DB_PASSWORD}"
-                f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
-                "?charset=utf8mb4"
-            )
-        return "sqlite:///./sigaa_unb.db"
+        return URL.create(
+            drivername="postgresql+psycopg",
+            username=self.DB_USER,
+            password=self.DB_PASSWORD,
+            host=self.DB_HOST,
+            port=self.DB_PORT,
+            database=self.DB_NAME,
+        ).render_as_string(hide_password=False)
 
     class Config:
         env_file = ".env"
