@@ -1,64 +1,22 @@
-import type { DadosHistorico, DadosInscricao } from "../types/dados-inscricao.js";
+import type { DadosHistorico, DadosInscricao } from "../types/inscricao.js";
 
-const API_BASE = "http://127.0.0.1:8000/api";
+// ÚNICO arquivo que vai conversar com o back-end (Python/FastAPI).
+// Hoje as duas funções são simuladas; quando a API existir, é só trocar
+// o corpo delas por um fetch() — as páginas não precisam mudar.
 
-async function obterDetalheErro(resposta: Response, padrao: string): Promise<string> {
-  try {
-    const erro = await resposta.json() as { detail?: unknown };
-    if (typeof erro.detail === "string" && erro.detail.trim()) return erro.detail;
-  } catch {
-    // A API pode responder sem JSON.
-  }
-  return padrao;
-}
+const atraso = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
 // RF-03: extrair os dados do PDF do histórico.
-export async function extrairDadosHistorico(
-  arquivo: File, 
-  disciplina: string,
-  matricula: string,
-):Promise<DadosHistorico> {
-                                            
-  const formulario = new FormData();                                        
-  formulario.append("arquivo", arquivo);
-  formulario.append("disciplina", disciplina);
-  formulario.append("matricula", matricula);
-  
-  const resposta = await fetch(
-    `${API_BASE}/historico`,
-    {
-      method: "POST",
-      body: formulario
-    }
-  );
-
-  if (!resposta.ok) {
-    throw new Error(await obterDetalheErro(resposta, "Não foi possível ler o histórico."));
-  }
-
-  return await resposta.json() as DadosHistorico;
+export async function extrairDadosHistorico(_arquivo: File): Promise<DadosHistorico> {
+  await atraso(600);
+  return {
+    aluno: "Lucas Almeida Ferreira",
+    matricula: "21/0039482",
+    ira: 4.32,
+  };
 }
 
 // RF-07: registrar a inscrição.
-export async function enviarInscricao(dados: DadosInscricao): Promise<string> {
-  const resposta = await fetch(`${API_BASE}/inscricoes`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      token_validacao: dados.tokenValidacao,
-      semestre: dados.semestre,
-      email: dados.email,
-      professor: dados.professor || null,
-      declaracao_sem_outra_bolsa: dados.declaracaoSemOutraBolsa,
-    }),
-  });
-
-  if (!resposta.ok) {
-    throw new Error(await obterDetalheErro(resposta, "Não foi possível validar a inscrição."));
-  }
-
-  const resultado = await resposta.json() as { mensagem?: unknown };
-  return typeof resultado.mensagem === "string"
-    ? resultado.mensagem
-    : "Os dados da inscrição foram validados pela API.";
+export async function enviarInscricao(_dados: DadosInscricao): Promise<void> {
+  await atraso(600);
 }
