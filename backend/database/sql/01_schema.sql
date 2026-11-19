@@ -22,10 +22,24 @@ ALTER TABLE public.aluno ALTER COLUMN id_aluno ADD GENERATED ALWAYS AS IDENTITY 
     CACHE 1
 );
 
+CREATE TABLE public.departamentos (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    sigaa_id integer NOT NULL UNIQUE,
+    nome character varying(300) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE public.disciplina (
     id_disciplina integer NOT NULL,
     codigo character varying(30) NOT NULL,
-    nome character varying(150) NOT NULL
+    nome character varying(300) NOT NULL,
+    tipo character varying(50),
+    nivel character varying(50),
+    carga_horaria integer,
+    departamento_id integer,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 ALTER TABLE ONLY public.disciplina
@@ -34,6 +48,11 @@ ALTER TABLE ONLY public.disciplina
 ALTER TABLE ONLY public.disciplina
     ADD CONSTRAINT disciplina_pkey PRIMARY KEY (id_disciplina);
 
+ALTER TABLE ONLY public.disciplina
+    ADD CONSTRAINT fk_disciplina_departamento
+    FOREIGN KEY (departamento_id)
+    REFERENCES public.departamentos(id);
+
 ALTER TABLE public.disciplina ALTER COLUMN id_disciplina ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME public.disciplina_id_disciplina_seq
     START WITH 1
@@ -41,27 +60,6 @@ ALTER TABLE public.disciplina ALTER COLUMN id_disciplina ADD GENERATED ALWAYS AS
     NO MINVALUE
     NO MAXVALUE
     CACHE 1
-);
-
-CREATE TABLE public.inscricao (
-    id_inscricao integer NOT NULL,
-    id_aluno integer NOT NULL,
-    id_disciplina integer NOT NULL,
-    id_processo integer NOT NULL,
-    ira numeric(4,2) NOT NULL,
-    mencao character varying(10) NOT NULL,
-    coeficiente numeric(4,2) NOT NULL,
-    caminho_historico text NOT NULL,
-    data_inscricao timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    CONSTRAINT chk_coeficiente_calculo CHECK ((coeficiente = round(((0.6 * ira) + (0.4 * (
-CASE mencao
-    WHEN 'MM'::text THEN 3
-    WHEN 'MS'::text THEN 4
-    WHEN 'SS'::text THEN 5
-    ELSE NULL::integer
-END)::numeric)), 2))),
-    CONSTRAINT chk_ira_limite CHECK (((ira >= (0)::numeric) AND (ira <= (5)::numeric))),
-    CONSTRAINT chk_mencao CHECK (((mencao)::text = ANY ((ARRAY['MM'::character varying, 'MS'::character varying, 'SS'::character varying])::text[])))
 );
 
 
@@ -92,7 +90,7 @@ ALTER TABLE public.inscricao ALTER COLUMN id_inscricao ADD GENERATED ALWAYS AS I
 );
 
 CREATE TABLE public.processo_seletivo (
-    id_processo integer NOT NULL,
+    id_processo integer GENERATED ALWAYS AS IDENTITY,
     id_usuario integer NOT NULL,
     semestre character varying(20) NOT NULL,
     data_abertura date NOT NULL,

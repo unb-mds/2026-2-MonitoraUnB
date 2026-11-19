@@ -40,7 +40,6 @@ services:
       - "127.0.0.1:8000:8000"
 
     environment:
-      DB_TYPE: postgresql
       DB_HOST: db
       DB_PORT: 5432
       DB_NAME: ${DB_NAME:-monitora_unb}
@@ -104,7 +103,6 @@ services:
       - backend.scraping.main
 
     environment:
-      DB_TYPE: postgresql
       DB_HOST: db
       DB_PORT: 5432
       DB_NAME: ${DB_NAME:-monitora_unb}
