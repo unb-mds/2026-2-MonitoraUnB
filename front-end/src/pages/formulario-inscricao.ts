@@ -76,17 +76,28 @@ botaoContinuar.addEventListener("click", async (evento) => {
   definirCarregando(true);
 
   try {
-    const historico = await extrairDadosHistorico(arquivo, codigo);
+    const historico = await extrairDadosHistorico(
+      arquivo,
+      codigo,
+      campoMatricula.value.trim(),
+    );
 
     salvarInscricao({
       aluno: historico.aluno,
       matricula: historico.matricula,
       ira: historico.ira,
       semestre: SEMESTRE_ATUAL,
-      disciplina: codigo,
-      disciplinaNome: codigo,
+      disciplina: historico.disciplina.codigo,
+      disciplinaNome: historico.disciplina.nome,
       professor: campoProfessor.value.trim(),
       email: campoEmail.value.trim(),
+      tokenValidacao: historico.token_validacao,
+      mencao: historico.disciplina.mencao,
+      situacaoDisciplina: historico.disciplina.situacao,
+      periodoDisciplina: historico.disciplina.periodo,
+      coefMencao: historico.disciplina.coef_mencao,
+      coeficienteCandidatura: historico.coeficiente_candidatura,
+      declaracaoSemOutraBolsa: true,
       arquivoHistorico: arquivo.name,
     });
 

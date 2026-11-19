@@ -11,7 +11,10 @@ from backend.schemas.auth import (
 )
 from backend.services import auth_service
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(
+    prefix="/auth", 
+    tags=["Auth"]
+)
 
 
 @router.post("/login", response_model=LoginResponse)
