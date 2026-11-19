@@ -8,10 +8,13 @@ from backend.schemas.inscricoes import (
 )
 from backend.services.inscricoes_service import ler_token_validacao
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/inscricoes",
+    tags=["Inscricoes"],
+)
 
 
-@router.post("/inscricoes", response_model=InscricaoResponse)
+@router.post("", response_model=InscricaoResponse)
 def criar_inscricao(dados: InscricaoRequest) -> InscricaoResponse:
     try:
         dados_assinados = ler_token_validacao(dados.token_validacao)
