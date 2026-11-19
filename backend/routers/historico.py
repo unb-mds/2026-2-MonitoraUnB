@@ -12,10 +12,13 @@ from backend.services.historico.calcular_coeficiente import calcular_coeficiente
 from backend.services.inscricoes_service import gerar_token_validacao
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/historico",
+    tags=["Historico"]
+)
 
 
-@router.post("/historico")
+@router.post("")
 def receber_historico(arquivo: UploadFile = File(...),
                       disciplina: str = Form(...),
                       matricula: str = Form(...),
