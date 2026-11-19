@@ -1,191 +1,60 @@
 /* PÁGINA 3 — FAÇA SUA INSCRIÇÃO */
 
-body:has(.form-group) {
-    background-color: #f4f8ff;
-}
-
-
-/* Cabeçalho */
-
-body:has(.form-group) header {
-    background-color: #ffffff;
-    padding: 20px 10%;
-    border-bottom: 1px solid #dfe7f5;
-}
-
-
-body:has(.form-group) header h1 {
-    color: #1736a6;
-    font-size: 1.45rem;
-}
-
-
-/* Área principal */
-
-body:has(.form-group) main {
-    padding: 55px 10% 70px;
-}
-
-
-/* Caixa principal */
-
-body:has(.form-group) section {
-    width: 100%;
-
-    max-width: 1050px;
-
-    margin: 0 auto;
-
-    background-color: #ffffff;
-
-    padding: 40px 45px;
-
-    border-radius: 12px;
-
-    border: 1px solid #dfe7f5;
-
-    box-shadow: 0 6px 20px rgba(23, 54, 166, 0.07);
-}
-
-
-/* Título */
-
-body:has(.form-group) section h2 {
-    color: #1736a6;
-
-    font-size: 2.1rem;
-
-    margin-bottom: 10px;
-}
-
-
-/* Descrição */
-
-body:has(.form-group) section > p {
-    color: #596579;
-
-    font-size: 1rem;
-
-    line-height: 1.6;
-
-    margin-bottom: 35px;
-}
-
-
-/* CAMPOS DA INSCRIÇÃO */
-
-.form-group {
-    margin-bottom: 28px;
-
-    padding: 20px 0;
-
+.card .campo {
+    padding-bottom: 22px;
     border-bottom: 1px solid #e8edf5;
 }
 
+.card > p {
+    margin-bottom: 30px;
+}
 
-/* Labels */
+.campo-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding: 16px 18px;
+    border-radius: 10px;
+    background-color: var(--azul-claro);
+    border: 1px solid var(--borda);
+}
 
-.form-group label {
-    display: block;
+.campo-check input {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: var(--azul-escuro);
+    flex-shrink: 0;
+}
 
+.campo-check label {
     color: #344054;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    cursor: pointer;
+}
 
+#disciplina {
+    text-transform: uppercase;
+}
+
+.erro {
+    margin-bottom: 16px;
+    color: var(--vermelho);
     font-size: 0.9rem;
-
-    font-weight: bold;
-
-    margin-bottom: 9px;
+    font-weight: 600;
 }
 
-
-/* Select */
-
-.form-group select {
-    width: 100%;
-
-    padding: 14px 15px;
-
-    border: 1px solid #cdd7e8;
-
-    border-radius: 8px;
-
-    background-color: #fbfcff;
-
-    color: #172033;
-
-    font-family: inherit;
-
-    font-size: 0.95rem;
-
-    outline: none;
-}
-
-
-.form-group select:focus {
-    border-color: #2855d9;
-
-    box-shadow: 0 0 0 3px rgba(40, 85, 217, 0.10);
-}
-
-
-/* Texto explicativo */
-
-.description {
-    color: #667085;
-
-    font-size: 0.88rem;
-
-    margin-bottom: 10px;
-}
-
-
-/* Upload */
-
-.form-group input[type="file"] {
-    width: 100%;
-
-    padding: 10px;
-
-    border: 1px solid #cdd7e8;
-
-    border-radius: 8px;
-
-    background-color: #fbfcff;
-
-    color: #596579;
-
-    font-family: inherit;
-}
-
-
-/*BOTÃO CONTINUAR */
-
-body:has(.form-group) .continue-button {
+.link-voltar {
     display: block;
-
-    width: 100%;
-
+    margin-top: 18px;
     text-align: center;
-
-    padding: 14px 20px;
-
-    background-color: #1736a6;
-
-    color: white;
-
-    border-radius: 8px;
-
+    color: var(--texto-suave);
+    font-size: 0.9rem;
     text-decoration: none;
-
-    font-weight: bold;
-
-    transition: 0.2s ease;
 }
 
-
-body:has(.form-group) .continue-button:hover {
-    background-color: #2855d9;
-
-    transform: translateY(-1px);
+.link-voltar:hover {
+    color: var(--azul-escuro);
 }
-

@@ -4,112 +4,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitora-UnB</title>
+    <title>Monitora-UnB — Inscrição</title>
     <link rel="stylesheet" href="../styles/global.css">
     <link rel="stylesheet" href="../styles/inscricao.css">
+    <link rel="icon"  type="image/x-icon" href="as_bas_cor.jpg">
 </head>
 
 <body>
 
-    <header>
-        <h1>Monitora-UnB</h1>
+    <header class="topbar">
+        <a href="inicio.html" class="logo">Monitora<span>-UnB</span></a>
     </header>
 
-    <main>
+    <section class="hero">
+        <div class="hero-conteudo">
+            <h1>Faça sua inscrição</h1>
+            <p>Escolha a disciplina para a qual deseja se candidatar e envie sua documentação.</p>
+            <ol class="etapas">
+                <li class="ativa">1. Inscrição</li>
+                <li>2. Revisão</li>
+                <li>3. Envio</li>
+            </ol>
+        </div>
+    </section>
 
-        <section>
+    <main class="conteudo">
+        <div class="coluna">
+            <section class="card">
 
-            <h2>Faça sua inscrição</h2>
+                <div class="campo">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" placeholder="seu.email@institucional.com ou @pessoal.com" required>
+                </div>
 
-            <p>
-                Escolha a disciplina para a qual deseja se candidatar
-                e envie sua documentação.
-            </p>
+                <div class="campo">
+                    <label for="historico">Histórico:</label>
+                    <p class="dica">Envie seu histórico em formato PDF.</p>
+                    <input type="file" id="historico" name="historico" accept=".pdf" required>
+                </div>
 
+                <div class="campo">
+                    <label for="disciplina">Código da disciplina:</label>
+                    <p class="dica">Digite o código da disciplina para a qual deseja ser monitor (ex.: MAT0001).</p>
+                    <input type="text" id="disciplina" name="disciplina" placeholder="ex: MAT0025" autocomplete="off" maxlength="10" required>
+                </div>
 
-            <!-- Seleção da disciplina -->
+                <div class="campo">
+                    <label for="professor">Professor com quem deseja ser monitor (opcional):</label>
+                    <p class="dica">Digite o nome do professor.</p>
+                    <input type="text" id="professor" name="professor" placeholder="Nome do professor" autocomplete="off" required>
+                </div>
 
-            <!-- Upload da documentação -->
+                <div class="campo">
+                    <label for="matricula">Matrícula:</label>
+                    <input type="text" id="matricula" name="matricula" inputmode="numeric" placeholder="ex: 241000000" required>
+                </div>
 
-            <div class="form-group">
+                <div class="campo-check">
+                    <input type="checkbox" id="concordo" name="concordo" required>
+                    <label for="concordo">Concordo que não recebo nenhuma outra bolsa.</label>
+                </div>
 
-                <label for="historico">
-                    Histórico:
-                </label>
+                <a href="revisao.html" id="continuar" class="btn btn-primario btn-bloco">Continuar para revisão</a>
 
-                <p class="description">
-                    Envie seu histórico em formato PDF.
-                </p>
+                <a href="inicio.html" class="link-voltar">&larr; Voltar ao início</a>
 
-                <input
-                    type="file"
-                    id="historico"
-                    name="historico"
-                    accept=".pdf"
-                    required
-                >
-
-            </div>
-        <div class="form-group">
-
-                <label for="disciplina">
-                    Disciplina para monitoria:
-                </label>
-
-                <select id="disciplina" name="disciplina" required>
-
-                    <option value="" disabled selected>
-                        Selecione uma disciplina
-                    </option>
-
-                    <option value="calculo-1">
-                        Cálculo 1
-                    </option>
-
-                    <option value="algebra-linear">
-                        Álgebra Linear
-                    </option>
-
-                    <option value="metodos-desenvolvimento-software">
-                        Métodos de Desenvolvimento de Software
-                    </option>
-
-                    <option value="algoritmos">
-                        Algoritmos e Programação
-                    </option>
-
-                    <option value="estrutura-dados">
-                        Estrutura de Dados
-                    </option>
-
-                    <option value="engenharia-software">
-                        Engenharia de Software
-                    </option>
-
-                    <option value="fisica-1">
-                        Física 1
-                    </option>
-
-                    <option value="matematica-discreta-1">
-                        Matemática Discreta 1
-                    </option>
-
-                </select>
-
-            </div>
-
-
-
-            <a href="./revisao.html" class="continue-button">
-                Continuar para revisão
-            </a>
-
-        </section>
-
+            </section>
+        </div>
     </main>
 
-    <script type="module" src="../dist/pages/inscricao.js"></script>
+    <footer class="rodape">
+        <p>&copy; 2026 Monitora-UnB. Todos os direitos reservados ao Grupo 11.</p>
+    </footer>
 
+    <script type="module" src="../dist/pages/formulario-inscricao.js"></script>
 </body>
 
 </html>

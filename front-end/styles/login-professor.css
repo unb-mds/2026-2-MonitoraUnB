@@ -1,0 +1,49 @@
+/* PÁGINA 6 — LOGIN DO PROFESSOR */
+
+.coluna.login {
+    max-width: 480px;
+}
+
+.login > .card > p {
+    margin-bottom: 28px;
+}
+
+.login .btn {
+    margin-top: 8px;
+}
+
+.link-voltar {
+    display: block;
+    margin-top: 18px;
+    text-align: center;
+    color: var(--texto-suave);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.link-voltar:hover {
+    color: var(--azul-escuro);
+}
+
+
+/* ---------- Mensagem de erro do login ---------- */
+
+.erro {
+    min-height: 1.2em;
+    margin-bottom: 14px;
+    color: var(--vermelho);
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.erro:empty {
+    display: none;
+}
+
+form + .link-voltar {
+    margin-top: 18px;
+}
+
+@media (max-width: 700px) {
+    .modal-conteudo { padding: 28px 22px 24px; }
+}
