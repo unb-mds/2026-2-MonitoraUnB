@@ -18,17 +18,7 @@ type LinhaVisivel = {
 /* ===== DADOS DE EXEMPLO =====
    Quando o banco estiver pronto, esta lista virá dele:
    uma linha por inscrição (status: pendente | aprovado | reprovado) */
-const inscricoes: InscricaoRanking[] = [
-  { id: 1, nome: "Beatriz Ferreira", disciplina: "Cálculo 1", professor: "Prof. Ana Souza", ira: 4.62, coef: 0.91, status: "pendente" },
-  { id: 2, nome: "Lucas Andrade", disciplina: "Cálculo 1", professor: "Prof. Ana Souza", ira: 4.1, coef: 0.84, status: "pendente" },
-  { id: 3, nome: "Camila Rocha", disciplina: "Cálculo 1", professor: "Prof. Carlos Lima", ira: 4.35, coef: 0.88, status: "pendente" },
-  { id: 4, nome: "Daniel Martins", disciplina: "Cálculo 1", professor: "Prof. Ana Souza", ira: 3.85, coef: 0.8, status: "pendente" },
-  { id: 5, nome: "Amanda Oliveira", disciplina: "Estrutura de Dados", professor: "Prof. Marina Alves", ira: 4.78, coef: 0.95, status: "pendente" },
-  { id: 6, nome: "Gabriel Santos", disciplina: "Estrutura de Dados", professor: "Prof. Ricardo Gomes", ira: 4.2, coef: 0.86, status: "pendente" },
-  { id: 7, nome: "Isabela Costa", disciplina: "Estrutura de Dados", professor: "Prof. Marina Alves", ira: 4.05, coef: 0.82, status: "pendente" },
-  { id: 8, nome: "Rafael Pereira", disciplina: "Álgebra Linear", professor: "Prof. Paulo Nunes", ira: 3.95, coef: 0.79, status: "pendente" },
-  { id: 9, nome: "Júlia Barbosa", disciplina: "Álgebra Linear", professor: "Prof. Paulo Nunes", ira: 4.5, coef: 0.9, status: "pendente" },
-];
+const inscricoes: InscricaoRanking[] = [];
 
 const selDisciplina = document.getElementById("filtro-disciplina") as HTMLSelectElement;
 const selOrdenar = document.getElementById("ordenar") as HTMLSelectElement;
