@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from pydantic import ValidationError
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
@@ -9,14 +9,17 @@ from backend.database.database import get_db
 from backend.schemas.inscricoes import (
     DadosHistoricoAssinados,
     InscricaoRequest,
+    InscricaoRankingResponse,
     InscricaoResponse,
 )
+from backend.services.auth_service import professor_autenticado
 from backend.services.inscricoes_service import (
     DisciplinaNaoEncontradaError,
     InscricaoDuplicadaError,
     ProcessoNaoAbertoError,
     ProcessoNaoEncontradoError,
     ler_token_validacao,
+    listar_inscricoes as listar_inscricoes_service,
     registrar_inscricao,
 )
 
@@ -26,6 +29,34 @@ router = APIRouter(
 )
 
 logger = logging.getLogger(__name__)
+
+
+@router.get("", response_model=list[InscricaoRankingResponse])
+def obter_inscricoes(
+    request: Request,
+    semestre: str = Query(..., pattern=r"^\d{4}/[12]$"),
+    db: Session = Depends(get_db),
+) -> list[dict]:
+    if not professor_autenticado(request.session):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="É necessário autenticar como professor para consultar inscrições.",
+        )
+
+    try:
+        return listar_inscricoes_service(db=db, semestre=semestre)
+    except ProcessoNaoEncontradoError as erro:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Não existe processo seletivo cadastrado para o semestre informado.",
+        ) from erro
+    except SQLAlchemyError as erro:
+        db.rollback()
+        logger.exception("Erro ao consultar inscrições no banco de dados.")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Não foi possível consultar as inscrições no banco de dados.",
+        ) from erro
 
 
 @router.post("", response_model=InscricaoResponse)
