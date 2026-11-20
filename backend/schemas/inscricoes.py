@@ -17,8 +17,8 @@ class DisciplinaValidada(BaseModel):
 
 
 class DadosHistoricoAssinados(BaseModel):
-    aluno: str
-    matricula: str
+    aluno: str = Field(..., min_length=1, max_length=150)
+    matricula: str = Field(..., pattern=r"^\d{9}$")
     ira: float
     status: str
     disciplina: DisciplinaValidada
@@ -31,7 +31,7 @@ class InscricaoRequest(BaseModel):
     email: str = Field(
         ...,
         min_length=5,
-        max_length=254,
+        max_length=150,
         pattern=r"^[^@\s]+@[^@\s]+\.[^@\s]+$",
     )
     professor: str | None = Field(default=None, max_length=150)
@@ -39,6 +39,6 @@ class InscricaoRequest(BaseModel):
 
 
 class InscricaoResponse(BaseModel):
-    status: Literal["validada"]
+    status: Literal["registrada"]
     mensagem: str
     coeficiente_candidatura: float
