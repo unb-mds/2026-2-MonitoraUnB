@@ -172,6 +172,37 @@ class Inscricao(Base):
     )
 
 
+class Resultado(Base):
+    """Decisão administrativa associada a uma inscrição."""
+
+    __tablename__ = "resultado"
+
+    id_resultado = Column(Integer, primary_key=True, autoincrement=True)
+    id_inscricao = Column(
+        Integer,
+        ForeignKey("inscricao.id_inscricao", ondelete="CASCADE"),
+        nullable=False,
+    )
+    decisao = Column(String(20), nullable=False)
+    modalidade = Column(String(20), nullable=True)
+    data_decisao = Column(
+        DateTime,
+        nullable=False,
+        server_default=func.now(),
+    )
+    email_enviado = Column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default=text("false"),
+    )
+    data_envio = Column(DateTime, nullable=True)
+
+    __table_args__ = (
+        UniqueConstraint("id_inscricao", name="resultado_id_inscricao_key"),
+    )
+
+
 class ScrapingLog(Base):
     """Log de execuções do scraper para rastreabilidade."""
 
