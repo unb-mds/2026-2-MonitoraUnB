@@ -170,13 +170,37 @@ configurar_sessao() {
 
 # Configura a senha inicial do banco, se necessário
 configurar_banco() {
-    if ! grep -q '^DB_PASSWORD=' .env ||
-       grep -Eq '^DB_PASSWORD=(substitua_por_uma_senha_segura)?$' .env; then
+    local senha
 
-        atualizar_env DB_PASSWORD "$(openssl rand -hex 32)"
+    echo
 
-        sucesso "Senha do PostgreSQL configurada."
+    read -rsp "Senha do banco de dados (Enter para padrão): " senha
+    echo
+
+    if [[ -z "$senha" ]]; then
+
+        if grep -Eq "^DB_PASSWORD=.+$" .env &&
+           ! grep -q "^DB_PASSWORD=substitua_por_uma_senha_segura$" .env; then
+
+            sucesso "Senha existente do banco mantida."
+
+            return
+        fi
+
+        senha=$("$PYTHON" -c \
+            "import secrets; print(secrets.token_hex(8))")
+
+        sucesso "Senha padrão gerada automaticamente."
+
+    else
+
+        sucesso "Senha personalizada selecionada."
+
     fi
+
+    atualizar_env DB_PASSWORD "$senha"
+
+    sucesso "Senha do PostgreSQL configurada."
 }
 
 

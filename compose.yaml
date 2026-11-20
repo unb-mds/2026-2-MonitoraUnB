@@ -8,8 +8,8 @@ services:
 
     environment:
       POSTGRES_DB: ${DB_NAME:-monitora_unb}
-      POSTGRES_USER: ${POSTGRES_USER:-monitora}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no .env}
+      POSTGRES_USER: ${DB_USER:-monitora}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Defina POSTGRES_PASSWORD no .env}
 
     ports:
       - "127.0.0.1:5432:5432"
@@ -110,7 +110,7 @@ services:
       DB_PORT: 5432
       DB_NAME: ${DB_NAME:-monitora_unb}
       DB_USER: ${POSTGRES_USER:-monitora}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no .env}
+      DB_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no .env}
 
     depends_on:
       db:
