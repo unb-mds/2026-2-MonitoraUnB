@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     # Database
     DB_HOST: str = "localhost"
     DB_PORT: int = 5432
-    DB_USER: str = "monitora"
+    DB_USER: str = "monitora_app"
     DB_PASSWORD: str = ""
     DB_NAME: str = "monitora_unb"
 
