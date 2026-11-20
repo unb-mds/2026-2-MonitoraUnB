@@ -1,5 +1,8 @@
 CREATE ROLE monitora_app LOGIN;
 
+-- Defina a senha do papel interativamente no psql com: \password monitora_app
+-- O valor deve ser o mesmo configurado em DB_PASSWORD no .env.
+
 GRANT USAGE ON SCHEMA public TO monitora_app;
 
 -- permissões das tabelas
