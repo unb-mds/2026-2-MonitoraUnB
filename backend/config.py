@@ -2,10 +2,17 @@
 Configurações da aplicação carregadas via variáveis de ambiente (.env).
 """
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 from sqlalchemy.engine import URL
 
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
 class Settings(BaseSettings):
     """Configurações da aplicação."""
