@@ -9,9 +9,11 @@ from sqlalchemy import (
     Date,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     Numeric,
     String,
+    Table,
     Text,
     UniqueConstraint,
     text,
@@ -20,6 +22,41 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from backend.database.database import Base
+
+
+disciplina_professores = Table(
+    "disciplina_professores",
+    Base.metadata,
+    Column(
+        "disciplina_id",
+        Integer,
+        ForeignKey("disciplina.id_disciplina", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column(
+        "professor_id",
+        Integer,
+        ForeignKey("professores.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+)
+
+turma_professores = Table(
+    "turma_professores",
+    Base.metadata,
+    Column(
+        "turma_id",
+        Integer,
+        ForeignKey("turmas.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column(
+        "professor_id",
+        Integer,
+        ForeignKey("professores.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+)
 
 
 class Departamento(Base):
@@ -34,6 +71,7 @@ class Departamento(Base):
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
     disciplinas = relationship("Disciplina", back_populates="departamento")
+    professores = relationship("Professor", back_populates="departamento")
 
     def __repr__(self):
         return f"<Departamento(sigaa_id={self.sigaa_id}, nome='{self.nome}')>"
@@ -52,18 +90,96 @@ class Disciplina(Base):
     tipo = Column(String(50), nullable=True, comment="Tipo: DISCIPLINA, ATIVIDADE, BLOCO, MÓDULO")
     nivel = Column(String(50), nullable=True, comment="Nível de ensino: GRADUAÇÃO, STRICTO SENSU, etc.")
     carga_horaria = Column(Integer, nullable=True, comment="Carga horária total em horas")
+    pre_requisitos = Column(Text, nullable=True, comment="Expressão de pré-requisitos")
+    co_requisitos = Column(Text, nullable=True, comment="Expressão de co-requisitos")
+    equivalencias = Column(Text, nullable=True, comment="Expressão de equivalências")
+    ementa = Column(Text, nullable=True, comment="Ementa oficial do componente")
     departamento_id = Column(Integer, ForeignKey("departamentos.id"), nullable=True)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
     departamento = relationship("Departamento", back_populates="disciplinas")
+    professores = relationship(
+        "Professor",
+        secondary=disciplina_professores,
+        back_populates="disciplinas",
+    )
+    turmas = relationship(
+        "Turma",
+        back_populates="disciplina",
+        cascade="all, delete-orphan",
+    )
 
     __table_args__ = (
         UniqueConstraint("codigo", name="disciplina_codigo_key"),
+        Index("idx_disciplina_nome", "nome"),
     )
 
     def __repr__(self):
         return f"<Disciplina(codigo='{self.codigo}', nome='{self.nome}')>"
+
+
+class Professor(Base):
+    """Docente associado a disciplinas e turmas do SIGAA."""
+
+    __tablename__ = "professores"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nome = Column(String(300), nullable=False)
+    departamento_id = Column(Integer, ForeignKey("departamentos.id"), nullable=True)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    departamento = relationship("Departamento", back_populates="professores")
+    disciplinas = relationship(
+        "Disciplina",
+        secondary=disciplina_professores,
+        back_populates="professores",
+    )
+    turmas = relationship(
+        "Turma",
+        secondary=turma_professores,
+        back_populates="professores",
+    )
+
+    __table_args__ = (UniqueConstraint("nome", name="uq_professor_nome"),)
+
+
+class Turma(Base):
+    """Turma de uma disciplina ofertada em um período letivo."""
+
+    __tablename__ = "turmas"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    codigo = Column(String(20), nullable=False)
+    ano_periodo = Column(String(20), nullable=False)
+    horario = Column(String(500), nullable=True)
+    local = Column(String(300), nullable=True)
+    vagas_ofertadas = Column(Integer, nullable=True)
+    vagas_ocupadas = Column(Integer, nullable=True)
+    disciplina_id = Column(
+        Integer,
+        ForeignKey("disciplina.id_disciplina", ondelete="CASCADE"),
+        nullable=False,
+    )
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    disciplina = relationship("Disciplina", back_populates="turmas")
+    professores = relationship(
+        "Professor",
+        secondary=turma_professores,
+        back_populates="turmas",
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            "disciplina_id",
+            "codigo",
+            "ano_periodo",
+            name="uq_turma_periodo",
+        ),
+    )
 
 
 class Aluno(Base):
@@ -215,6 +331,8 @@ class ScrapingLog(Base):
     disciplinas_encontradas = Column(Integer, default=0)
     disciplinas_novas = Column(Integer, default=0)
     disciplinas_atualizadas = Column(Integer, default=0)
+    professores_encontrados = Column(Integer, default=0)
+    turmas_encontradas = Column(Integer, default=0)
     mensagem = Column(Text, nullable=True)
     started_at = Column(DateTime, server_default=func.now())
     finished_at = Column(DateTime, nullable=True)
