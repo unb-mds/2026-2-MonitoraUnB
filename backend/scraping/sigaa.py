@@ -326,7 +326,7 @@ class SigaaScraper:
     async def buscar_turmas(
         self,
         nivel: str = "G",
-        unidade_id: int = null,
+        unidade_id: int = None,
         ano: Optional[str] = "2027",
         periodo: Optional[str] = "1",
     ) -> list[dict]:
