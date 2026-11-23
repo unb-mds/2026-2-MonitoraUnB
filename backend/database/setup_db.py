@@ -6,9 +6,9 @@ import sys
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-from app.config import get_settings
-from app.database import init_db, engine, SessionLocal
-from app.scraper import sincronizar_departamentos
+from backend.config import get_settings
+from backend.database.database import init_db, SessionLocal, engine
+from backend.services.scraping_service import sincronizar_departamentos
 
 settings = get_settings()
 
@@ -18,7 +18,7 @@ def criar_banco_de_dados():
     print(f"Conectando ao PostgreSQL: banco '{settings.DB_NAME}' em {settings.DB_HOST}:{settings.DB_PORT}")
 
     # Tenta criar o banco de dados se ainda não existir, conectando-se ao banco de manutenção padrão 'postgres'
-    if not settings.DATABASE_URL_OVERRIDE:
+    if not getattr(settings, "DATABASE_URL_OVERRIDE", None):
         try:
             import psycopg2
             from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
