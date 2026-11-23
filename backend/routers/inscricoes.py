@@ -11,6 +11,7 @@ from backend.schemas.inscricoes import (
     InscricaoRequest,
     InscricaoRankingResponse,
     InscricaoResponse,
+    ProcessoAbertoResponse,
 )
 from backend.services.auth_service import professor_autenticado
 from backend.services.inscricoes_service import (
@@ -20,6 +21,7 @@ from backend.services.inscricoes_service import (
     ProcessoNaoEncontradoError,
     ler_token_validacao,
     listar_inscricoes as listar_inscricoes_service,
+    obter_processo_aberto as obter_processo_aberto_service,
     registrar_inscricao,
 )
 
@@ -29,6 +31,29 @@ router = APIRouter(
 )
 
 logger = logging.getLogger(__name__)
+
+
+@router.get("/processo-aberto", response_model=ProcessoAbertoResponse)
+def consultar_processo_aberto(
+    db: Session = Depends(get_db),
+) -> ProcessoAbertoResponse:
+    try:
+        processo = obter_processo_aberto_service(db)
+    except SQLAlchemyError as erro:
+        db.rollback()
+        logger.exception("Erro ao consultar o processo seletivo aberto.")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Não foi possível consultar o processo seletivo no banco de dados.",
+        ) from erro
+
+    if processo is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Não há processo seletivo aberto para inscrições.",
+        )
+
+    return ProcessoAbertoResponse(semestre=processo.semestre)
 
 
 @router.get("", response_model=list[InscricaoRankingResponse])
