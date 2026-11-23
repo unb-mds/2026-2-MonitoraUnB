@@ -90,7 +90,7 @@ class ScrapingRequest(BaseModel):
         description="G=Graduação, S=Stricto Sensu, L=Lato Sensu, F=Formação Complementar",
     )
     departamento_sigaa_id: int | None = Field(
-        default=673,
+        default=None,
         description="ID SIGAA do departamento; null solicita todos.",
     )
     tipo: int | None = Field(
