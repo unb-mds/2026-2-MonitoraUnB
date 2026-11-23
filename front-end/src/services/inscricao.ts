@@ -1,19 +1,32 @@
-import type { DadosHistorico, DadosInscricao } from "../types/inscricao.js";
+import type { DadosHistorico, DadosInscricao } from "../types/dados-inscricao.js";
+import type { InscricaoRanking } from "../types/inscricao-ranking.js";
 
-const atraso = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
+const API_BASE = "http://127.0.0.1:8000/api";
+
+async function obterDetalheErro(resposta: Response, padrao: string): Promise<string> {
+  try {
+    const erro = await resposta.json() as { detail?: unknown };
+    if (typeof erro.detail === "string" && erro.detail.trim()) return erro.detail;
+  } catch {
+    // A API pode responder sem JSON.
+  }
+  return padrao;
+}
 
 // RF-03: extrair os dados do PDF do histórico.
 export async function extrairDadosHistorico(
   arquivo: File, 
-  disciplina: string
+  disciplina: string,
+  matricula: string,
 ):Promise<DadosHistorico> {
                                             
   const formulario = new FormData();                                        
   formulario.append("arquivo", arquivo);
   formulario.append("disciplina", disciplina);
+  formulario.append("matricula", matricula);
   
   const resposta = await fetch(
-    "http://127.0.0.1:8000/api/historico",
+    `${API_BASE}/historico`,
     {
       method: "POST",
       body: formulario
@@ -21,16 +34,54 @@ export async function extrairDadosHistorico(
   );
 
   if (!resposta.ok) {
-    const erro = await resposta.json();
-    throw new Error(erro.detail);
+    throw new Error(await obterDetalheErro(resposta, "Não foi possível ler o histórico."));
   }
 
-  const dados = await resposta.json();
-
-  return dados;
+  return await resposta.json() as DadosHistorico;
 }
 
 // RF-07: registrar a inscrição.
-export async function enviarInscricao(_dados: DadosInscricao): Promise<void> {
-  await atraso(600);
+export async function enviarInscricao(dados: DadosInscricao): Promise<string> {
+  const resposta = await fetch(`${API_BASE}/inscricoes`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      token_validacao: dados.tokenValidacao,
+      semestre: dados.semestre,
+      email: dados.email,
+      professor: dados.professor || null,
+      declaracao_sem_outra_bolsa: dados.declaracaoSemOutraBolsa,
+    }),
+  });
+
+  if (!resposta.ok) {
+    throw new Error(await obterDetalheErro(resposta, "Não foi possível validar a inscrição."));
+  }
+
+  const resultado = await resposta.json() as { mensagem?: unknown };
+  return typeof resultado.mensagem === "string"
+    ? resultado.mensagem
+    : "Os dados da inscrição foram validados pela API.";
+}
+
+// Consulta as inscrições de um semestre para a área do professor.
+export async function listarInscricoes(semestre: string): Promise<InscricaoRanking[]> {
+  const url = new URL(`${API_BASE}/inscricoes`);
+  url.searchParams.set("semestre", semestre);
+
+  const resposta = await fetch(url, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!resposta.ok) {
+    throw new Error(await obterDetalheErro(resposta, "Não foi possível carregar as inscrições."));
+  }
+
+  const resultado: unknown = await resposta.json();
+  if (!Array.isArray(resultado)) {
+    throw new Error("A API retornou um formato inválido para as inscrições.");
+  }
+
+  return resultado as InscricaoRanking[];
 }

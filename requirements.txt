@@ -6,3 +6,8 @@ sqlalchemy
 pydantic-settings
 httpx
 beautifulsoup4
+pytest
+python-dotenv
+openpyxl
+bcrypt
+itsdangerous

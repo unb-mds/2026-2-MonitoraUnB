@@ -8,7 +8,12 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
 ).href;
 
 /** Extrai o texto real do PDF e interpreta os campos do histórico da UnB. */
-export async function extrairDadosHistorico(arquivo: File): Promise<DadosHistorico> {
+type DadosHistoricoExtraido = Pick<
+  DadosHistorico,
+  "aluno" | "matricula" | "ira"
+>;
+
+export async function extrairDadosHistorico(arquivo: File): Promise<DadosHistoricoExtraido> {
   const documento = await pdfjsLib.getDocument({ data: await arquivo.arrayBuffer() }).promise;
   const paginas: string[] = [];
 

@@ -1,0 +1,128 @@
+
+services:
+
+  # Banco de dados PostgreSQL
+  db:
+    image: postgres:17
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${DB_NAME:-monitora_unb}
+      POSTGRES_USER: ${POSTGRES_USER:-monitora}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no .env}
+
+    ports:
+      - "127.0.0.1:5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+    networks:
+      - monitora_network
+
+  # Backend: FastAPI, PDF e SMTP
+  api:
+    image: monitora-backend:dev
+
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:8000:8000"
+
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-monitora_unb}
+      DB_USER: ${DB_USER:-monitora_app}
+      DB_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no .env}
+
+      # --- E-mail (SMTP) ---
+      # Servidor SMTP usado para enviar os e-mails (Gmail por padrão)
+      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      # Porta do servidor SMTP (587 = conexão segura com STARTTLS)
+      SMTP_PORT: ${SMTP_PORT:-587}
+      # E-mail da conta que envia as mensagens (login no SMTP)
+      SMTP_USER: ${SMTP_USER:-}
+      # Senha de app de 16 letras gerada no Google (secreta, só no .env)
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      # Remetente exibido no e-mail (se vazio, usa o SMTP_USER)
+      SMTP_FROM: ${SMTP_FROM:-}
+      # Liga a conexão segura (starttls) antes do login
+      SMTP_USE_TLS: ${SMTP_USE_TLS:-true}
+
+      
+      PROFESSOR_USERNAME: ${PROFESSOR_USERNAME:-professor}
+      PROFESSOR_PASSWORD_HASH: ${PROFESSOR_PASSWORD_HASH:?Defina PROFESSOR_PASSWORD_HASH no .env}
+      SESSION_SECRET: ${SESSION_SECRET:?Defina SESSION_SECRET no .env}
+
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    networks:
+      - monitora_network
+
+  # Frontend: HTML, CSS, TypeScript e Nginx
+  frontend:
+    build:
+      context: .
+      dockerfile: front-end/Dockerfile
+
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:3000:80"
+
+    depends_on:
+      - api
+
+    networks:
+      - monitora_network
+
+  # Scraping do SIGAA
+  scraping:
+    image: monitora-backend:dev
+
+    profiles:
+      - scraping
+
+    command:
+      - python
+      - -m
+      - backend.scraping.main
+
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-monitora_unb}
+      DB_USER: ${POSTGRES_USER:-monitora}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no .env}
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    networks:
+      - monitora_network
+
+volumes:
+  postgres_data:
+
+networks:
+  monitora_network:
+    driver: bridge
+
