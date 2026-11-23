@@ -64,6 +64,22 @@ export async function enviarInscricao(dados: DadosInscricao): Promise<string> {
         : "Os dados da inscrição foram validados pela API.";
 }
 
+export async function obterProcessoAberto(): Promise<{ semestre: string }> {
+    const resposta = await fetch(`${API_BASE}/inscricoes/processo-aberto`);
+
+    if (!resposta.ok) {
+        throw new Error(
+            await obterDetalheErro(
+                resposta,
+                "Não há processo seletivo aberto para inscrições.",
+            ),
+        );
+    }
+
+    return await resposta.json() as { semestre: string };
+}
+
+
 // Consulta as inscrições de um semestre para a área do professor.
 export async function listarInscricoes(semestre: string): Promise<InscricaoRanking[]> {
   const url = new URL(`${API_BASE}/inscricoes`);
