@@ -326,9 +326,9 @@ class SigaaScraper:
     async def buscar_turmas(
         self,
         nivel: str = "G",
-        unidade_id: int = 673,
-        ano: Optional[str] = None,
-        periodo: Optional[str] = None,
+        unidade_id: int = null,
+        ano: Optional[str] = "2027",
+        periodo: Optional[str] = "1",
     ) -> list[dict]:
         """
         Busca as turmas e professores de um departamento no SIGAA.
