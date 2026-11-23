@@ -135,9 +135,13 @@ call :sucesso "Senha protegida com sucesso."
 goto :eof
 
 :configurar_sessao
-:: Gera token de 32 bytes em hexadecimal (equivalente ao openssl rand -hex 32)
-for /f "delims=" %%s in ('powershell -NoProfile -Command "$b = New-Object byte[] 32; (New-Object Security.Cryptography.RNGCryptoServiceProvider).GetBytes($b); -join ($b ^| ForEach-Object { '{0:x2}' -f $_ })"') do (
+:: Gera token seguro de 32 bytes em hexadecimal usando o Python do .venv
+for /f "delims=" %%s in ('.venv\Scripts\python.exe -c "import secrets; print(secrets.token_hex(32))"') do (
     set "SESSION_SECRET=%%s"
+)
+
+if "%SESSION_SECRET%"=="" (
+    call :erro "Nao foi possivel gerar a chave de sessao."
 )
 
 call :atualizar_env "SESSION_SECRET" "%SESSION_SECRET%"
