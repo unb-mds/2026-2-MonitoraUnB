@@ -12,7 +12,8 @@ from backend.routers import (
     disciplinas,
     historico,
     inscricoes,
-    departamentos
+    departamentos,
+    scraping,
 )
 
 logging.basicConfig(
@@ -80,6 +81,11 @@ app.include_router(
 app.include_router(
     departamentos.router,
     prefix="/api"
+)
+
+app.include_router(
+    scraping.router,
+    prefix="/api/v1",
 )
 
 @app.get("/")

@@ -1,6 +1,7 @@
 """
-API Faz scraping da página pública:
-  https://sig.unb.br/sigaa/public/componentes/busca_componentes.jsf
+API Faz scraping das páginas públicas do SIGAA UnB:
+  - Componentes curriculares: https://sigaa.unb.br/sigaa/public/componentes/busca_componentes.jsf
+  - Turmas e Docentes: https://sigaa.unb.br/sigaa/public/turmas/listar.jsf
 """
 
 import asyncio
@@ -12,10 +13,8 @@ from typing import Optional
 
 import httpx
 from bs4 import BeautifulSoup
-from sqlalchemy.orm import Session
 
 from backend.config import get_settings
-from backend.database.models import Departamento, Disciplina, ScrapingLog
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -140,6 +139,7 @@ class SigaaScraper:
 
     HOME_URL = f"{settings.SIGAA_BASE_URL}/public/home.jsf"
     BUSCA_URL = f"{settings.SIGAA_BASE_URL}/public/componentes/busca_componentes.jsf"
+    TURMAS_URL = f"{settings.SIGAA_BASE_URL}/public/turmas/listar.jsf?aba=p-ensino"
 
     ABA_POR_NIVEL = {
         "G": "p-graduacao",
@@ -183,10 +183,8 @@ class SigaaScraper:
         """
         Garante que a sessão JSF do SIGAA está inicializada e retorna o ViewState.
         """
-        # 1. estabelecer sessão
         await client.get(self.HOME_URL)
 
-        # 2. Acessar a página de busca com a aba correta
         aba = self.ABA_POR_NIVEL.get(nivel, "p-ensino")
         url_com_aba = f"{self.BUSCA_URL}?nivel={nivel}&aba={aba}"
         response = await client.get(url_com_aba)
@@ -210,11 +208,9 @@ class SigaaScraper:
         """
         client = await self._get_client()
 
-        # 1. Obter o ViewState 
         view_state = await self._inicializar_sessao(client, nivel)
         logger.info(f"ViewState obtido: {view_state}")
 
-        # 2. dados do POST
         form_data = {
             "form": "form",
             "form:nivel": nivel,
@@ -230,7 +226,6 @@ class SigaaScraper:
         else:
             form_data["form:unidades"] = "0"
 
-        # 3. Enviar o POST
         logger.info(
             f"Buscando componentes: nivel={nivel}, tipo={tipo}, unidade={unidade_id}"
         )
@@ -245,8 +240,6 @@ class SigaaScraper:
         response.raise_for_status()
 
         html = response.content.decode("iso-8859-1", errors="replace")
-
-        # 4. Parse do HTML da resposta
         disciplinas = self._parse_resultados(html, nivel)
 
         logger.info(f"Encontradas {len(disciplinas)} disciplinas")
@@ -254,21 +247,18 @@ class SigaaScraper:
 
     def _parse_resultados(self, html: str, nivel: str) -> list[dict]:
         """
-        Extrai as disciplinas do HTML de resultados.
+        Extrai as disciplinas do HTML de resultados da busca de componentes.
         """
         soup = BeautifulSoup(html, "html.parser")
         disciplinas = []
 
-        # Procurar a tabela de resultados com classe 'listagem'
         tabela = soup.find("table", class_="listagem")
         if not tabela:
-            # Tentar busca por atributo id ou padrão alternativo
             tabela = soup.find("table", id=re.compile(r".*listagem.*", re.IGNORECASE))
             if not tabela:
                 logger.warning("Tabela de resultados não encontrada no HTML")
                 return disciplinas
 
-        # Iterar pelas linhas da tabela
         linhas = tabela.find_all("tr")
         for linha in linhas:
             celulas = linha.find_all("td")
@@ -286,7 +276,6 @@ class SigaaScraper:
         return disciplinas
 
     def _extrair_disciplina(self, celulas: list, nivel: str) -> Optional[dict]:
-
         col0 = unescape(celulas[0].get_text(strip=True))
         col1 = unescape(celulas[1].get_text(strip=True)) if len(celulas) > 1 else ""
 
@@ -334,150 +323,300 @@ class SigaaScraper:
             "carga_horaria": carga_horaria,
         }
 
+    async def buscar_turmas(
+        self,
+        nivel: str = "G",
+        unidade_id: int = 673,
+        ano: Optional[str] = None,
+        periodo: Optional[str] = None,
+    ) -> list[dict]:
+        """
+        Busca as turmas e professores de um departamento no SIGAA.
+        Retorna lista de disciplinas com suas turmas e professores.
+        """
+        client = await self._get_client()
 
-def sincronizar_departamentos(db: Session) -> int:
-    """
-    Sincroniza a lista de departamentos do SIGAA no banco de dados.
-    Retorna o número de departamentos inseridos/atualizados.
-    """
-    count = 0
-    for sigaa_id, nome in DEPARTAMENTOS.items():
-        existing = db.query(Departamento).filter_by(sigaa_id=sigaa_id).first()
-        if existing:
-            if existing.nome != nome:
-                existing.nome = nome
-                count += 1
-        else:
-            db.add(Departamento(sigaa_id=sigaa_id, nome=nome))
-            count += 1
+        # 1. Obter a página de turmas para ViewState e defaults
+        await client.get(self.HOME_URL)
+        resp = await client.get(self.TURMAS_URL)
+        resp.raise_for_status()
 
-    db.commit()
-    logger.info(f"Departamentos sincronizados: {count} novos/atualizados")
-    return count
+        html = resp.content.decode("iso-8859-1", errors="replace")
+        soup = BeautifulSoup(html, "html.parser")
 
+        view_state_input = soup.find("input", {"name": "javax.faces.ViewState"})
+        view_state = view_state_input.get("value", "j_id1") if view_state_input else "j_id1"
 
-async def executar_scraping(
-    db: Session,
-    nivel: str = "G",
-    tipo: int = 2,
-    departamento_sigaa_id: Optional[int] = None,
-) -> ScrapingLog:
-    """
-    Executa o scraping completo e salva os resultados no banco de dados.
-    """
-    # Criar log de scraping
-    log = ScrapingLog(
-        departamento_sigaa_id=departamento_sigaa_id,
-        nivel=NIVEIS.get(nivel, nivel),
-        status="RUNNING",
-    )
-    db.add(log)
-    db.commit()
+        # Defaults de ano e período se não fornecidos
+        if not ano:
+            ano_input = soup.find("input", id=lambda x: x and "inputAno" in str(x))
+            ano = ano_input.get("value", "2026") if ano_input else "2026"
 
-    scraper = SigaaScraper()
-    total_encontradas = 0
-    total_novas = 0
-    total_atualizadas = 0
+        if not periodo:
+            periodo_select = soup.find("select", id=lambda x: x and "inputPeriodo" in str(x))
+            if periodo_select:
+                sel_opt = periodo_select.find("option", selected=True)
+                periodo = sel_opt.get("value") if sel_opt else "2"
+            else:
+                periodo = "2"
 
-    try:
-        # Sincronizar departamentos
-        sincronizar_departamentos(db)
+        # Localizar botão Buscar do formulário
+        form = soup.find("form", id="formTurma") or soup.find("form")
+        submit_btn = form.find("input", {"type": "submit", "value": "Buscar"}) if form else None
+        btn_name = submit_btn.get("name", "formTurma:j_id_jsp_1370969402_11") if submit_btn else "formTurma:j_id_jsp_1370969402_11"
+        btn_value = submit_btn.get("value", "Buscar") if submit_btn else "Buscar"
 
-        if departamento_sigaa_id:
-            # Scraping de um único departamento
-            deptos = [departamento_sigaa_id]
-        else:
-            # Scraping de todos os departamentos
-            deptos = list(DEPARTAMENTOS.keys())
+        form_data = {
+            "formTurma": "formTurma",
+            "formTurma:inputNivel": nivel,
+            "formTurma:inputDepto": str(unidade_id),
+            "formTurma:inputAno": str(ano),
+            "formTurma:inputPeriodo": str(periodo),
+            btn_name: btn_value,
+            "javax.faces.ViewState": view_state,
+        }
 
-        for depto_id in deptos:
-            try:
-                logger.info(
-                    f"Scraping departamento {depto_id}: {DEPARTAMENTOS.get(depto_id, 'Desconhecido')}"
-                )
-
-                disciplinas = await scraper.buscar_componentes(
-                    nivel=nivel,
-                    tipo=tipo,
-                    unidade_id=depto_id,
-                )
-
-                # Buscar o departamento no banco
-                depto_db = db.query(Departamento).filter_by(sigaa_id=depto_id).first()
-
-                for disc_data in disciplinas:
-                    total_encontradas += 1
-                    novas, atualizadas = _salvar_disciplina(db, disc_data, depto_db)
-                    total_novas += novas
-                    total_atualizadas += atualizadas
-
-                db.commit()
-
-                # Delay entre requisições para não sobrecarregar o servidor
-                await asyncio.sleep(settings.SCRAPER_DELAY)
-
-            except Exception as e:
-                logger.error(f"Erro no departamento {depto_id}: {e}")
-                continue
-
-        # Atualizar log de sucesso
-        log.status = "SUCCESS"
-        log.disciplinas_encontradas = total_encontradas
-        log.disciplinas_novas = total_novas
-        log.disciplinas_atualizadas = total_atualizadas
-        log.mensagem = f"Scraping concluído: {total_encontradas} encontradas, {total_novas} novas, {total_atualizadas} atualizadas"
-        log.finished_at = datetime.utcnow()
-
-    except Exception as e:
-        logger.error(f"Erro durante o scraping: {e}")
-        log.status = "ERROR"
-        log.mensagem = str(e)[:500]
-        log.finished_at = datetime.utcnow()
-
-    finally:
-        await scraper.close()
-        db.commit()
-
-    return log
-
-
-def _salvar_disciplina(
-    db: Session, disc_data: dict, departamento: Optional[Departamento]
-) -> tuple[int, int]:
-    """
-    Salva ou atualiza uma disciplina no banco de dados.
-    """
-    existing = (
-        db.query(Disciplina)
-        .filter_by(codigo=disc_data["codigo"], nivel=disc_data["nivel"])
-        .first()
-    )
-
-    if existing:
-        # Atualizar se houver mudanças
-        changed = False
-        if existing.nome != disc_data["nome"]:
-            existing.nome = disc_data["nome"]
-            changed = True
-        if disc_data["tipo"] and existing.tipo != disc_data["tipo"]:
-            existing.tipo = disc_data["tipo"]
-            changed = True
-        if disc_data["carga_horaria"] and existing.carga_horaria != disc_data["carga_horaria"]:
-            existing.carga_horaria = disc_data["carga_horaria"]
-            changed = True
-        if departamento and existing.departamento_id != departamento.id:
-            existing.departamento_id = departamento.id
-            changed = True
-        return (0, 1 if changed else 0)
-    else:
-        # Inserir nova disciplina
-        nova = Disciplina(
-            codigo=disc_data["codigo"],
-            nome=disc_data["nome"],
-            tipo=disc_data["tipo"],
-            nivel=disc_data["nivel"],
-            carga_horaria=disc_data["carga_horaria"],
-            departamento_id=departamento.id if departamento else None,
+        logger.info(
+            f"Buscando turmas/professores: depto={unidade_id}, nivel={nivel}, ano={ano}, periodo={periodo}"
         )
-        db.add(nova)
-        return (1, 0)
+        response = await client.post(
+            f"{settings.SIGAA_BASE_URL}/public/turmas/listar.jsf",
+            data=form_data,
+            headers={
+                **self.HEADERS,
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        )
+        response.raise_for_status()
+
+        html_res = response.content.decode("iso-8859-1", errors="replace")
+        disciplinas_turmas = self._parse_turmas(html_res, nivel)
+
+        logger.info(
+            f"Encontradas {len(disciplinas_turmas)} disciplinas com turmas no depto {unidade_id}"
+        )
+        return disciplinas_turmas
+
+    def _parse_turmas(self, html: str, nivel: str) -> list[dict]:
+        """
+        Extrai disciplinas, turmas e professores do HTML de turmas/listar.jsf.
+        """
+        soup = BeautifulSoup(html, "html.parser")
+        tabela = soup.find("table", class_="listagem")
+        if not tabela:
+            return []
+
+        resultado = []
+        disc_atual = None
+        padrao_titulo = re.compile(r"([A-Z0-9]+)\s*[-–]\s*(.+)")
+
+        for tr in tabela.find_all("tr"):
+            classes = tr.get("class", [])
+
+            # Linha agrupador (Título da disciplina)
+            if "agrupador" in classes:
+                texto = tr.get_text(" ", strip=True)
+                m = padrao_titulo.search(texto)
+                if m:
+                    cod = m.group(1).strip()
+                    nome = m.group(2).strip()
+                    disc_atual = {
+                        "codigo": cod,
+                        "nome": nome,
+                        "nivel": NIVEIS.get(nivel, nivel),
+                        "professores": set(),
+                        "turmas": [],
+                    }
+                    resultado.append(disc_atual)
+                else:
+                    disc_atual = None
+
+            # Linha de turma (linhaPar / linhaImpar)
+            elif ("linhaPar" in classes or "linhaImpar" in classes) and disc_atual:
+                tds = tr.find_all(["th", "td"])
+                if len(tds) >= 3:
+                    cod_turma = tds[0].get_text(strip=True)
+                    ano_periodo = tds[1].get_text(strip=True)
+                    td_docente = tds[2]
+
+                    # Extrair os nomes dos professores da turma
+                    docentes = []
+                    for part in td_docente.stripped_strings:
+                        doc = re.sub(r"\s*\(\d+h\)", "", part).strip()
+                        doc = re.sub(r"\s+", " ", doc).strip()
+                        if doc and doc not in ["--", "A DEFINIR"]:
+                            docentes.append(doc)
+                            disc_atual["professores"].add(doc)
+
+                    horario = tds[3].get_text(" ", strip=True) if len(tds) > 3 else None
+                    if horario:
+                        horario = re.sub(r"\s+", " ", horario).strip()
+
+                    vagas_ofertadas = None
+                    vagas_ocupadas = None
+                    if len(tds) > 5:
+                        m_vof = re.search(r"\d+", tds[5].get_text(strip=True))
+                        if m_vof:
+                            vagas_ofertadas = int(m_vof.group(0))
+                    if len(tds) > 6:
+                        m_voc = re.search(r"\d+", tds[6].get_text(strip=True))
+                        if m_voc:
+                            vagas_ocupadas = int(m_voc.group(0))
+
+                    local = tds[7].get_text(" ", strip=True) if len(tds) > 7 else None
+                    if local:
+                        local = re.sub(r"\s+", " ", local).strip()
+
+                    disc_atual["turmas"].append({
+                        "codigo": cod_turma,
+                        "ano_periodo": ano_periodo,
+                        "horario": horario,
+                        "local": local,
+                        "vagas_ofertadas": vagas_ofertadas,
+                        "vagas_ocupadas": vagas_ocupadas,
+                        "docentes": docentes,
+                    })
+
+        # Converter set de professores para lista ordenada
+        for item in resultado:
+            item["professores"] = sorted(list(item["professores"]))
+
+        return resultado
+
+    async def buscar_detalhes_disciplina(
+        self,
+        codigo: str,
+        nivel: str = "G",
+    ) -> Optional[dict]:
+        """
+        Busca detalhes completos de uma disciplina no SIGAA pelo código:
+        - Ementa / Descrição
+        - Pré-requisitos
+        - Co-requisitos
+        - Equivalências e lista de disciplinas equivalentes
+        """
+        client = await self._get_client()
+        view_state = await self._inicializar_sessao(client, nivel)
+
+        aba = self.ABA_POR_NIVEL.get(nivel, "p-ensino")
+        url_com_aba = f"{self.BUSCA_URL}?nivel={nivel}&aba={aba}"
+        resp_busca = await client.get(url_com_aba)
+        soup_busca = BeautifulSoup(resp_busca.text, "html.parser")
+
+        check_cod = soup_busca.find("input", id=lambda x: x and "checkCodigo" in str(x))
+        if not check_cod:
+            return None
+        input_cod = check_cod.find_next("input", {"type": "text"})
+        if not input_cod:
+            return None
+
+        post_data = {
+            "form": "form",
+            "form:nivel": nivel,
+            "form:tipo": "0",
+            "form:checkCodigo": "on",
+            input_cod["name"]: codigo.strip().upper(),
+            "form:unidades": "0",
+            "form:btnBuscarComponentes": "Buscar Componentes",
+            "javax.faces.ViewState": view_state,
+        }
+
+        resp_result = await client.post(
+            self.BUSCA_URL,
+            data=post_data,
+            headers={
+                **self.HEADERS,
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        )
+        soup_res = BeautifulSoup(resp_result.text, "html.parser")
+        t = soup_res.find("table", class_="listagem")
+        if not t:
+            return None
+
+        rows = t.find_all("tr")
+        if len(rows) < 2:
+            return None
+
+        target_row = rows[1]
+        links = target_row.find_all("a")
+        if not links:
+            return None
+
+        onclick = links[0].get("onclick", "")
+        m = re.search(r"\{([^}]+)\}", onclick)
+        if not m:
+            return None
+
+        vs2_elem = soup_res.find("input", {"name": "javax.faces.ViewState"})
+        vs2 = vs2_elem["value"] if vs2_elem else view_state
+
+        post_details = {
+            "formListagemComponentes": "formListagemComponentes",
+            "javax.faces.ViewState": vs2,
+        }
+        for item in m.group(1).split(","):
+            sub = item.strip(" {}").split("':")
+            if len(sub) == 2:
+                post_details[sub[0].strip("' \"")] = sub[1].strip("' \"")
+
+        resp_det = await client.post(
+            self.BUSCA_URL,
+            data=post_details,
+            headers={
+                **self.HEADERS,
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        )
+        soup_det = BeautifulSoup(resp_det.text, "html.parser")
+        tbl_vis = soup_det.find("table", class_="visualizacao")
+        if not tbl_vis:
+            return None
+
+        info = {
+            "codigo": codigo.strip().upper(),
+            "pre_requisitos": None,
+            "co_requisitos": None,
+            "equivalencias": None,
+            "disciplinas_equivalentes": [],
+            "ementa": None,
+        }
+
+        for tr in tbl_vis.find_all("tr"):
+            th = tr.find("th")
+            td = tr.find("td")
+            if not th or not td:
+                continue
+            campo = th.get_text(strip=True).lower().replace(":", "")
+            valor = td.get_text(" ", strip=True)
+
+            if "pré-requisito" in campo:
+                info["pre_requisitos"] = None if valor == "-" else valor
+            elif "co-requisito" in campo:
+                info["co_requisitos"] = None if valor == "-" else valor
+            elif campo in ("equivalência", "equivalências"):
+                if valor != "-":
+                    info["equivalencias"] = valor
+
+                    eq_map = {}
+                    for acr in td.find_all("acronym"):
+                        cod_eq = acr.get_text(strip=True)
+                        nome_eq = acr.get("title", "")
+                        if " - " in nome_eq:
+                            nome_eq = nome_eq.split(" - ", 1)[1].strip()
+                        if cod_eq and cod_eq != codigo.strip().upper():
+                            eq_map[cod_eq] = nome_eq
+
+                    if not eq_map:
+                        codes = re.findall(r"\b[A-Z]{2,6}\d{3,6}\b", valor)
+                        for c in codes:
+                            if c != codigo.strip().upper():
+                                eq_map[c] = ""
+
+                    info["disciplinas_equivalentes"] = [
+                        {"codigo": c, "nome": n} for c, n in eq_map.items()
+                    ]
+            elif "ementa" in campo or "descrição" in campo:
+                info["ementa"] = valor
+
+        return info
