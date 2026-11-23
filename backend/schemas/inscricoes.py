@@ -42,3 +42,15 @@ class InscricaoResponse(BaseModel):
     status: Literal["registrada"]
     mensagem: str
     coeficiente_candidatura: float
+
+
+class InscricaoRankingResponse(BaseModel):
+    """Formato de uma inscrição retornada para o ranking do professor."""
+
+    id: int
+    nome: str
+    disciplina: str
+    professor: str | None
+    ira: float
+    coef: float
+    status: Literal["pendente", "aprovado", "reprovado"]

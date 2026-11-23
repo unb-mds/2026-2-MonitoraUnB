@@ -1,23 +1,12 @@
-type StatusInscricao = "pendente" | "aprovado" | "reprovado";
-
-type InscricaoRanking = {
-  id: number;
-  nome: string;
-  disciplina: string;
-  professor: string;
-  ira: number;
-  coef: number;
-  status: StatusInscricao;
-};
+import { listarInscricoes } from "../services/inscricao.js";
+import type { InscricaoRanking, StatusInscricao } from "../types/inscricao-ranking.js";
 
 type LinhaVisivel = {
   pos: number;
   item: InscricaoRanking;
 };
 
-/* ===== DADOS DE EXEMPLO =====
-   Quando o banco estiver pronto, esta lista virá dele:
-   uma linha por inscrição (status: pendente | aprovado | reprovado) */
+const SEMESTRE_RANKING = "2026/2";
 const inscricoes: InscricaoRanking[] = [];
 
 const selDisciplina = document.getElementById("filtro-disciplina") as HTMLSelectElement;
@@ -47,9 +36,17 @@ function unicos(lista: string[]): string[] {
 
 function preencherDisciplinas(): void {
   const nomes = unicos(inscricoes.map((i) => i.disciplina));
-  selDisciplina.innerHTML =
-    '<option value="">Todas as disciplinas</option>' +
-    nomes.map((n) => `<option value="${n}">${n}</option>`).join("");
+  const todas = document.createElement("option");
+  todas.value = "";
+  todas.textContent = "Todas as disciplinas";
+  selDisciplina.replaceChildren(todas);
+
+  nomes.forEach((nome) => {
+    const opcao = document.createElement("option");
+    opcao.value = nome;
+    opcao.textContent = nome;
+    selDisciplina.append(opcao);
+  });
 }
 
 function filtradas(): InscricaoRanking[] {
@@ -60,6 +57,19 @@ function filtradas(): InscricaoRanking[] {
 
 function porRanking(a: InscricaoRanking, b: InscricaoRanking): number {
   return b.ira - a.ira || b.coef - a.coef;
+}
+
+function escaparHtml(valor: string): string {
+  return valor.replace(/[&<>"']/g, (caractere) => {
+    const entidades: Record<string, string> = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    };
+    return entidades[caractere];
+  });
 }
 
 function desenhar(): void {
@@ -97,9 +107,9 @@ function desenhar(): void {
       (i) =>
         `<tr class="${i.status === "pendente" ? "" : i.status}" data-id="${i.id}">` +
         `<td>${posicao[i.id]}</td>` +
-        `<td>${i.nome}</td>` +
-        `<td>${i.disciplina}</td>` +
-        `<td>${i.professor}</td>` +
+        `<td>${escaparHtml(i.nome)}</td>` +
+        `<td>${escaparHtml(i.disciplina)}</td>` +
+        `<td>${escaparHtml(i.professor ?? "Não informado")}</td>` +
         `<td>${fmt(i.ira)}</td>` +
         `<td>${fmt(i.coef)}</td>` +
         `<td><span class="situacao">${ROTULOS[i.status]}</span></td>` +
@@ -129,7 +139,7 @@ function gerarCSV(): string {
       v.pos,
       i.nome,
       i.disciplina,
-      i.professor,
+      i.professor ?? "Não informado",
       fmt(i.ira),
       fmt(i.coef),
       ROTULOS[i.status],
@@ -170,6 +180,35 @@ function ehStatusInscricao(valor: string | undefined): valor is StatusInscricao 
   return valor === "pendente" || valor === "aprovado" || valor === "reprovado";
 }
 
+function exibirErroCarregamento(mensagem: string): void {
+  contador.textContent = "Não foi possível carregar as inscrições.";
+  btnBaixar.disabled = true;
+
+  const linha = document.createElement("tr");
+  const celula = document.createElement("td");
+  celula.colSpan = 8;
+  celula.className = "vazio";
+  celula.textContent = mensagem;
+  linha.append(celula);
+  corpo.replaceChildren(linha);
+}
+
+async function carregarInscricoes(): Promise<void> {
+  contador.textContent = "Carregando inscrições...";
+  btnBaixar.disabled = true;
+
+  try {
+    inscricoes.push(...await listarInscricoes(SEMESTRE_RANKING));
+    preencherDisciplinas();
+    desenhar();
+  } catch (erro) {
+    const mensagem = erro instanceof Error
+      ? erro.message
+      : "Não foi possível carregar as inscrições.";
+    exibirErroCarregamento(mensagem);
+  }
+}
+
 selDisciplina.addEventListener("change", desenhar);
 btnBaixar.addEventListener("click", baixarPlanilha);
 selOrdenar.addEventListener("change", desenhar);
@@ -194,5 +233,4 @@ corpo.addEventListener("click", (e) => {
   desenhar();
 });
 
-preencherDisciplinas();
-desenhar();
+void carregarInscricoes();

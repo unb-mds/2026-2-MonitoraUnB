@@ -3,11 +3,18 @@ Assinatura temporária dos dados acadêmicos já validados pelo histórico.
 """
 
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
+from sqlalchemy import String, case, literal
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from backend.config import get_settings
-from backend.database.models import Aluno, Disciplina, Inscricao, ProcessoSeletivo
+from backend.database.models import (
+    Aluno,
+    Disciplina,
+    Inscricao,
+    ProcessoSeletivo,
+    Resultado,
+)
 from backend.schemas.inscricoes import DadosHistoricoAssinados
 
 TEMPO_MAXIMO_TOKEN_SEGUNDOS = 15 * 60
@@ -155,3 +162,41 @@ def registrar_inscricao(
         raise
 
     return inscricao
+
+
+def listar_inscricoes(db: Session, semestre: str) -> list[dict]:
+    """Lista inscrições do semestre com os dados usados pelo ranking."""
+    processo = (
+        db.query(ProcessoSeletivo)
+        .filter(ProcessoSeletivo.semestre == semestre)
+        .first()
+    )
+    if processo is None:
+        raise ProcessoNaoEncontradoError
+
+    situacao = case(
+        (Resultado.id_resultado.is_(None), "pendente"),
+        (Resultado.decisao == "APROVADO", "aprovado"),
+        (Resultado.decisao == "REPROVADO", "reprovado"),
+        else_="pendente",
+    ).label("status")
+
+    linhas = (
+        db.query(
+            Inscricao.id_inscricao.label("id"),
+            Aluno.nome.label("nome"),
+            Disciplina.nome.label("disciplina"),
+            literal(None, type_=String()).label("professor"),
+            Inscricao.ira.label("ira"),
+            Inscricao.coeficiente.label("coef"),
+            situacao,
+        )
+        .join(Aluno, Inscricao.id_aluno == Aluno.id_aluno)
+        .join(Disciplina, Inscricao.id_disciplina == Disciplina.id)
+        .outerjoin(Resultado, Resultado.id_inscricao == Inscricao.id_inscricao)
+        .filter(Inscricao.id_processo == processo.id_processo)
+        .order_by(Inscricao.coeficiente.desc())
+        .all()
+    )
+
+    return [dict(linha._mapping) for linha in linhas]

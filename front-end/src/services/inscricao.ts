@@ -1,4 +1,5 @@
 import type { DadosHistorico, DadosInscricao } from "../types/dados-inscricao.js";
+import type { InscricaoRanking } from "../types/inscricao-ranking.js";
 
 const API_BASE = "/api";
 
@@ -61,4 +62,26 @@ export async function enviarInscricao(dados: DadosInscricao): Promise<string> {
     return typeof resultado.mensagem === "string"
         ? resultado.mensagem
         : "Os dados da inscrição foram validados pela API.";
+}
+
+// Consulta as inscrições de um semestre para a área do professor.
+export async function listarInscricoes(semestre: string): Promise<InscricaoRanking[]> {
+  const url = new URL(`${API_BASE}/inscricoes`);
+  url.searchParams.set("semestre", semestre);
+
+  const resposta = await fetch(url, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!resposta.ok) {
+    throw new Error(await obterDetalheErro(resposta, "Não foi possível carregar as inscrições."));
+  }
+
+  const resultado: unknown = await resposta.json();
+  if (!Array.isArray(resultado)) {
+    throw new Error("A API retornou um formato inválido para as inscrições.");
+  }
+
+  return resultado as InscricaoRanking[];
 }
