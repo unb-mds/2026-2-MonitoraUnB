@@ -4,7 +4,7 @@ Schemas da API de consulta e sincronização dos dados do SIGAA.
 
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class SchemaORM(BaseModel):
@@ -98,8 +98,17 @@ class ScrapingRequest(BaseModel):
         description="2=DISCIPLINA, 1=ATIVIDADE, 4=BLOCO, 3=MÓDULO",
     )
     buscar_professores: bool = True
-    ano: str | None = None
-    periodo: str | None = None
+    ano: str | None = Field(default=None, pattern=r"^\d{4}$")
+    periodo: str | None = Field(default=None, pattern=r"^[12]$")
+
+    @model_validator(mode="after")
+    def validar_ano_e_periodo_em_conjunto(self):
+        if (self.ano is None) != (self.periodo is None):
+            raise ValueError(
+                "Informe ano e período juntos ou deixe ambos vazios "
+                "para buscar o próximo semestre."
+            )
+        return self
 
 
 class ScrapingLogResponse(SchemaORM):

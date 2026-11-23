@@ -13,11 +13,22 @@ from typing import Optional
 
 import httpx
 from bs4 import BeautifulSoup
+from sqlalchemy import null
 
 from backend.config import get_settings
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
+
+
+def calcular_proximo_semestre(ano_atual: str, periodo_atual: str) -> tuple[str, str]:
+    """Calcula o semestre seguinte ao semestre atual informado."""
+    if periodo_atual == "1":
+        return ano_atual, "2"
+    if periodo_atual == "2":
+        return str(int(ano_atual) + 1), "1"
+    raise ValueError(f"Período letivo inválido informado pelo SIGAA: {periodo_atual!r}.")
+
 
 NIVEIS = {
     "F": "FORMAÇÃO COMPLEMENTAR",
@@ -326,9 +337,9 @@ class SigaaScraper:
     async def buscar_turmas(
         self,
         nivel: str = "G",
-        unidade_id: int = None,
-        ano: Optional[str] = "2027",
-        periodo: Optional[str] = "1",
+        unidade_id: int = null,
+        ano: Optional[str] = None,
+        periodo: Optional[str] = None,
     ) -> list[dict]:
         """
         Busca as turmas e professores de um departamento no SIGAA.
@@ -347,18 +358,35 @@ class SigaaScraper:
         view_state_input = soup.find("input", {"name": "javax.faces.ViewState"})
         view_state = view_state_input.get("value", "j_id1") if view_state_input else "j_id1"
 
-        # Defaults de ano e período se não fornecidos
-        if not ano:
-            ano_input = soup.find("input", id=lambda x: x and "inputAno" in str(x))
-            ano = ano_input.get("value", "2026") if ano_input else "2026"
+        if (ano is None) != (periodo is None):
+            raise ValueError(
+                "Informe ano e período juntos ou deixe ambos vazios "
+                "para buscar o próximo semestre."
+            )
 
-        if not periodo:
+        if ano is None and periodo is None:
+            ano_input = soup.find("input", id=lambda x: x and "inputAno" in str(x))
+            ano_atual = ano_input.get("value") if ano_input else None
+
             periodo_select = soup.find("select", id=lambda x: x and "inputPeriodo" in str(x))
-            if periodo_select:
-                sel_opt = periodo_select.find("option", selected=True)
-                periodo = sel_opt.get("value") if sel_opt else "2"
-            else:
-                periodo = "2"
+            opcoes_periodo = periodo_select.find_all("option") if periodo_select else []
+            opcao_atual = (
+                periodo_select.find("option", selected=True)
+                if periodo_select
+                else None
+            )
+            if opcao_atual is None and opcoes_periodo:
+                opcao_atual = opcoes_periodo[0]
+            periodo_atual = opcao_atual.get("value") if opcao_atual else None
+
+            if not ano_atual or not periodo_atual:
+                raise ValueError(
+                    "Não foi possível identificar o semestre atual "
+                    "no formulário do SIGAA."
+                )
+
+            # Sem ano e período explícitos, usa o semestre atual lido do SIGAA.
+            ano, periodo = calcular_proximo_semestre(ano_atual, periodo_atual)
 
         # Localizar botão Buscar do formulário
         form = soup.find("form", id="formTurma") or soup.find("form")
@@ -370,8 +398,8 @@ class SigaaScraper:
             "formTurma": "formTurma",
             "formTurma:inputNivel": nivel,
             "formTurma:inputDepto": str(unidade_id),
-            "formTurma:inputAno": str(ano),
-            "formTurma:inputPeriodo": str(periodo),
+            "formTurma:inputAno": ano,
+            "formTurma:inputPeriodo": periodo,
             btn_name: btn_value,
             "javax.faces.ViewState": view_state,
         }
