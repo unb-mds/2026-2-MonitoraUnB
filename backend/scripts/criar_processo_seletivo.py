@@ -56,44 +56,57 @@ def exibir_banner() -> None:
 
 
 def conectar_banco() -> Session:
-    """Conecta ao PostgreSQL usando as configurações já prontas do .env."""
-    settings = get_settings()
+  """Conecta ao PostgreSQL usando as configurações já prontas do .env."""
+  settings = get_settings()
 
-    hosts_para_tentar = [settings.DB_HOST]
-    if settings.DB_HOST == "db":
-        hosts_para_tentar.extend(["localhost", "127.0.0.1"])
+  # Se rodar no host (Windows/Linux fora do Docker), localhost responde na hora
+  hosts_para_tentar = ["localhost", "127.0.0.1"]
+  if settings.DB_HOST not in hosts_para_tentar:
+    hosts_para_tentar.append(settings.DB_HOST)
 
-    engine = None
-    ultimo_erro = None
+  engine = None
+  ultimo_erro = None
 
-    for host in hosts_para_tentar:
-        try:
-            db_url = URL.create(
-                drivername="postgresql+psycopg",
-                username=settings.DB_USER,
-                password=settings.DB_PASSWORD,
-                host=host,
-                port=settings.DB_PORT,
-                database=settings.DB_NAME,
-            ).render_as_string(hide_password=False)
+  print(f"{Cores.CINZA}Conectando ao banco de dados...{Cores.RESET}")
 
-            eng = create_engine(db_url, pool_pre_ping=True)
-            with eng.connect() as conn:
-                conn.execute(text("SELECT 1;"))
-            engine = eng
-            break
-        except Exception as e:
-            ultimo_erro = e
+  for host in hosts_para_tentar:
+    try:
+      db_url = URL.create(
+          drivername="postgresql+psycopg",
+          username=settings.DB_USER,
+          password=settings.DB_PASSWORD,
+          host=host,
+          port=settings.DB_PORT,
+          database=settings.DB_NAME,
+      ).render_as_string(hide_password=False)
 
-    if engine is None:
-        print(f"{Cores.VERMELHO}✖ Erro ao conectar ao banco de dados:{Cores.RESET} {ultimo_erro}")
-        print(f"\n{Cores.AMARELO}ℹ Certifique-se de que o Docker está rodando:{Cores.RESET}")
-        print("  docker compose up -d db\n")
-        sys.exit(1)
+      # connect_timeout=3 evita que o Windows fique travado esperando timeout longo
+      eng = create_engine(
+          db_url,
+          pool_pre_ping=True,
+          connect_args={"connect_timeout": 3},
+      )
+      with eng.connect() as conn:
+        conn.execute(text("SELECT 1;"))
+      engine = eng
+      break
+    except Exception as e:
+      ultimo_erro = e
 
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    return SessionLocal()
+  if engine is None:
+    print(
+        f"{Cores.VERMELHO}✖ Erro ao conectar ao banco de dados:{Cores.RESET}"
+        f" {ultimo_erro}"
+    )
+    print(
+        f"\n{Cores.AMARELO}ℹ Certifique-se de que o Docker está"
+        f" rodando:{Cores.RESET}"
+    )
+    print("  docker compose up -d db\n")
+    sys.exit(1)
 
+  SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+  return SessionLocal()
 
 def obter_usuario_responsavel(db: Session) -> UsuarioAdministrador:
     """
