@@ -1,3 +1,12 @@
+-- =====================================================================
+-- 01_schema.sql — Banco do Monitora UnB: tabelas, regras, triggers e views.
+-- Executar UMA vez, em banco vazio, como dono do banco (a função
+-- limpar_processo_encerrado roda com os privilégios de quem a criou).
+-- =====================================================================
+
+-- ---------------------------------------------------------------------
+-- Tabelas
+-- ---------------------------------------------------------------------
 
 CREATE TABLE public.aluno (
     id_aluno  integer GENERATED ALWAYS AS IDENTITY,
@@ -34,8 +43,6 @@ CREATE TABLE public.usuario_administrador (
     CONSTRAINT uq_usuario_admin_email UNIQUE (email)
 );
 
--- CORREÇÃO: id_processo não tinha IDENTITY (a sequence
--- processo_seletivo_id_processo_seq do 03_setup_usuario.sql não existia).
 CREATE TABLE public.processo_seletivo (
     id_processo       integer GENERATED ALWAYS AS IDENTITY,
     id_usuario        integer NOT NULL,
@@ -120,8 +127,8 @@ CREATE UNIQUE INDEX uq_processo_aberto
     ON public.processo_seletivo USING btree (status)
     WHERE status = 'ABERTO';
 
--- CORREÇÃO: FKs sem índice (o Postgres não cria automaticamente).
--- Aceleram as views, os triggers e os DELETE ... CASCADE.
+-- Índices nas chaves estrangeiras (o Postgres não os cria sozinho):
+-- aceleram views, triggers e DELETE ... CASCADE.
 CREATE INDEX idx_inscricao_processo   ON public.inscricao (id_processo);
 CREATE INDEX idx_inscricao_disciplina ON public.inscricao (id_disciplina);
 CREATE INDEX idx_processo_usuario     ON public.processo_seletivo (id_usuario);
@@ -139,7 +146,7 @@ BEGIN
             'Este resultado não pode ser alterado: o e-mail já foi enviado.';
     END IF;
 
-    -- CORREÇÃO: impede "trocar" o resultado de uma inscrição para outra.
+    -- Impede trocar o resultado de uma inscrição para outra.
     IF NEW.id_inscricao IS DISTINCT FROM OLD.id_inscricao THEN
         RAISE EXCEPTION
             'Não é permitido alterar a inscrição vinculada ao resultado.';
@@ -158,9 +165,7 @@ BEGIN
 END;
 $$;
 
--- CORREÇÃO: agora valida TODAS as transições de status e a criação
--- (antes só validava o encerramento; era possível reabrir um processo
--- ENCERRADO ou voltar ABERTO -> AGENDADO).
+-- Valida a criação e todas as transições de status do processo.
 -- Transições permitidas: AGENDADO -> ABERTO -> ENCERRADO.
 CREATE FUNCTION public.validar_transicao_processo() RETURNS trigger
     LANGUAGE plpgsql
@@ -286,7 +291,7 @@ BEGIN
 END;
 $$;
 
--- CORREÇÃO: SECURITY DEFINER + search_path fixo.
+-- SECURITY DEFINER + search_path fixo.
 -- O papel da aplicação não tem DELETE em aluno/processo_seletivo, então
 -- sem isso a função falharia para ele. A função já valida todas as
 -- condições antes de apagar. O EXECUTE é liberado no 03_setup_usuario.sql.
@@ -396,7 +401,7 @@ EXECUTE FUNCTION public.validar_inscricao_processo();
 -- Views
 -- ---------------------------------------------------------------------
 
--- CORREÇÃO: inclui id_inscricao, necessário para o app registrar o
+-- Inclui id_inscricao, necessário para o app registrar o
 -- resultado (INSERT em resultado) de uma inscrição pendente.
 CREATE VIEW public.vw_inscricoes_pendentes AS
  SELECT i.id_inscricao,
