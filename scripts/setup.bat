@@ -42,7 +42,7 @@ echo [OK] %~1
 goto :eof
 
 :erro
-echo [ERRO] %~1 >&2
+echo [ERRO] %~1
 pause
 exit /b 1
 
@@ -53,14 +53,17 @@ if not exist .env (
         call :sucesso "Arquivo .env criado."
     ) else (
         call :erro "Arquivo .env.example nao encontrado."
+        exit /b 1
     )
 )
 goto :eof
 
 :atualizar_env
-set "ENV_CHAVE=%~1"
-set "ENV_VALOR=%~2"
-powershell -NoProfile -Command "$k = $env:ENV_CHAVE; $v = $env:ENV_VALOR; $f = '.env'; if (Test-Path $f) { $linhas = Get-Content $f; $achou = $false; $novas = foreach ($l in $linhas) { if ($l -match ('^\s*' + [regex]::Escape($k) + '=')) { $achou = $true; $k + '=' + $v } else { $l } }; if (-not $achou) { $novas += ($k + '=' + $v) }; [IO.File]::WriteAllLines((Resolve-Path $f).Path, [string[]]$novas) }"
+set "CHAVE=%~1"
+set "VALOR=%~2"
+
+powershell -NoProfile -Command "$k='%CHAVE%'; $v='%VALOR%'; if ($k -eq 'PROFESSOR_PASSWORD_HASH') { $v = [char]39 + $v + [char]39 }; $f='.env'; if (Test-Path $f) { $c = Get-Content $f -Raw; if ($c -match ('(?m)^' + [regex]::Escape($k) + '=')) { $c = [regex]::Replace($c, '(?m)^' + [regex]::Escape($k) + '=.*', [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $k + '=' + $v }) } else { $c += [Environment]::NewLine + $k + '=' + $v }; [IO.File]::WriteAllText($f, $c) }"
+
 goto :eof
 
 :instalar_dependencias
@@ -71,12 +74,14 @@ echo.
 where python >nul 2>&1
 if %ERRORLEVEL% neq 0 (
     call :erro "Python nao esta instalado no Windows ou nao esta no PATH."
+    exit /b 1
 )
 
 if not exist .venv\Scripts\python.exe (
     python -m venv .venv
     if %ERRORLEVEL% neq 0 (
         call :erro "Falha ao criar o ambiente virtual .venv."
+        exit /b 1
     )
     call :sucesso "Ambiente virtual criado."
 )
@@ -87,6 +92,7 @@ if %ERRORLEVEL% neq 0 (
     .venv\Scripts\python.exe -m pip install --disable-pip-version-check --quiet -r backend/requirements/setup.txt
     if %ERRORLEVEL% neq 0 (
         call :erro "Falha ao instalar dependencias do setup."
+        exit /b 1
     )
     call :sucesso "Dependencias instaladas."
 ) else (
@@ -100,6 +106,7 @@ if "%USUARIO%"=="" set "USUARIO=professor"
 
 :: Desativa DelayedExpansion temporariamente para nao corromper '!' na senha
 setlocal DisableDelayedExpansion
+
 for /f "delims=" %%p in ('powershell -NoProfile -Command "$s1 = Read-Host 'Senha do professor' -AsSecureString; $b1 = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($s1)); $s2 = Read-Host 'Confirme a senha' -AsSecureString; $b2 = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($s2)); if ($b1 -ne $b2) { Write-Output 'ERRO_SENHAS_DIFERENTES'; exit }; if ([string]::IsNullOrWhiteSpace($b1)) { Write-Output 'ERRO_SENHA_VAZIA'; exit }; Write-Output $b1"') do (
     set "SENHA_PROFESSOR=%%p"
 )
@@ -107,23 +114,26 @@ for /f "delims=" %%p in ('powershell -NoProfile -Command "$s1 = Read-Host 'Senha
 if "%SENHA_PROFESSOR%"=="ERRO_SENHAS_DIFERENTES" (
     endlocal
     call :erro "As senhas nao coincidem."
+    exit /b 1
 )
 if "%SENHA_PROFESSOR%"=="ERRO_SENHA_VAZIA" (
     endlocal
     call :erro "A senha nao pode ser vazia."
+    exit /b 1
 )
 
-:: Le a senha via os.environ (nunca quebra com aspas, %, &, ! ou caracteres especiais)
-for /f "delims=" %%h in ('.venv\Scripts\python.exe -c "import os, bcrypt; print(bcrypt.hashpw(os.environ['SENHA_PROFESSOR'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8').replace('$', '$$'))"') do (
+:: Le a senha via os.environ para preservar caracteres especiais
+for /f "delims=" %%h in ('.venv\Scripts\python.exe -c "import os, bcrypt; print(bcrypt.hashpw(os.environ['SENHA_PROFESSOR'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8'))"') do (
     set "HASH=%%h"
 )
 
-:: Limpa a senha da memoria imediatamente e restaura o escopo
+:: Limpa a senha da memoria e restaura o escopo
 set "SENHA_PROFESSOR="
 endlocal & set "HASH=%HASH%"
 
 if "%HASH%"=="" (
     call :erro "Nao foi possivel gerar o hash da senha."
+    exit /b 1
 )
 
 call :atualizar_env "PROFESSOR_USERNAME" "%USUARIO%"
@@ -135,13 +145,15 @@ call :sucesso "Senha protegida com sucesso."
 goto :eof
 
 :configurar_sessao
-:: Gera token seguro de 32 bytes em hexadecimal usando o Python do .venv
-for /f "delims=" %%s in ('.venv\Scripts\python.exe -c "import secrets; print(secrets.token_hex(32))"') do (
+:: Gera token de 32 bytes em hexadecimal
+for /f "delims=" %%s in ('powershell -NoProfile -Command "$bytes = New-Object byte[] 32; [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes); [BitConverter]::ToString($bytes).Replace('-', '').ToLower()"') do (
     set "SESSION_SECRET=%%s"
 )
 
-if "%SESSION_SECRET%"=="" (
-    call :erro "Nao foi possivel gerar a chave de sessao."
+:: Verifica se o token foi gerado corretamente
+if not defined SESSION_SECRET (
+    call :erro "Falha ao gerar a chave de sessao."
+    exit /b 1
 )
 
 call :atualizar_env "SESSION_SECRET" "%SESSION_SECRET%"
@@ -177,6 +189,7 @@ goto :eof
 docker compose config --quiet
 if %ERRORLEVEL% neq 0 (
     call :erro "Configuracao do Docker Compose invalida."
+    exit /b 1
 )
 
 call :sucesso "Docker Compose validado."
@@ -197,10 +210,23 @@ goto :eof
 
 :main
 call :cabecalho
+
 call :instalar_dependencias
+if errorlevel 1 exit /b 1
+
 call :preparar_env
+if errorlevel 1 exit /b 1
+
 call :configurar_professor
+if errorlevel 1 exit /b 1
+
 call :configurar_sessao
+if errorlevel 1 exit /b 1
+
 call :configurar_banco
+if errorlevel 1 exit /b 1
+
 call :finalizar
+if errorlevel 1 exit /b 1
+
 goto :eof
