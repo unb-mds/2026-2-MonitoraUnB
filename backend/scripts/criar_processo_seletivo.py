@@ -8,7 +8,6 @@ Execução:
 
 from __future__ import annotations
 
-import re
 import sys
 from datetime import date, datetime
 from pathlib import Path
@@ -59,12 +58,20 @@ def conectar_banco() -> Session:
     """Conecta ao PostgreSQL usando as configurações já prontas do .env."""
     settings = get_settings()
 
-    hosts_para_tentar = [settings.DB_HOST]
-    if settings.DB_HOST == "db":
-        hosts_para_tentar.extend(["localhost", "127.0.0.1"])
+    if not settings.DB_PASSWORD:
+        print(f"{Cores.VERMELHO}✖ Erro: DB_PASSWORD está vazio no arquivo .env.{Cores.RESET}")
+        print(f"{Cores.AMARELO}ℹ Execute o setup.bat primeiro para configurar a senha do banco.{Cores.RESET}\n")
+        sys.exit(1)
+
+    # Prioriza localhost/127.0.0.1 quando executado no host (Windows/Linux fora do Docker)
+    hosts_para_tentar = ["localhost", "127.0.0.1"]
+    if settings.DB_HOST not in hosts_para_tentar:
+        hosts_para_tentar.append(settings.DB_HOST)
 
     engine = None
     ultimo_erro = None
+
+    print(f"{Cores.CINZA}Conectando ao banco de dados...{Cores.RESET}")
 
     for host in hosts_para_tentar:
         try:
@@ -77,7 +84,11 @@ def conectar_banco() -> Session:
                 database=settings.DB_NAME,
             ).render_as_string(hide_password=False)
 
-            eng = create_engine(db_url, pool_pre_ping=True)
+            eng = create_engine(
+                db_url,
+                pool_pre_ping=True,
+                connect_args={"connect_timeout": 3},
+            )
             with eng.connect() as conn:
                 conn.execute(text("SELECT 1;"))
             engine = eng
@@ -98,17 +109,20 @@ def conectar_banco() -> Session:
 def obter_usuario_responsavel(db: Session) -> UsuarioAdministrador:
     """
     Recupera ou registra automaticamente o usuário administrador
-    usando as credenciais que já foram salvas no .env pelo setup.sh.
+    usando as credenciais que já foram salvas no .env pelo setup.
     """
     settings = get_settings()
     username = settings.PROFESSOR_USERNAME or "professor"
     email = f"{username}@unb.br" if "@" not in username else username
 
+    # Normaliza o hash caso tenha sido escapado com '$$' para o Docker Compose
+    senha_hash = (settings.PROFESSOR_PASSWORD_HASH or "hash_provisorio").replace("$$", "$")
+
     admin = db.query(UsuarioAdministrador).first()
     if not admin:
         admin = UsuarioAdministrador(
             email=email,
-            senha_hash=settings.PROFESSOR_PASSWORD_HASH or "hash_provisorio",
+            senha_hash=senha_hash,
             ativo=True,
         )
         db.add(admin)
