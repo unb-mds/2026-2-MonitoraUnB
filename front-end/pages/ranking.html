@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../styles/global.css">
     <link rel="stylesheet" href="../styles/ranking.css">
     <link rel="icon"  type="image/x-icon" href="as_bas_cor.jpg">
+    <link rel="stylesheet" href="../styles/processo-admin.css">
 </head>
 
 <body>
@@ -45,6 +46,11 @@
             <div class="barra-tabela">
                 <p class="contador" id="contador"></p>
                 <div class="botoes-barra">
+                    <div id="pa-bloco" class="pa-bloco" hidden>
+    <button type="button" class="btn btn-primario" id="pa-iniciar">Iniciar processo seletivo</button>
+    <span id="pa-status" class="pa-status"></span>
+</div>
+                    <p id="pa-aviso" class="pa-aviso" role="status" aria-live="polite" hidden></p>
                     <button type="button" class="btn btn-primario btn-baixar" id="btn-baixar">&#11015; Baixar planilha</button>
                 </div>
             </div>
@@ -80,13 +86,46 @@
 
         </div>
     </main>
+<dialog id="pa-dialogo" class="pa-dialogo" aria-labelledby="pa-titulo">
+    <form id="pa-form" method="dialog">
+        <h2 id="pa-titulo">Iniciar processo seletivo</h2>
 
+        <div class="pa-campo">
+            <label for="pa-semestre">Semestre</label>
+            <input
+                id="pa-semestre"
+                name="semestre"
+                type="text"
+                placeholder="2026/2"
+                pattern="[0-9]{4}/[12]"
+                autocomplete="off"
+                required
+            >
+        </div>
+
+        <div class="pa-campo">
+            <label for="pa-abertura">Início das inscrições</label>
+            <input id="pa-abertura" name="data_abertura" type="date" required>
+        </div>
+
+        <div class="pa-campo">
+            <label for="pa-encerramento">Fim das inscrições</label>
+            <input id="pa-encerramento" name="data_encerramento" type="date" required>
+        </div>
+
+        <div class="pa-acoes">
+            <button id="pa-cancelar" type="button" class="btn btn-secundario">Cancelar</button>
+            <button id="pa-confirmar" type="submit" class="btn btn-primario">Confirmar e abrir</button>
+        </div>
+    </form>
+</dialog>
     <footer class="rodape">
         <p>&copy; 2026 Monitora-UnB. Todos os direitos reservados ao Grupo 11.</p>
     </footer>
 
     <script type="module" src="../dist/pages/ranking-guard.js"></script>
     <script type="module" src="../dist/pages/ranking.js"></script>
+    <script type="module" src="../dist/pages/iniciar-processo.js"></script>
 </body>
 
 </html>
