@@ -44,6 +44,12 @@ class InscricaoResponse(BaseModel):
     coeficiente_candidatura: float
 
 
+class ProcessoAbertoResponse(BaseModel):
+    """Semestre do processo seletivo que está recebendo inscrições."""
+
+    semestre: str = Field(..., pattern=r"^\d{4}/[12]$")
+
+
 class InscricaoRankingResponse(BaseModel):
     """Formato de uma inscrição retornada para o ranking do professor."""
 

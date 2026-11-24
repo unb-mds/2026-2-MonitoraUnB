@@ -71,6 +71,15 @@ def ler_token_validacao(token: str) -> dict:
     return dados
 
 
+def obter_processo_aberto(db: Session) -> ProcessoSeletivo | None:
+    """Retorna o processo seletivo que está recebendo inscrições, se houver."""
+    return (
+        db.query(ProcessoSeletivo)
+        .filter(ProcessoSeletivo.status == "ABERTO")
+        .first()
+    )
+
+
 def registrar_inscricao(
     db: Session,
     historico: DadosHistoricoAssinados,

@@ -58,9 +58,9 @@ if not exist .env (
 goto :eof
 
 :atualizar_env
-set "CHAVE=%~1"
-set "VALOR=%~2"
-powershell -NoProfile -Command "$k='%CHAVE%'; $v='%VALOR%'; $f='.env'; if (Test-Path $f) { $c = Get-Content $f -Raw; if ($c -match ('(?m)^' + [regex]::Escape($k) + '=')) { $c = [regex]::Replace($c, '(?m)^' + [regex]::Escape($k) + '=.*', ($k + '=' + $v)) } else { $c += [Environment]::NewLine + $k + '=' + $v }; [IO.File]::WriteAllText($f, $c) }"
+set "ENV_CHAVE=%~1"
+set "ENV_VALOR=%~2"
+powershell -NoProfile -Command "$k = $env:ENV_CHAVE; $v = $env:ENV_VALOR; $f = '.env'; if (Test-Path $f) { $linhas = Get-Content $f; $achou = $false; $novas = foreach ($l in $linhas) { if ($l -match ('^\s*' + [regex]::Escape($k) + '=')) { $achou = $true; $k + '=' + $v } else { $l } }; if (-not $achou) { $novas += ($k + '=' + $v) }; [IO.File]::WriteAllLines((Resolve-Path $f).Path, [string[]]$novas) }"
 goto :eof
 
 :instalar_dependencias
@@ -98,29 +98,36 @@ goto :eof
 set /p "USUARIO=Usuario do professor [professor]: "
 if "%USUARIO%"=="" set "USUARIO=professor"
 
-:: Le a senha oculta e confirma usando PowerShell nativo
+:: Desativa DelayedExpansion temporariamente para nao corromper '!' na senha
+setlocal DisableDelayedExpansion
 for /f "delims=" %%p in ('powershell -NoProfile -Command "$s1 = Read-Host 'Senha do professor' -AsSecureString; $b1 = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($s1)); $s2 = Read-Host 'Confirme a senha' -AsSecureString; $b2 = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($s2)); if ($b1 -ne $b2) { Write-Output 'ERRO_SENHAS_DIFERENTES'; exit }; if ([string]::IsNullOrWhiteSpace($b1)) { Write-Output 'ERRO_SENHA_VAZIA'; exit }; Write-Output $b1"') do (
     set "SENHA_PROFESSOR=%%p"
 )
 
 if "%SENHA_PROFESSOR%"=="ERRO_SENHAS_DIFERENTES" (
+    endlocal
     call :erro "As senhas nao coincidem."
 )
 if "%SENHA_PROFESSOR%"=="ERRO_SENHA_VAZIA" (
+    endlocal
     call :erro "A senha nao pode ser vazia."
 )
 
-:: Gera o hash bcrypt usando o Python do .venv
-for /f "delims=" %%h in ('.venv\Scripts\python.exe -c "import bcrypt; print(bcrypt.hashpw('%SENHA_PROFESSOR%'.encode(), bcrypt.gensalt()).decode())"') do (
+:: Le a senha via os.environ (nunca quebra com aspas, %, &, ! ou caracteres especiais)
+for /f "delims=" %%h in ('.venv\Scripts\python.exe -c "import os, bcrypt; print(bcrypt.hashpw(os.environ['SENHA_PROFESSOR'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8').replace('$', '$$'))"') do (
     set "HASH=%%h"
 )
+
+:: Limpa a senha da memoria imediatamente e restaura o escopo
+set "SENHA_PROFESSOR="
+endlocal & set "HASH=%HASH%"
 
 if "%HASH%"=="" (
     call :erro "Nao foi possivel gerar o hash da senha."
 )
 
 call :atualizar_env "PROFESSOR_USERNAME" "%USUARIO%"
-call :atualizar_env "PROFESSOR_PASSWORD_HASH" "'%HASH%'"
+call :atualizar_env "PROFESSOR_PASSWORD_HASH" "%HASH%"
 
 echo.
 call :sucesso "Usuario configurado."
@@ -128,9 +135,13 @@ call :sucesso "Senha protegida com sucesso."
 goto :eof
 
 :configurar_sessao
-:: Gera token de 32 bytes em hexadecimal (equivalente ao openssl rand -hex 32)
-for /f "delims=" %%s in ('powershell -NoProfile -Command "$b = New-Object byte[] 32; (New-Object Security.Cryptography.RNGCryptoServiceProvider).GetBytes($b); -join ($b ^| ForEach-Object { '{0:x2}' -f $_ })"') do (
+:: Gera token seguro de 32 bytes em hexadecimal usando o Python do .venv
+for /f "delims=" %%s in ('.venv\Scripts\python.exe -c "import secrets; print(secrets.token_hex(32))"') do (
     set "SESSION_SECRET=%%s"
+)
+
+if "%SESSION_SECRET%"=="" (
+    call :erro "Nao foi possivel gerar a chave de sessao."
 )
 
 call :atualizar_env "SESSION_SECRET" "%SESSION_SECRET%"
