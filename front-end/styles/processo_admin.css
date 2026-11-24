@@ -1,0 +1,90 @@
+.pa-bloco {
+  display: none;
+}
+
+.pa-bloco {
+  --pa-cor-primaria: var(--pa-primaria, #0f4c81);
+  --pa-cor-texto: var(--pa-texto, currentColor);
+  --pa-cor-borda: var(--pa-borda, rgba(128, 128, 128, 0.35));
+  --pa-cor-fundo-card: var(--pa-fundo-card, Canvas);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--pa-cor-texto);
+}
+
+.pa-status {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.pa-aviso {
+  margin: 0.5rem 0 0.9rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.4rem;
+  border-left: 4px solid var(--pa-cor-primaria);
+  background: rgba(15, 76, 129, 0.08);
+  font-size: 0.9rem;
+}
+
+.pa-aviso[hidden] {
+  display: none;
+}
+
+.pa-aviso[data-tipo="erro"] {
+  border-left-color: #c62828;
+  background: rgba(198, 40, 40, 0.1);
+}
+
+.pa-aviso[data-tipo="ok"] {
+  border-left-color: #2e7d32;
+  background: rgba(46, 125, 50, 0.1);
+}
+
+.pa-dialogo {
+  border: 1px solid var(--pa-cor-borda);
+  border-radius: 0.65rem;
+  background: var(--pa-cor-fundo-card);
+  color: CanvasText;
+  padding: 1.25rem;
+  max-width: 26rem;
+  width: calc(100% - 2rem);
+}
+
+.pa-dialogo::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.pa-dialogo h2 {
+  margin: 0 0 0.9rem;
+  font-size: 1.15rem;
+}
+
+.pa-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.9rem;
+}
+
+.pa-campo label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.pa-campo input {
+  font: inherit;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--pa-cor-borda);
+  border-radius: 0.4rem;
+  background: Field;
+  color: FieldText;
+}
+
+.pa-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}

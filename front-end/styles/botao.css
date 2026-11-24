@@ -1,0 +1,56 @@
+/* Troque as cores abaixo pelas do site. O modo escuro segue o sistema. */
+:root {
+  --fundo: #f5f7fa; --cartao: #ffffff; --texto: #17212b; --suave: #5b6b7a;
+  --borda: #d5dde5; --primaria: #1b4f9c; --sobre-primaria: #ffffff;
+  --perigo: #b3261e; --ok-fundo: #dff3e4; --ok-texto: #14532d;
+  --ag-fundo: #e3ebf7; --ag-texto: #1b3f7a; --en-fundo: #e9ecef; --en-texto: #424a52;
+  --erro-fundo: #fde8e6; --erro-texto: #7a1712;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fundo: #10161d; --cartao: #18212b; --texto: #e8eef4; --suave: #9aabbb;
+    --borda: #2c3a48; --primaria: #6ea4f0; --sobre-primaria: #0b1522;
+    --perigo: #f2877f; --ok-fundo: #173a24; --ok-texto: #9be3b0;
+    --ag-fundo: #1c2f4d; --ag-texto: #a9c8f5; --en-fundo: #27313b; --en-texto: #b4c0cb;
+    --erro-fundo: #4a1f1c; --erro-texto: #f6b8b3;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--fundo); color: var(--texto);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.topo { display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  padding: 1rem 1.5rem; background: var(--cartao); border-bottom: 1px solid var(--borda); }
+h1 { font-size: 1.25rem; margin: 0; }
+h2 { font-size: 1.1rem; margin: 0 0 1rem; }
+h3 { margin: 0 0 .5rem; }
+main { max-width: 56rem; margin: 0 auto; padding: 1.5rem; display: grid; gap: 1.5rem; }
+section { background: var(--cartao); border: 1px solid var(--borda); border-radius: .5rem; padding: 1.25rem; }
+form#form-novo { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 1rem; align-items: end; }
+label { display: grid; gap: .25rem; font-size: .9rem; color: var(--suave); }
+input { font: inherit; color: var(--texto); background: var(--fundo);
+  border: 1px solid var(--borda); border-radius: .375rem; padding: .5rem .625rem; }
+input:invalid.tocado { border-color: var(--perigo); }
+.btn { font: inherit; font-weight: 600; border-radius: .375rem; padding: .55rem 1rem;
+  border: 1px solid transparent; cursor: pointer; }
+.btn-pri { background: var(--primaria); color: var(--sobre-primaria); }
+.btn-sec { background: transparent; color: var(--texto); border-color: var(--borda); }
+.btn-perigo { background: var(--perigo); color: var(--sobre-primaria); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+:focus-visible { outline: 3px solid var(--primaria); outline-offset: 2px; }
+.dica { color: var(--suave); font-size: .9rem; margin: .75rem 0 0; }
+.rolagem { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: .65rem .5rem; border-bottom: 1px solid var(--borda); white-space: nowrap; }
+th { font-size: .85rem; color: var(--suave); font-weight: 600; }
+.selo { display: inline-block; padding: .15rem .6rem; border-radius: 1rem; font-size: .85rem; font-weight: 600; }
+.selo-AGENDADO { background: var(--ag-fundo); color: var(--ag-texto); }
+.selo-ABERTO { background: var(--ok-fundo); color: var(--ok-texto); }
+.selo-ENCERRADO { background: var(--en-fundo); color: var(--en-texto); }
+#aviso { margin: 0; padding: .75rem 1rem; border-radius: .375rem; font-weight: 500; }
+#aviso.ok { background: var(--ok-fundo); color: var(--ok-texto); }
+#aviso.erro { background: var(--erro-fundo); color: var(--erro-texto); }
+dialog { border: 1px solid var(--borda); border-radius: .5rem; background: var(--cartao);
+  color: var(--texto); max-width: 26rem; padding: 1.25rem; }
+dialog::backdrop { background: rgba(0, 0, 0, .5); }
+.acoes { display: flex; justify-content: flex-end; gap: .75rem; margin-top: 1rem; }
+@media (max-width: 40rem) { main { padding: 1rem; } .topo { padding: 1rem; } }

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administração — Monitora UnB</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <header class="topo">
+    <h1>Processos seletivos</h1>
+    <button id="sair" class="btn btn-sec" type="button">Sair</button>
+  </header>
+
+  <main>
+    <p id="aviso" role="status" aria-live="polite" hidden></p>
+
+    <section aria-labelledby="t-novo">
+      <h2 id="t-novo">Novo processo</h2>
+      <form id="form-novo" novalidate>
+        <label>Semestre
+          <input id="semestre" placeholder="2026/2" inputmode="numeric" autocomplete="off" required>
+        </label>
+        <label>Início das inscrições
+          <input id="abertura" type="date" required>
+        </label>
+        <label>Fim das inscrições
+          <input id="encerramento" type="date" required>
+        </label>
+        <button class="btn btn-pri" type="submit">Criar processo</button>
+      </form>
+      <p class="dica">O processo nasce como agendado. Abra as inscrições depois que as disciplinas do semestre estiverem carregadas.</p>
+    </section>
+
+    <section aria-labelledby="t-lista">
+      <h2 id="t-lista">Processos criados</h2>
+      <div class="rolagem">
+        <table>
+          <thead>
+            <tr><th>Semestre</th><th>Início</th><th>Fim</th><th>Situação</th><th>Ação</th></tr>
+          </thead>
+          <tbody id="lista"></tbody>
+        </table>
+      </div>
+      <p id="vazio" class="dica" hidden>Nenhum processo criado ainda. Use o formulário acima.</p>
+    </section>
+  </main>
+
+  <dialog id="dialogo">
+    <form method="dialog">
+      <h3 id="d-titulo"></h3>
+      <p id="d-texto"></p>
+      <div class="acoes">
+        <button value="nao" class="btn btn-sec">Cancelar</button>
+        <button value="sim" id="d-ok" class="btn btn-pri">Confirmar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
