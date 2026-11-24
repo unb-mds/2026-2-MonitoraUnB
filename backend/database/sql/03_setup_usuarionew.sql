@@ -1,5 +1,5 @@
 -- =====================================================================
--- 03_setup_usuario.sql  (versão revisada)
+-- 03_setup_usuario.sql — papéis e permissões da aplicação e do scraper.
 -- Executar com um superusuário/dono do schema, DEPOIS do 01_schema.sql.
 -- =====================================================================
 
@@ -22,7 +22,7 @@ GRANT USAGE ON SCHEMA public TO monitora_app;
 GRANT SELECT, INSERT         ON TABLE public.aluno                 TO monitora_app;
 GRANT SELECT                 ON TABLE public.disciplina            TO monitora_app;
 GRANT SELECT, INSERT         ON TABLE public.inscricao             TO monitora_app;
--- INSERT adicionado: sem ele o app não consegue criar processos seletivos.
+-- INSERT em processo_seletivo: necessário para o app criar processos.
 -- Remova se os processos forem criados fora da aplicação.
 GRANT SELECT, INSERT, UPDATE ON TABLE public.processo_seletivo     TO monitora_app;
 GRANT SELECT, INSERT, UPDATE ON TABLE public.resultado             TO monitora_app;
@@ -31,10 +31,8 @@ GRANT SELECT                 ON TABLE public.usuario_administrador TO monitora_a
 -- ---------------------------------------------------------------------
 -- Sequências
 -- ---------------------------------------------------------------------
--- REMOVIDAS de propósito: todas as chaves são GENERATED ALWAYS AS IDENTITY.
--- Em colunas identity, quem faz o INSERT só precisa de INSERT na tabela;
--- não precisa de privilégio na sequence. (O GRANT antigo da
--- processo_seletivo_id_processo_seq também falhava, pois ela não existia.)
+-- Nenhum GRANT é necessário: todas as chaves são GENERATED ALWAYS AS IDENTITY,
+-- e quem faz o INSERT só precisa de INSERT na tabela (não da sequência).
 
 -- ---------------------------------------------------------------------
 -- Views
