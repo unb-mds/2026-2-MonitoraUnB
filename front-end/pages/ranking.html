@@ -43,23 +43,17 @@
                 </div>
             </section>
 
-            <div id="pa-bloco" class="pa-bloco" hidden>
-                <button type="button" class="btn btn-primario" id="pa-iniciar">Iniciar processo seletivo</button>
-                <span id="pa-status" class="pa-status"></span>
-            </div>
-            <p id="pa-aviso" class="pa-aviso" role="status" aria-live="polite" hidden></p>
-
             <div class="barra-tabela">
                 <p class="contador" id="contador"></p>
                 <div class="botoes-barra">
                     <div id="pa-bloco" class="pa-bloco">
-    <button type="button" class="btn btn-primario" id="pa-iniciar">Iniciar processo seletivo</button>
-    <span id="pa-status" class="pa-status"></span>
-</div>
-                    <p id="pa-aviso" class="pa-aviso" role="status" aria-live="polite" hidden></p>
+                        <span id="pa-status" class="pa-status"></span>
+                        <button type="button" class="btn btn-primario btn-baixar" id="pa-iniciar">Iniciar processo seletivo</button>
+                    </div>
                     <button type="button" class="btn btn-primario btn-baixar" id="btn-baixar">&#11015; Baixar planilha</button>
                 </div>
             </div>
+            <p id="pa-aviso" class="pa-aviso" role="status" aria-live="polite" hidden></p>
 
             <!-- Tabela -->
             <section class="card ranking-card">
@@ -119,6 +113,8 @@
             <input id="pa-encerramento" name="data_encerramento" type="date" required>
         </div>
 
+        <p id="pa-modal-erro" class="pa-aviso" role="alert" data-tipo="erro" hidden></p>
+
         <div class="pa-acoes">
             <button id="pa-cancelar" type="button" class="btn btn-secundario">Cancelar</button>
             <button id="pa-confirmar" type="submit" class="btn btn-primario">Confirmar e abrir</button>
@@ -131,7 +127,7 @@
 
     <script type="module" src="../dist/pages/ranking-guard.js"></script>
     <script type="module" src="../dist/pages/ranking.js"></script>
-    <script type="module" src="../dist/pages/iniciar-processo.js"></script>
+    <script type="module" src="../dist/pages/iniciar_processo.js"></script>
 </body>
 
 </html>

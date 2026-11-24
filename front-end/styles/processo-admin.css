@@ -1,13 +1,11 @@
 /* Processo seletivo — alinhado ao visual global / ranking */
 
 .pa-bloco {
-    display: flex;
-    flex-direction: column;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     gap: 10px;
-    margin: 0 0 22px;
-    text-align: center;
+    margin: 0;
 }
 
 .pa-bloco[hidden] {
@@ -15,7 +13,14 @@
 }
 
 .pa-bloco .btn {
-    min-width: min(320px, 100%);
+    padding: 11px 22px;
+    font-size: 0.95rem;
+}
+
+.pa-bloco .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .pa-status {
@@ -57,6 +62,12 @@
 }
 
 .pa-dialogo {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    height: fit-content;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
     border: 1px solid var(--borda);
     border-radius: 16px;
     background: #ffffff;
@@ -120,6 +131,12 @@
 }
 
 @media (max-width: 700px) {
+    .pa-bloco {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
     .pa-bloco .btn {
         width: 100%;
         min-width: 0;
