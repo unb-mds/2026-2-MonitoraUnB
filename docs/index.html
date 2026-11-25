@@ -19,7 +19,55 @@
 <body>
   <div id="app">Carregando...</div>
   <script>
+
+    /* ---- Cards e participantes (edite aqui para mudar o conteúdo) ---- */
+    var DOCS=[
+      ["Documento de Visão","Contexto, objetivos e escopo do produto.","#/Documento_de_visao"],
+      ["Documento de Requisitos","Requisitos funcionais e não funcionais.","#/Documento_de_requisitos"],
+      ["Story Map","Mapeamento da jornada e das histórias de usuário.","https://www.figma.com/board/uMI0chh0NXErrtzv5eDBgr/FigJam-basics?node-id=0-1&p=f&t=BSS0Q8BY5yVRBwKL-0"],
+      ["Arquitetura","Arquitetura C4 do sistema.","#/arquitetura"],
+      ["Protótipo no Figma","Protótipo das telas do sistema.","https://panic-iso-13327902.figma.site/"],
+      ["Licença","Termos de uso do repositório (MIT).","https://github.com/unb-mds/2026-2-MonitoraUnB/blob/main/LICENSE"]
+    ];
+    var FUNC=[
+      ["Portal","Apresentação do sistema e acesso à inscrição."],
+      ["Inscrição","Envio do histórico em PDF e escolha da disciplina."],
+      ["Revisão","Conferência dos dados (aluno, matrícula, semestre, disciplina e IRA) antes do envio."],
+      ["Solicitação","Confirmação de que a inscrição foi registrada e encaminhada para análise."]
+    ];
+    var TEAM=[
+      ["AnaBiaGuerra","Ana Beatriz Nogueira Ferreira Guerra","Product Owner"],
+      ["MariaMacedoToledo","Maria Eduarda Macedo Toledo",""],
+      ["Aquila27","João Áquila","Scrum Master"],
+      ["pablosousaa","Pablo Antonio",""],
+      ["iurikoboldt","Iuri Capanema Souza Koboldt",""],
+      ["vitormorhy","Vitor Piau Morhy",""],
+      ["Vinicius-Eugenio-337","Vinicius Eugênio Montalvão Silva",""]
+    ];
+    function injeta(titulo,html){
+      var hs=document.querySelectorAll('.markdown-section h2');
+      for(var i=0;i<hs.length;i++){
+        if(hs[i].textContent.trim()===titulo){
+          var el=hs[i],nx=el.nextElementSibling;
+          if(nx&&nx.tagName==='P')el=nx;
+          el.insertAdjacentHTML('afterend',html);return;
+        }
+      }
+    }
+    function blocos(){
+      injeta('Documentação','<div class="cards">'+DOCS.map(function(d){
+        var ext=d[2].charAt(0)!=='#'?' target="_blank" rel="noopener"':'';
+        return '<a class="card" href="'+d[2]+'"'+ext+'><b>'+d[0]+'</b><span>'+d[1]+'</span></a>';
+      }).join('')+'</div>');
+      injeta('Funcionalidades','<div class="cards">'+FUNC.map(function(f,i){
+        return '<div class="card"><b><i class="n">'+(i+1)+'</i>'+f[0]+'</b><span>'+f[1]+'</span></div>';
+      }).join('')+'</div>');
+      injeta('Participantes','<div class="team">'+TEAM.map(function(t){
+        return '<a class="p" href="https://github.com/'+t[0]+'" target="_blank" rel="noopener"><img src="https://github.com/'+t[0]+'.png?size=160" alt="">'+t[1]+(t[2]?'<br><em>'+t[2]+'</em>':'')+'</a>';
+      }).join('')+'</div>');
+    }
     window.$docsify = {
+      plugins: [function(hook){ hook.doneEach(blocos); }],
       name: 'Monitora-UnB',
       repo: 'unb-mds/2026-2-MonitoraUnB',
       homepage: 'inicio.md',
