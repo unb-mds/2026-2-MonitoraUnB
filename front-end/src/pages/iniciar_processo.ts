@@ -1,5 +1,5 @@
 (() => {
-    const PA_API_BASE = "http://localhost:8000/api";
+    const PA_API_BASE = "/api";
 
     type StatusProcesso = "AGENDADO" | "ABERTO" | "ENCERRADO" | string;
 
