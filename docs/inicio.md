@@ -38,10 +38,10 @@ A documentação detalhada do projeto está disponível na pasta [`docs/`](https
 O fluxo do sistema é composto por quatro telas:
  
 <div class="cards">
-<div class="card"><div class="n">1</div><b>Portal</b><span>Apresentação do sistema e acesso à inscrição.</span></div>
-<div class="card"><div class="n">2</div><b>Inscrição</b><span>Envio do histórico em PDF e escolha da disciplina.</span></div>
-<div class="card"><div class="n">3</div><b>Revisão</b><span>Conferência dos dados (aluno, matrícula, semestre, disciplina e IRA) antes do envio.</span></div>
-<div class="card"><div class="n">4</div><b>Solicitação</b><span>Confirmação de que a inscrição foi registrada e encaminhada para análise.</span></div>
+<div class="card"><b><i class="n">1</i>Portal</b><span>Apresentação do sistema e acesso à inscrição.</span></div>
+<div class="card"><b><i class="n">2</i>Inscrição</b><span>Envio do histórico em PDF e escolha da disciplina.</span></div>
+<div class="card"><b><i class="n">3</i>Revisão</b><span>Conferência dos dados (aluno, matrícula, semestre, disciplina e IRA) antes do envio.</span></div>
+<div class="card"><b><i class="n">4</i>Solicitação</b><span>Confirmação de que a inscrição foi registrada e encaminhada para análise.</span></div>
 </div>
 ## Papéis
  
