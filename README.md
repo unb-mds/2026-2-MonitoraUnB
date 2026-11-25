@@ -10,8 +10,8 @@
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/STATUS-EM%20DESENVOLVIMENTO-yellow?style=flat-square" alt="Status: em desenvolvimento">
-  <img src="https://img.shields.io/badge/FRONT--END-EM%20DESENVOLVIMENTO-yellow?style=flat-square" alt="Front-end: em desenvolvimento">
-  <img src="https://img.shields.io/badge/BACK--END-PLANEJADO-lightgrey?style=flat-square" alt="Back-end: planejado">
+  <img src="https://img.shields.io/badge/FRONT--END-%20CONCLUÍDO-yellow?style=flat-square" alt="Front-end: concluído">
+  <img src="https://img.shields.io/badge/BACK-EM%20DESENVOLVIMENTO-yellow?style=flat-square" alt="Back-end: concluído">
 </p>
 <p align="center">
   <a href="#sobre-o-projeto">Sobre</a> &bull;
