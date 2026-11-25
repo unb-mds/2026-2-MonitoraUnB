@@ -1,11 +1,11 @@
 (() => {
-    // Se houver prefixo no Nginx (ex.: "/api") ou backend em outra origem (ex.: "http://localhost:8000"), ajuste aqui:
-    const PA_API_BASE = "http://localhost:8000";
+    const PA_API_BASE = "http://localhost:8000/api";
 
     type StatusProcesso = "AGENDADO" | "ABERTO" | "ENCERRADO" | string;
 
     interface ProcessoSeletivo {
-        id: number | string;
+        id?: number | string;
+        id_processo?: number | string;
         semestre: string;
         data_abertura?: string;
         data_encerramento?: string;
@@ -13,6 +13,8 @@
     }
 
     interface UsuarioAtual {
+        authenticated?: boolean;
+        username?: string | null;
         role?: string;
         perfil?: string;
         tipo?: string;
@@ -24,6 +26,7 @@
     const btnIniciar = document.getElementById("pa-iniciar") as HTMLButtonElement | null;
     const statusEl = document.getElementById("pa-status") as HTMLSpanElement | null;
     const avisoEl = document.getElementById("pa-aviso") as HTMLParagraphElement | null;
+    const modalErroEl = document.getElementById("pa-modal-erro") as HTMLParagraphElement | null;
     const dialogo = document.getElementById("pa-dialogo") as HTMLDialogElement | null;
     const form = document.getElementById("pa-form") as HTMLFormElement | null;
     const inputSemestre = document.getElementById("pa-semestre") as HTMLInputElement | null;
@@ -58,6 +61,22 @@
         delete avisoEl.dataset.tipo;
     }
 
+    function mostrarErroModal(mensagem: string): void {
+        if (modalErroEl) {
+            modalErroEl.textContent = mensagem;
+            modalErroEl.dataset.tipo = "erro";
+            modalErroEl.hidden = false;
+            return;
+        }
+        mostrarAviso(mensagem, "erro");
+    }
+
+    function limparErroModal(): void {
+        if (!modalErroEl) return;
+        modalErroEl.textContent = "";
+        modalErroEl.hidden = true;
+    }
+
     function headersPadrao(): HeadersInit {
         const headers: Record<string, string> = {
             "Content-Type": "application/json",
@@ -86,6 +105,7 @@
 
     function ehAdmin(usuario: UsuarioAtual | null): boolean {
         if (!usuario) return false;
+        if (usuario.authenticated === true) return true;
         if (usuario.is_admin === true || usuario.admin === true) return true;
         const cargo = (usuario.role || usuario.perfil || usuario.tipo || "").toLowerCase();
         return cargo === "admin" || cargo === "administrador" || cargo === "professor";
@@ -150,9 +170,17 @@
     async function abrirProcessoCriado(
         processo: ProcessoSeletivo
     ): Promise<{ aberto: boolean; motivo?: string }> {
+        const processoId = processo.id_processo ?? processo.id;
+        if (processoId === undefined || processoId === null) {
+            return {
+                aberto: false,
+                motivo: "O servidor não retornou o identificador do processo criado.",
+            };
+        }
+
         const endpointsCandidatos = [
-            `/admin/processos/${processo.id}/abrir`,
-            `/admin/processos/${processo.id}/status`,
+            `/admin/processos/${processoId}/abrir`,
+            `/admin/processos/${processoId}/status`,
         ];
 
         for (const endpoint of endpointsCandidatos) {
@@ -182,6 +210,7 @@
 
     btnIniciar.addEventListener("click", () => {
         limparAviso();
+        limparErroModal();
         if (inputAbertura && !inputAbertura.value) {
             inputAbertura.value = hojeISO();
         }
@@ -194,29 +223,31 @@
     });
 
     btnCancelar?.addEventListener("click", () => {
+        limparErroModal();
         dialogo.close();
     });
 
     form.addEventListener("submit", async (event: Event) => {
         event.preventDefault();
         limparAviso();
+        limparErroModal();
 
         const semestre = inputSemestre?.value.trim() || "";
         const dataAbertura = inputAbertura?.value || "";
         const dataEncerramento = inputEncerramento?.value || "";
 
         if (!/^\d{4}\/[12]$/.test(semestre)) {
-            mostrarAviso("Informe o semestre no formato AAAA/1 ou AAAA/2 (ex.: 2026/2).", "erro");
+            mostrarErroModal("Informe o semestre no formato AAAA/1 ou AAAA/2 (ex.: 2026/2).");
             return;
         }
 
         if (!dataAbertura || !dataEncerramento) {
-            mostrarAviso("Preencha as datas de início e fim das inscrições.", "erro");
+            mostrarErroModal("Preencha as datas de início e fim das inscrições.");
             return;
         }
 
         if (dataEncerramento < dataAbertura) {
-            mostrarAviso("A data de fim das inscrições não pode ser anterior à data de início.", "erro");
+            mostrarErroModal("A data de fim das inscrições não pode ser anterior à data de início.");
             return;
         }
 
@@ -234,7 +265,7 @@
 
             if (!resCriar.ok) {
                 const msgErro = await extrairMensagemErro(resCriar, "Não foi possível criar o processo seletivo.");
-                mostrarAviso(msgErro, "erro");
+                mostrarErroModal(msgErro);
                 return;
             }
 
@@ -255,7 +286,7 @@
                 );
             }
         } catch {
-            mostrarAviso("Falha de comunicação com o servidor ao iniciar o processo seletivo.", "erro");
+            mostrarErroModal("Falha de comunicação com o servidor ao iniciar o processo seletivo.");
         } finally {
             if (btnConfirmar) btnConfirmar.disabled = false;
         }
@@ -267,11 +298,9 @@
 
         const autorizado = await verificarPermissaoAdmin();
         if (!autorizado) {
-            bloco.hidden = false;
             return;
         }
 
-        bloco.hidden = false;
         await atualizarEstadoProcessos();
     }
 
