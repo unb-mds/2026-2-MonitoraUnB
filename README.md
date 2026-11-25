@@ -51,7 +51,7 @@ A documentação detalhada do projeto está disponível na pasta [`docs/`](docs/
 | [Documento de Visão](docs/Documento_de_visao.md) | Contexto, objetivos e escopo do produto |
 | [Documento de Requisitos](docs/Documento_de_requisitos.md) | Requisitos funcionais e não funcionais |
 | [Story Map](https://www.figma.com/board/uMI0chh0NXErrtzv5eDBgr/FigJam-basics?node-id=0-1&p=f&t=BSS0Q8BY5yVRBwKL-0) | Mapeamento da jornada e das histórias de usuário |
-| [Arquitetura](https://panic-iso-13327902.figma.site/) | Protótipo das telas do sistema |
+| [Arquitetura](docs/arquitetura.md) | Arquitetura C4 do sistema |
 | [Protótipo no Figma](https://panic-iso-13327902.figma.site/) | Protótipo das telas do sistema |
 | [Licença](LICENSE) | Termos de uso do repositório |
  
