@@ -1,510 +1,408 @@
-
-# DOCUMENTO DE REQUISITOS DE SOFTWARE (DRS)
-
-**Monitora UnB — Sistema de Gestão do Processo Seletivo de Monitoria**
-
-**Versão:** 0.2  
-**Status:** Rascunho para revisão da equipe  
-**Instituição:** Universidade de Brasília (UnB)
-
----
-
+# Documento de Requisitos de Software — Monitora-UnB
+ 
+Universidade de Brasília (UnB)
+Disciplina: Métodos de Desenvolvimento de Software
+Grupo 11
+Versão: 2.0
+Professor(a) orientador(a): Carla Rocha
+Brasília, 2026
+ 
+Este documento detalha os requisitos funcionais, não funcionais e inversos do sistema Monitora-UnB, organizados por épico e com rastreabilidade até as regras de negócio e as decisões do grupo.
+ 
 ## 1. Introdução
-
-### 1.1. Objetivo
-
-Este documento especifica os requisitos funcionais, não funcionais, regras de negócio, restrições e fluxos operacionais do Monitora UnB, sistema destinado a auxiliar a gestão do processo seletivo de monitores da Universidade de Brasília.
-
-O documento servirá como referência para o desenvolvimento, a implementação e a validação do sistema.
-
-### 1.2. Contextualização
-
-O processo seletivo de monitoria envolve a coleta de informações dos candidatos, a conferência dos dados acadêmicos, o cálculo de coeficientes, a classificação dos estudantes e a distribuição de vagas e bolsas.
-
-No procedimento manual, os estudantes preenchem formulários, cujas respostas são posteriormente reunidas em planilhas. Os responsáveis pela comissão calculam os coeficientes, classificam os candidatos e encaminham informações para conferência da situação acadêmica.
-
-O Monitora UnB pretende reduzir o trabalho manual por meio da centralização das inscrições, da leitura automatizada dos históricos escolares e da geração de classificações e resultados.
-
-### 1.3. Objetivos
-
-O sistema deverá:
-
-- Centralizar as inscrições dos estudantes.
-- Extrair informações dos históricos escolares enviados em PDF.
-- Comparar os dados extraídos dos documentos com os informados pelos candidatos.
-- Impedir o avanço da inscrição quando houver erros de leitura ou divergências impeditivas.
-- Calcular os coeficientes dos candidatos elegíveis.
-- Gerar classificações gerais e por disciplina.
-- Auxiliar a distribuição de vagas e bolsas de monitoria.
-- Permitir a análise e a decisão da presidência da comissão.
-- Encerrar as inscrições automaticamente no prazo estabelecido.
-
-### 1.4. Público-alvo
-
-- **Estudantes:** realizam as inscrições.
-- **Presidência da comissão de monitoria:** analisa as candidaturas e confirma as decisões de seleção.
-- **Professores responsáveis pelas disciplinas:** informam a quantidade de monitores desejada para suas disciplinas, conforme o procedimento que vier a ser estabelecido.
-
----
-
-## 2. Escopo do sistema
-
-### 2.1. Funcionalidades incluídas
-
-O escopo contempla:
-
-1. Página inicial com acesso à inscrição e à área administrativa.
-2. Formulário de candidatura.
-3. Envio e leitura do histórico em PDF.
-4. Comparação entre os dados preenchidos e os dados extraídos do documento.
-5. Mensagens de erro para arquivos ilegíveis ou informações divergentes.
-6. Geração de comprovantes de inscrição.
-7. Armazenamento das candidaturas em banco de dados próprio.
-8. Cálculo automático dos coeficientes.
-9. Classificação geral e por disciplina.
-10. Análise, aprovação e rejeição de candidaturas.
-11. Registro da quantidade de vagas e bolsas disponíveis.
-12. Sugestão de distribuição de bolsas e vagas.
-13. Confirmação administrativa dos resultados.
-14. Encerramento automático das inscrições.
-
-### 2.2. Funcionalidades fora do escopo inicial
-
-Não fazem parte do escopo inicial:
-
-- Alteração de dados acadêmicos no SIGAA.
-- Verificação automática de outras bolsas recebidas pelos estudantes.
-- Concessão autônoma de bolsas pelo sistema.
-- Gestão acadêmica completa da universidade.
-- Manutenção de um histórico permanente de todas as informações institucionais de semestres anteriores.
-
----
-
-## 3. Descrição geral do sistema
-
-### 3.1. Arquitetura conceitual
-
-O projeto possui dois componentes distintos:
-
-**API acadêmica do projeto:** possui uma base de dados própria, alimentada por um scraper que coleta informações do SIGAA. Sua finalidade é disponibilizar os dados institucionais contemplados em seu escopo, como informações sobre disciplinas, códigos e professores responsáveis. Não será utilizada para consultar informações pessoais dos candidatos para validar suas inscrições.
-
-**Aplicação Monitora UnB:** será responsável pelo formulário, processamento dos arquivos PDF, comparação dos dados informados, armazenamento das candidaturas, cálculo dos coeficientes, classificação dos estudantes e gestão dos resultados.
-
-O Monitora UnB deverá possuir um banco de dados próprio para armazenar as inscrições e as informações necessárias à condução do processo seletivo.
-
-### 3.2. Usuários
-
-#### 3.2.1. Estudante
-
-O estudante poderá:
-
-- Acessar o formulário de inscrição.
-- Informar seus dados pessoais e acadêmicos.
-- Selecionar uma única disciplina que deseja ser monitor.
-- Enviar o histórico escolar em PDF.
-- Declarar que não recebe outra bolsa institucional.
-- Conferir as informações validadas.
-- Submeter definitivamente a candidatura.
-
-Após a submissão definitiva, o estudante não poderá editar os dados enviados nem substituir o arquivo original da candidatura.
-
-#### 3.2.2. Presidência da comissão
-
-A presidência será o único perfil administrativo previsto inicialmente.
-
-Poderá:
-
-- Acessar o sistema por e-mail e senha.
-- Consultar as candidaturas.
-- Visualizar classificações gerais e por disciplina.
-- Aprovar ou rejeitar candidaturas.
-- Consultar os dados submetidos pelos estudantes.
-- Informar ou confirmar a quantidade de bolsas disponíveis.
-- Analisar e confirmar a distribuição sugerida pelo sistema.
-
-A presidência não poderá modificar os dados originalmente submetidos pelos estudantes.
-
-#### 3.2.3. Professores responsáveis pelas disciplinas
-
-Os professores informarão a quantidade de monitores desejada para suas disciplinas. O mecanismo de recebimento e registro dessas informações deverá ser definido pela equipe.
-
----
-
-## 4. Requisitos funcionais
-
-### 4.1. Acesso e navegação
-
-**RF-001 — Página inicial:** o sistema deverá disponibilizar uma página inicial com uma opção para iniciar a inscrição de estudante e outra para acessar a área administrativa.
-
-**RF-002 — Acesso à inscrição:** ao selecionar a opção de estudante, o usuário deverá ser direcionado ao formulário de candidatura.
-
-**RF-003 — Autenticação administrativa:** o sistema deverá permitir o acesso da presidência da comissão mediante e-mail e senha.
-
-**RF-004 — Controle de acesso:** as funcionalidades administrativas deverão ser acessíveis somente a usuários autenticados e autorizados.
-
-### 4.2. Formulário de inscrição
-
-**RF-005 — Campos da candidatura:** o formulário deverá conter, no mínimo:
-
-- Nome completo.
-- Número de matrícula.
-- E-mail de contato.
-- Disciplina pretendida.
-- Menção informada na disciplina.
-- Histórico em PDF.
-- Declaração de ausência de outra bolsa incompatível.
-
-**RF-006 — Validação de preenchimento:** o sistema deverá verificar o preenchimento dos campos obrigatórios e os formatos aceitos.
-
-**RF-007 — Seleção de disciplina:** o sistema deverá permitir a escolha de apenas uma disciplina por estudante em cada processo seletivo.
-
-**RF-008 — Declaração de não recebimento de bolsa:** o sistema deverá exigir a declaração do estudante sobre o não recebimento de outras bolsas incompatíveis, basta preencher um campo afirmando.
-
-**RF-009 — Envio do histórico:** o sistema deverá permitir o envio de um histórico escolar apenas no formato PDF.
-
-### 4.3. Leitura e validação do histórico escolar
-
-**RF-010 — Extração de dados:** o backend do Monitora UnB deverá utilizar uma biblioteca em Python para extrair do PDF as informações necessárias à validação.
-
-**RF-011 — Comparação de informações:** o sistema deverá comparar os dados extraídos do PDF com os dados correspondentes informados pelo estudante.
-
-**RF-012 — Validação da menção:** o sistema deverá comparar a menção informada com a menção extraída para a disciplina selecionada.
-
-**RF-013 — Validação da disciplina:** o sistema deverá verificar se a disciplina e os dados associados informados pelo estudante correspondem às informações extraídas do documento.
-
-**RF-014 — Tratamento de divergências:** quando os dados preenchidos não corresponderem aos dados extraídos, o sistema deverá exibir uma mensagem de erro e impedir o avanço para a submissão definitiva.
-
-**RF-015 — Tratamento de arquivo ilegível:** quando o sistema não conseguir ler ou extrair as informações necessárias do PDF, deverá impedir o avanço e solicitar que o estudante tente novamente com um arquivo legível.
-
-**RF-016 — Falhas de processamento:** o sistema deverá informar quando não for possível concluir a leitura ou a comparação, sem apresentar o resultado como uma validação bem-sucedida.
-
-**RF-017 — Limites da validação automática:** o sistema deverá distinguir a comparação entre os dados preenchidos e os dados extraídos da verificação da autenticidade do documento. A correspondência entre os dados não deverá ser apresentada, isoladamente, como comprovação de autenticidade do histórico escolar ou de matrícula ativa.
-
-### 4.4. Conferência e submissão
-
-**RF-018 — Tela de conferência:** após a validação bem-sucedida, o sistema deverá apresentar os dados da candidatura para conferência do estudante.
-
-**RF-019 — Submissão definitiva:** o sistema deverá disponibilizar uma ação para a submissão definitiva da candidatura.
-
-**RF-020 — Armazenamento:** após a submissão definitiva, o sistema deverá registrar a candidatura no banco de dados próprio do Monitora UnB.
-
-**RF-021 — Bloqueio de alterações:** após a submissão, o sistema deverá impedir que o estudante altere os dados enviados ou substitua o arquivo da candidatura.
-
-**RF-022 — Prevenção de duplicidade:** o sistema deverá impedir que o mesmo estudante registre candidaturas para mais de uma disciplina no mesmo processo seletivo.
-
-O mecanismo técnico de identificação e prevenção de duplicidade deverá ser definido na implementação.
-
-### 4.5. Cálculo e classificação
-
-**RF-023 — Cálculo do coeficiente:** o sistema deverá calcular automaticamente o coeficiente dos candidatos elegíveis pela fórmula:
-
-`C = 0,6 × IRA + 0,4 × M`
-
-Em que (C) representa o coeficiente, (IRA) representa o Índice de Rendimento Acadêmico e (M) representa o valor numérico da menção na disciplina.
-
-**RF-024 — Classificação geral:** o sistema deverá gerar uma classificação geral dos candidatos elegíveis, em ordem decrescente de coeficiente.
-
-**RF-025 — Classificação por disciplina:** o sistema deverá gerar classificações separadas por disciplina, também em ordem decrescente de coeficiente.
-
-**RF-026 — Dados exibidos:** as classificações administrativas deverão apresentar nome completo, matrícula, e-mail, menção e coeficiente do candidato.
-
-**RF-027 — Atualização das classificações:** as classificações deverão refletir os dados válidos e as decisões administrativas aplicáveis.
-
-### 4.6. Área administrativa
-
-**RF-028 — Consulta de candidaturas:** a presidência deverá poder consultar as candidaturas armazenadas.
-
-**RF-029 — Visualização:** o sistema deverá apresentar as informações necessárias à análise das candidaturas.
-
-**RF-030 — Aprovação:** a presidência deverá poder aprovar uma candidatura.
-
-**RF-031 — Rejeição:** a presidência deverá poder rejeitar uma candidatura.
-
-**RF-032 — Preservação dos dados:** o sistema não deverá permitir que a presidência altere diretamente os dados originalmente submetidos pelo estudante.
-
-**RF-033 — Registro de decisões:** o sistema deverá registrar as decisões administrativas relacionadas às candidaturas.
-
-### 4.7. Vagas e bolsas
-
-**RF-034 — Vagas por disciplina:** o sistema deverá permitir registrar ou confirmar a quantidade de monitores desejada para cada disciplina.
-
-**RF-035 — Bolsas disponíveis:** o sistema deverá permitir registrar ou confirmar a quantidade de bolsas disponível no processo seletivo.
-
-**RF-036 — Sugestão de distribuição:** o sistema deverá sugerir a distribuição de bolsas com base na classificação dos candidatos e nas quantidades disponíveis.
-
-**RF-037 — Confirmação da distribuição:** a distribuição sugerida deverá ser submetida à confirmação da presidência da comissão.
-
-**RF-038 — Autoridade administrativa:** o sistema não deverá conceder bolsas nem finalizar a distribuição sem a confirmação exigida da presidência.
-
-**RF-039 — Distinção de resultados:** o sistema deverá distinguir os candidatos selecionados para monitoria com bolsa, os selecionados para monitoria voluntária e os não selecionados.
-
-**RF-040 — Monitoria voluntária:** o sistema deverá permitir identificar candidatos elegíveis para monitoria voluntária após a distribuição das bolsas, respeitando as vagas disponíveis e as regras aplicáveis.
-
-### 4.8. Encerramento e comunicação
-
-**RF-041 — Configuração de encerramento:** o sistema deverá permitir definir a data e o horário de encerramento das inscrições.
-
-**RF-042 — Encerramento automático:** na data e no horário configurados, o sistema deverá bloquear novas inscrições.
-
-**RF-043 — Resultado com bolsa:** os candidatos selecionados com bolsa deverão receber uma comunicação correspondente.
-
-**RF-044 — Resultado voluntário:** os candidatos selecionados para monitoria voluntária deverão receber uma comunicação correspondente.
-
-**RF-045 — Não seleção:** o sistema deverá prever a comunicação dos resultados aos candidatos não selecionados.
-
----
-
-## 5. Regras de negócio
-
-**RN-001 — Matrícula ativa:** a matrícula ativa na UnB é um requisito de elegibilidade para a monitoria. O mecanismo de verificação desse requisito ainda deverá ser definido, pois não será realizado pela API acadêmica do projeto conforme o escopo atual.
-
-**RN-002 — Aprovação na disciplina:** o estudante deverá ter sido aprovado na disciplina pretendida.
-
-**RN-003 — Menção mínima:** a menção mínima para elegibilidade será MM.
-
-**RN-004 — IRA mínimo:** não haverá IRA mínimo para candidatura, conforme as regras atualmente informadas.
-
-**RN-005 — Disciplina única:** cada estudante poderá se candidatar a somente uma disciplina por processo seletivo.
-
-**RN-006 — Declaração de bolsa:** o estudante deverá declarar não receber outra bolsa incompatível. O sistema não verificará automaticamente essa declaração.
-
-**RN-007 — Fórmula do coeficiente:** o coeficiente será calculado por:
-
-`C = 0,6 × IRA + 0,4 × M`
-
-**RN-008 — Conversão de menções:**
-
-| Menção | Valor numérico |
-|---|---:|
-| MM | 3 |
-| MS | 4 |
-| SS | 5 |
-
-**RN-009 — Ordem de classificação:** os candidatos elegíveis serão ordenados por coeficiente decrescente.
-
-**RN-010 — Desempate:** o critério para desempate entre candidatos com coeficientes iguais deverá ser definido.
-
-**RN-011 — Vagas e bolsas:** a distribuição deverá respeitar as quantidades disponíveis para cada processo seletivo e disciplina.
-
-**RN-012 — Autoridade decisória:** a presidência da comissão terá a decisão final sobre a aprovação e rejeição das candidaturas e a confirmação da distribuição de bolsas e vagas.
-
-**RN-013 — Monitoria voluntária:** candidatos elegíveis sem bolsa poderão ser selecionados para monitoria voluntária, conforme a disponibilidade de vagas e as regras aplicáveis.
-
-**RN-014 — Imutabilidade:** os dados submetidos pelo estudante não poderão ser alterados por ele após a submissão definitiva.
-
-**RN-015 — Correspondência dos dados:** divergências entre o formulário e o PDF deverão impedir o avanço para a submissão definitiva até que o procedimento de correção ou tratamento seja definido.
-
-**RN-016 — Limites da conferência documental:** a correspondência entre o formulário e o PDF não comprova, por si só, a autenticidade do documento nem a situação atual da matrícula.
-
----
-
-## 6. Requisitos não funcionais
-
-### 6.1. Segurança
-
-**RNF-001:** a área administrativa deverá exigir autenticação.
-
-**RNF-002:** as senhas não deverão ser armazenadas em texto puro.
-
-**RNF-003:** as operações administrativas deverão ser protegidas por controle de acesso.
-
-**RNF-004:** a aplicação deverá utilizar HTTPS em ambiente de produção.
-
-**RNF-005:** os arquivos enviados deverão ser validados quanto ao formato e ao tamanho, além de processados de maneira segura.
-
-**RNF-006:** credenciais e configurações sensíveis deverão permanecer fora do código-fonte versionado.
-
-### 6.2. Privacidade e proteção de dados
-
-**RNF-007:** o sistema deverá coletar e armazenar somente os dados necessários à finalidade do processo seletivo.
-
-**RNF-008:** o tratamento dos dados deverá observar a LGPD e as normas institucionais aplicáveis.
-
-**RNF-009:** o acesso aos dados das candidaturas deverá ser restrito a usuários autorizados.
-
-**RNF-010:** deverão ser definidos os períodos de retenção e os procedimentos de exclusão das inscrições, dos dados associados e dos arquivos enviados.
-
-### 6.3. Confiabilidade
-
-**RNF-011:** as candidaturas submetidas deverão permanecer registradas após o encerramento da sessão ou a reinicialização do sistema.
-
-**RNF-012:** o sistema deverá tratar erros de leitura e processamento sem apresentar validações incorretas.
-
-**RNF-013:** deverá ser definida uma política de backup e recuperação do banco de dados das inscrições.
-
-**RNF-014:** as operações de submissão e registro de resultados deverão preservar a integridade dos dados.
-
-### 6.4. Usabilidade e compatibilidade
-
-**RNF-015:** as mensagens de erro deverão ser claras e indicar o problema encontrado.
-
-**RNF-016:** a interface deverá ser responsiva e compatível com os navegadores modernos definidos como alvo do projeto.
-
-**RNF-017:** a interface deverá observar boas práticas de acessibilidade, incluindo identificação de campos e navegação por teclado.
-
-### 6.5. Manutenibilidade
-
-**RNF-018:** o código deverá separar a interface, a lógica de negócio, o processamento dos arquivos e o acesso ao banco de dados.
-
-**RNF-019:** erros relevantes deverão ser registrados para diagnóstico, sem exposição desnecessária de dados pessoais.
-
-**RNF-020:** a estrutura deverá permitir a manutenção dos critérios de seleção e dos parâmetros de cada processo seletivo.
-
----
-
-## 7. Dados e integrações
-
-### 7.1. Banco de dados do Monitora UnB
-
-O sistema deverá possuir banco de dados próprio para armazenar as informações necessárias à gestão das candidaturas, incluindo:
-
-- Identificação e contato dos candidatos.
-- Disciplina escolhida.
-- Dados acadêmicos utilizados na seleção.
-- Coeficiente calculado.
-- Estado da validação.
-- Estado da análise administrativa.
-- Decisões da presidência.
-- Resultado final.
-
-O modelo de dados, as tabelas, os relacionamentos e a tecnologia de armazenamento deverão ser definidos durante o desenvolvimento.
-
-### 7.2. API acadêmica do projeto
-
-A API acadêmica possui base de dados própria, alimentada por um scraper que coleta informações do SIGAA.
-
-A API disponibilizará os dados institucionais contemplados em seu escopo, como informações sobre disciplinas, códigos e professores responsáveis.
-
-A API não será utilizada para consultar informações pessoais dos estudantes para validação das candidaturas. A leitura do histórico escolar e a comparação com os dados informados serão responsabilidades do próprio Monitora UnB.
-
-### 7.3. Histórico em PDF
-
-O sistema deverá processar o histórico escolar enviado para extrair as informações necessárias à conferência.
-
-Ainda deverá ser definido se o PDF original será armazenado após o processamento ou se será mantido apenas durante a validação.
-
----
-
-## 8. Fluxos principais
-
-### 8.1. Inscrição do estudante
-
-1. O estudante acessa a página inicial.
-2. Seleciona a opção de inscrição.
-3. Preenche os dados solicitados.
-4. Seleciona uma única disciplina.
-5. Envia o histórico escolar em PDF.
-6. Registra a declaração sobre bolsas incompatíveis.
-7. O sistema verifica o preenchimento dos campos.
-8. O sistema extrai os dados do PDF.
-9. O sistema compara os dados extraídos com os dados informados.
-10. Se o arquivo for ilegível ou houver divergências impeditivas, o sistema informa o erro e interrompe o fluxo.
-11. Se a comparação for bem-sucedida, o sistema apresenta os dados para conferência.
-12. O estudante poderá baixar o comprovante e submeter a candidatura.
-13. O sistema armazena a candidatura.
-14. A candidatura fica disponível para análise administrativa.
-
-### 8.2. Análise e seleção
-
-1. A presidência acessa a área administrativa.
-2. Consulta as candidaturas.
-3. Analisa as informações submetidas e o estado da validação.
-4. Aprova ou rejeita as candidaturas.
-5. O sistema calcula os coeficientes dos candidatos elegíveis.
-6. O sistema gera as classificações gerais e por disciplina.
-7. A presidência informa ou confirma as vagas e bolsas disponíveis.
-8. O sistema sugere a distribuição.
-9. A presidência confirma a distribuição.
-10. O sistema registra os resultados finais.
-
-### 8.3. Encerramento
-
-1. O sistema atinge a data e o horário configurados.
-2. Novas inscrições são bloqueadas.
-3. O sistema verifica se os resultados estão confirmados.
-
----
-
-## 9. Restrições e premissas
-
-### 9.1. Restrições
-
-- A aplicação utilizará a API acadêmica do projeto para os dados institucionais previstos em seu escopo.
-- A API não será responsável por verificar dados pessoais dos candidatos.
-- O banco de dados das inscrições ainda deverá ser desenvolvido.
-- A presidência será o único perfil administrativo previsto inicialmente.
-- Os dados não poderão ser alterados pelo estudante após a submissão definitiva.
-- O sistema não verificará automaticamente a existência de outras bolsas incompatíveis.
-- A distribuição final das bolsas dependerá da confirmação da presidência.
-- A comparação entre formulário e PDF não será tratada como comprovação automática de autenticidade documental.
-
-### 9.2. Premissas
-
-- A equipe possui autorização para realizar a coleta institucional prevista pelo scraper.
-- Os históricos escolares enviados poderão ser processados pelo backend em Python, desde que estejam em formato legível.
-- A comissão disponibilizará as quantidades de vagas e bolsas necessárias à seleção.
-
----
-
-## 10. Critérios gerais de aceitação
-
-O sistema deverá demonstrar que:
-
-1. O estudante consegue preencher e enviar uma candidatura.
-2. O sistema extrai as informações necessárias de um PDF legível.
-3. O sistema impede o avanço quando não consegue ler o documento.
-4. O sistema identifica divergências entre os dados preenchidos e os dados extraídos.
-5. O sistema não utiliza a API acadêmica para verificar dados pessoais dos candidatos.
-6. A submissão definitiva registra a candidatura no banco de dados próprio.
-7. O sistema impede candidaturas para mais de uma disciplina pelo mesmo estudante.
-8. O coeficiente é calculado corretamente.
-9. As classificações gerais e por disciplina são geradas corretamente.
-10. A presidência consegue aprovar ou rejeitar candidaturas sem editar os dados originais.
-11. O sistema sugere a distribuição de bolsas e permite sua confirmação administrativa.
-12. Os resultados distinguem monitoria com bolsa, monitoria voluntária e não seleção.
-13. O sistema bloqueia novas inscrições no encerramento configurado.
-14. O acesso aos dados e às funções administrativas é protegido.
-
----
-
-## 11. Pendências para validação
-
-**P-001 — Tecnologia do banco:** definir a tecnologia do banco de dados das inscrições.
-
-**P-002 — Duplicidade:** definir como identificar o mesmo estudante em tentativas diferentes.
-
-**P-003 — Desempate:** definir critérios para candidatos com coeficientes iguais.
-
-**P-004 — Distribuição de bolsas:** definir como combinar a classificação geral e os rankings por disciplina.
-
-**P-005 — Quantidade de monitores:** definir como os professores informarão a quantidade desejada por disciplina.
-
-**P-006 — Justificativas de rejeição:** definir se a presidência deverá informar uma justificativa e se ela será comunicada ao estudante.
-
-**P-007 — Correção de divergências:** definir como o estudante poderá corrigir dados após uma tentativa bloqueada.
-
-**P-008 — Matrícula ativa e autenticidade documental:** definir como serão verificadas a situação atual da matrícula e a autenticidade do histórico, se esses controles forem exigidos no processo. A API acadêmica do projeto não será utilizada para consultar dados pessoais dos candidatos.
-
-**P-009 — Atualização da base da API:** definir periodicidade, mecanismo e responsáveis pela atualização dos dados institucionais.
-
-**P-010 — Retenção:** definir por quanto tempo serão mantidos os registros das inscrições e os arquivos enviados.
-
-**P-011 — Encerramento:** definir o comportamento quando houver candidaturas pendentes ou resultados não confirmados na data de encerramento.
-
-**P-012 — PDF:** decidir se o histórico original será armazenado após a validação.
-
-**P-013 — Conta administrativa:** definir como a conta da presidência será criada e como será feita a recuperação de senha.
-
-**P-014 — Formato das menções:** confirmar os formatos de menção presentes nos históricos e os critérios de extração.
-
-**P-015 — Regras institucionais:** confirmar as regras oficiais de elegibilidade, bolsas incompatíveis, monitoria voluntária e distribuição de vagas.
-
----
-
-## 12. Considerações finais
-
-Esta versão descreve o funcionamento planejado do Monitora UnB com base nas informações disponíveis durante a elaboração do documento.
-
-Os requisitos deverão ser revisados pela equipe e validados com os responsáveis pelo processo seletivo. As pendências deverão ser resolvidas ou formalmente registradas antes da implementação das funcionalidades correspondentes.
-
-O modelo do banco de dados, os contratos da API, os protótipos de interface e os casos de teste deverão ser desenvolvidos em conformidade com os requisitos aprovados.
+ 
+### 1.1 Propósito
+ 
+Este documento especifica, de forma detalhada e verificável, os requisitos funcionais (RF), não funcionais (RNF) e inversos (RI) do sistema Monitora-UnB. Serve de referência para o desenvolvimento, o teste e a avaliação do produto, e para a integração entre as frentes do grupo (front-end, back-end, banco de dados, scraper e e-mail).
+ 
+### 1.2 Escopo
+ 
+O Monitora-UnB gerencia o processo seletivo de vagas de monitoria. O estudante se inscreve em uma disciplina e escolhe o professor com quem quer ser monitor, caso haja mais de um professor ofertando a matéria. O sistema realiza a automação da leitura e validação dos históricos enviados de cada candidato, dispensando o trabalho manual e cansativo antes usado. O Monitor-UnB também gera o ranking dos inscritos com base no coeficiente de cada um (que o sistema também calcula). Quem decide o resultado (bolsista ou voluntário) é o professor chefe da comissão de monitoria. Terminados o período de inscrição e a decisão, cada estudante que passou recebe o resultado por e-mail.
+ 
+Fora do escopo: acesso ao sistema pelos demais professores (RI02), decisão automática de aprovação (RI03) e limite de monitores por professor (RI08).
+ 
+### 1.3 Convenções deste documento
+ 
+| Elemento | Convenção |
+|---|---|
+| ID de requisito funcional | RF + dois dígitos sequenciais, únicos no documento (ex.: RF01, RF02, ...) |
+| ID de subrequisito | RFxx.y: parte verificável de um RF. O RF que cobre um único comportamento não tem subrequisitos |
+| ID de requisito não funcional | RNF + dois dígitos sequenciais |
+| ID de requisito inverso | RI + dois dígitos sequenciais |
+| ID de regra de negócio | RN + dois dígitos sequenciais. As regras estão no Anexo B e os requisitos as citam em vez de repetilas |
+| ID de limitação ou risco | L + dois dígitos sequenciais |
+| Critério de aceite | Escrito em Dado/Quando/Então. Cada subrequisito tem um cenário (no máximo dois) |
+| Prioridade (proposta) | Essencial (sem ele o sistema não cumpre seu objetivo), Importante (melhora a operação ou a experiência), Desejável (pode ficar para depois). O grupo deve confirmar |
+| Parâmetros | Valores ajustáveis sem alterar o requisito estão no Anexo A |
+| Numeração | Os IDs são únicos, seguem a ordem de criação e não mudam |
+ 
+### 1.4 Termos
+ 
+| Termo | Significado |
+|---|---|
+| Estudante | Aluno que se inscreve para uma vaga de monitoria. Não precisa de conta: a inscrição é identificada pela matrícula |
+| Chefe da comissão | Professor que chefia a comissão de monitoria. É o único usuário com login. A conta está ligada ao cargo, não à pessoa |
+| Demais professores | Professores que aparecem como opção de orientação na inscrição, mas não têm login nem acesso (RN05) |
+| Processo seletivo | Período de inscrições de um semestre, identificado no formato 2026/2 |
+| Matrícula | Identificador do estudante, usado para impedir mais de uma inscrição por semestre (UK) |
+| Coeficiente | Valor usado para ordenar o ranking. Maior coeficiente, melhor posição |
+| Inscrição | Pedido de um estudante para ser monitor de uma disciplina, com um professor escolhido, dentro de um processo seletivo |
+| Ranking | Lista dos inscritos ordenada por coeficiente (maior primeiro), gerada pelo sistema |
+| Aprovado / Rejeitado | Decisão do chefe da comissão sobre uma inscrição, tomada pelos botões do ranking |
+| Não apto | Situação do candidato rejeitado, exibida na página "não apto" |
+| Bolsista / Voluntário | Tipos de monitoria. O chefe da comissão decide quem recebe a bolsa (maior coeficiente) e quem é voluntário |
+| Scraper | Rotina que lê o SIGAA e carrega disciplinas e professores no banco a cada semestre |
+| SMTP | Serviço usado para enviar os e-mails de resultado |
+| Limpeza do semestre | Apagamento dos dados do semestre ao fim do processo, preservando a conta do chefe da comissão |
+ 
+### 1.5 Stack tecnológica
+ 
+O front-end é em HTML e CSS, com TypeScript para preencher as páginas com os dados. O back-end é em Python e é desenvolvido por outro integrante do grupo. O banco de dados é PostgreSQL; a aplicação se conecta com a role dedicada monitora_app. As disciplinas e os professores vêm do scraper, e os e-mails de resultado saem por SMTP.
+ 
+## 2. Requisitos Funcionais
+ 
+Cada requisito funcional tem identificador, descrição e prioridade. O RF que cobre mais de um comportamento independente é dividido em subrequisitos (RFxx.y), cada um com uma frase e um cenário de aceite. As regras detalhadas estão no Anexo B (RN01 a RN13) e os valores ajustáveis, no Anexo A. A origem de cada requisito está na Matriz de Rastreabilidade (Seção 6).
+ 
+### Épico 1 — Inscrição do estudante
+ 
+#### RF01 — Página inicial
+ 
+**Descrição:** O sistema deve exibir uma página inicial com as informações do processo seletivo em andamento e o acesso à inscrição. O estudante não precisa de login para acessá-la.
+**Prioridade:** Essencial
+ 
+#### RF02 — Inscrição em vaga de monitoria
+ 
+**Descrição:** O sistema deve permitir que o estudante preencha o formulário de inscrição com seus dados, escolha a disciplina e o professor com quem quer ser monitor. A inscrição só é aceita se houver processo seletivo aberto e se a matrícula ainda não tiver inscrição no semestre.
+**Prioridade:** Essencial
+ 
+**RF02.1 — Dados do estudante.** O sistema deve receber os dados do estudante definidos no Anexo A, incluindo a matrícula e o coeficiente, e rejeitar o envio com campo obrigatório vazio ou fora do formato.
+ 
+- Dado que deixo um campo obrigatório vazio, quando envio, então o formulário é rejeitado com mensagem que indica o campo.
+- Dado que preencho todos os campos no formato correto, quando avanço, então sigo para a revisão (RF03).
+**RF02.2 — Escolha da disciplina.** O sistema terá um campo destinado a escolha da disciplina em que o aluno terá de digitar e só poderá escolher uma(RN09).
+ 
+**RF02.3 — Escolha do professor.** O sistema também terá um espaço dedicado para escrever o nome do professor da escolha do candidato, o que será opcional, pois não é de conhecimento público quais professores querem ter ou não monitores e quantidade.
+ 
+**RF02.4 — Uma inscrição por semestre.** O sistema deve recusar a inscrição de uma matrícula que já tem inscrição no processo seletivo corrente, em qualquer disciplina (RN03, RI01).
+ 
+- Dado que a matrícula X já se inscreveu em uma disciplina em 2026/2, quando tento me inscrever com X em outra disciplina do mesmo semestre, então a inscrição é recusada com mensagem informando o motivo.
+#### RF03 — Revisão da inscrição
+ 
+**Descrição:** O sistema deve exibir uma página de revisão com os dados informados, a disciplina e o professor escolhidos, antes do envio definitivo.
+**Prioridade:** Essencial
+ 
+**Critérios de aceite:**
+ 
+- Dado que preenchi a inscrição, quando avanço, então vejo todos os dados, a disciplina e o professor escolhidos, com a opção de voltar e corrigir ou de confirmar o envio.
+- Dado que voltou para corrigir, quando avançou de novo, então os dados já preenchidos continuam no formulário.
+- Dado que confirmo o envio, quando o sistema registra a inscrição, então a inscrição fica ligada ao processo seletivo corrente (RN11).
+#### RF04 — Confirmação da inscrição
+ 
+**Descrição:** O sistema deve exibir uma página de confirmação quando a inscrição for registrada com sucesso.
+**Prioridade:** Essencial
+ 
+**Critérios de aceite:**
+ 
+- Dado que confirmei o envio na revisão, quando a inscrição é registrada no banco, então vejo a página de confirmação com a disciplina e o professor escolhidos.
+- Dado que o registro falha (por exemplo, por erro do servidor), quando isso ocorre, então não vejo a confirmação e recebo uma mensagem de erro com a orientação de tentar de novo.
+#### RF05 — Inscrição somente com processo seletivo aberto
+ 
+**Descrição:** O sistema deve aceitar inscrições apenas enquanto houver um processo seletivo aberto (RN06, RI06).
+**Prioridade:** Essencial
+ 
+**Critérios de aceite:**
+ 
+- Dado que não há processo seletivo aberto, quando tento enviar uma inscrição, então ela é recusada com mensagem informando que as inscrições estão encerradas, e nada é gravado.
+- Dado que o processo seletivo do semestre foi aberto, quando envio uma inscrição válida, então ela é aceita.
+### Épico 2 — Área do chefe da comissão de monitoria
+ 
+#### RF06 — Login do chefe da comissão
+ 
+**Descrição:** O sistema deve permitir que o chefe da comissão de monitoria se autentique com e-mail e senha. É o único login do sistema (RN05).
+**Prioridade:** Essencial
+ 
+**RF06.1 — Autenticação.** O sistema deve autenticar a conta do chefe da comissão (ex:admin@monitora.unb.br) com a senha cadastrada e levá-lo ao ranking.
+ 
+- Dado e-mail e senha corretos, quando entro, então a sessão é iniciada e vejo o ranking (RF07).
+- Dado e-mail ou senha incorretos, quando envio, então vejo mensagem genérica, sem indicar qual dos dois está errado.
+**RF06.2 — Senha única e permanente.** O sistema não deve exigir a troca da senha no primeiro login (RN07).
+ 
+- Dado que entro pela primeira vez, quando a autenticação é aceita, então vejo o ranking direto, sem tela de troca de senha.
+**RF06.3 — Acesso restrito.** O sistema não deve oferecer login nem acesso à área do chefe a nenhum outro usuário (RN05, RI02).
+ 
+- Dado um e-mail que não seja o da conta do chefe, quando tento entrar, então o login é recusado.
+- Dado que não estou logado, quando abro diretamente a URL do ranking, então sou levado ao login.
+**RF06.4 — Sair.** O sistema deve permitir encerrar a sessão do chefe.
+ 
+- Dado que estou logado, quando toco em "Sair", então a sessão termina e a área do ranking deixa de ser acessível.
+#### RF07 — Ranking dos inscritos
+ 
+**Descrição:** O sistema deve exibir ao chefe da comissão o ranking dos inscritos, gerado a partir do coeficiente, com filtro por disciplina e opções de ordenação.
+**Prioridade:** Essencial
+ 
+**RF07.1 — Exibição do ranking.** O sistema deve listar os inscritos do processo seletivo corrente do maior para o menor coeficiente (RN04).
+ 
+- Dado inscritos com coeficientes diferentes, quando abro o ranking, então a lista aparece do maior para o menor coeficiente, com os botões de aprovar e rejeitar (RF08).
+**RF07.2 — Filtro por disciplina.** O sistema deve permitir filtrar o ranking por disciplina e mostrar o número de inscritos por professor dentro dela.
+ 
+- Dado a disciplina D com dois professores, quando a filtro, então vejo só os inscritos de D e, para cada professor, o número de candidatos que o escolheram.
+- Dado que limpo o filtro, quando confirmo, então volto a ver todos os inscritos.
+**RF07.3 — Ordenação.** O sistema deve permitir ordenar a lista em ordem alfabética (pelo nome do estudante) ou por posição no ranking, com o maior coeficiente primeiro.
+ 
+- Dado a lista exibida, quando escolho "ordem alfabética", então os nomes aparecem de A a Z; quando escolho "ranking", então volto à ordem do maior coeficiente para o menor.
+#### RF08 — Aprovar ou rejeitar candidato
+ 
+**Descrição:** O sistema deve oferecer, para cada inscrito no ranking, os botões de aprovar e rejeitar, e guardar a decisão do chefe da comissão (RN04).
+**Prioridade:** Essencial
+ 
+**Critérios de aceite:**
+ 
+- Dado um inscrito no ranking, quando toco em "aprovar", então a decisão fica registrada como aprovado e o candidato continua na lista de aprovados.
+- Dado um inscrito no ranking, quando toco em "rejeitar", então a decisão fica registrada como rejeitado e o candidato passa para a página "não apto" (RF09).
+- Dado uma decisão já tomada, quando o período de decisão ainda não terminou, então posso alterá-la.
+#### RF09 — Página "não apto"
+ 
+**Descrição:** O sistema deve ter uma página que lista os candidatos considerados não aptos, com a disciplina e o professor de cada um. (Interpretação do grupo a confirmar: não apto = rejeitado.)
+**Prioridade:** Essencial
+ 
+**Critérios de aceite:**
+ 
+- Dado candidatos rejeitados, quando abro a página "não apto", então vejo a lista deles com disciplina e professor escolhidos.
+- Dado que desfaço uma rejeição (RF08), quando abro a página, então o candidato não aparece mais nela.
+#### RF10 — Definir bolsista e voluntário
+ 
+**Descrição:** O sistema deve permitir que o chefe da comissão defina, entre os aprovados, quem recebe a bolsa (maior coeficiente) e quem é voluntário. O sistema não faz essa definição sozinho (RN04, RI03).
+**Prioridade:** Essencial
+ 
+**RF10.1 — Registro do tipo de monitoria.** O sistema deve registrar para cada aprovado se ele é bolsista ou voluntário.
+ 
+- Dado um aprovado, quando o chefe escolhe "bolsista" ou "voluntário", então a escolha fica registrada e aparece no ranking.
+**RF10.2 — Sugestão pelo coeficiente.** O sistema deve destacar o aprovado de maior coeficiente de cada disciplina como candidato natural à bolsa, sem atribuí-la automaticamente.
+ 
+- Dado aprovados em uma disciplina, quando abro o ranking, então o de maior coeficiente aparece destacado, e o tipo de monitoria dele continua em branco até o chefe decidir.
+### Épico 3 — Processo seletivo e dados do semestre
+ 
+#### RF11 — Processo seletivo do semestre
+ 
+**Descrição:** O sistema deve manter um processo seletivo por semestre, identificado no formato 2026/2, com situação aberta ou encerrada. Sem processo aberto, nenhuma inscrição é aceita (RN06).
+**Prioridade:** Essencial
+ 
+**RF11.1 — Abertura.** O sistema deve ter um processo seletivo aberto antes de o período de inscrições começar.
+ 
+- Dado o setup do banco do semestre, quando ele termina, então existe um processo seletivo aberto com o semestre no formato 2026/2.
+**RF11.2 — Encerramento.** O sistema deve encerrar o processo seletivo ao fim do período de inscrições, mantendo o ranking e as decisões disponíveis ao chefe.
+ 
+- Dado o fim do período de inscrições, quando o processo é encerrado, então novas inscrições são recusadas e o ranking continua acessível para a decisão (RF05).
+#### RF12 — Carga de disciplinas e professores
+ 
+**Descrição:** O sistema deve carregar as disciplinas e os professores do SIGAA por meio do scraper, já integrado ao banco, a cada semestre (RN08).
+**Prioridade:** Essencial
+ 
+**Critérios de aceite:**
+ 
+- Dado o início de um semestre, quando o scraper executa, então as disciplinas e os professores do semestre ficam no banco e aparecem na inscrição (RF02.2 e RF02.3).
+- Dado que a leitura do SIGAA falha, quando isso ocorre, então nenhuma disciplina incompleta é gravada e a falha fica registrada para a equipe.
+#### RF13 — Limpeza ao fim do semestre
+ 
+**Descrição:** O sistema deve permitir apagar os dados do semestre depois do período de inscrição e da decisão, incluindo as disciplinas, preservando a conta do chefe da comissão (RN10, RN12).
+**Prioridade:** Importante
+ 
+**RF13.1 — Apagar dados do semestre.** A limpeza deve remover inscrições, decisões, processo seletivo e as disciplinas e os professores encarregados naquele semestre.
+ 
+- Dado um semestre encerrado e decidido, quando executo a limpeza, então inscrições, decisões, processo seletivo e disciplinas do semestre deixam de existir no banco.
+**RF13.2 — Preservar a conta do chefe.** A limpeza nunca deve remover a conta do chefe da comissão (RN12, RI05).
+ 
+- Dado que executou a limpeza, quando ela termina, então admin@monitora.unb.br continua existindo e consegue entrar com a mesma senha.
+### Épico 4 — Comunicação do resultado
+ 
+#### RF14 — E-mail de resultado
+ 
+**Descrição:** O sistema deve enviar por e-mail o resultado a cada estudante que passou, depois do encerramento do período de inscrição e da decisão do chefe da comissão (RN13).
+**Prioridade:** Essencial
+ 
+**RF14.1 — Momento do envio.** O sistema só deve enviar os e-mails depois do encerramento do processo seletivo e da decisão (RI07).
+ 
+- Dado um processo ainda aberto, quando consulto os envios, então nenhum email de resultado foi enviado.
+**RF14.2 — Destinatários e conteúdo.** O e-mail deve ir a cada estudante aprovado, informando o resultado (bolsista ou voluntário), a disciplina e o professor.
+ 
+- Dado um aprovado como bolsista, quando os e-mails são enviados, então ele recebe a mensagem com o resultado, a disciplina e o professor; rejeitados também recebem e-mail com o resultado.
+**RF14.3 — Falha de envio.** O sistema deve registrar os envios que falharam e permitir reenviá-los.
+ 
+- Dado que o SMTP recusa um envio, quando isso ocorre, então a falha fica registrada com o estudante e o motivo, e o envio pode ser repetido sem duplicar os já entregues.
+## 3. Requisitos Não Funcionais
+ 
+Os valores marcados como Proposto foram sugeridos para este documento e precisam ser confirmados pelo grupo. Os marcados como Definido pelo grupo vêm de decisões já tomadas.
+ 
+### RNF01 — Desempenho (Proposto)
+ 
+O sistema deve responder às requisições das páginas do estudante e do ranking do chefe em até 3 segundos, em condições normais de operação, para o volume de acessos esperado no pico das inscrições (valor em aberto no Anexo A).
+ 
+Justificativa: o pico de acessos ocorre perto do fim do período de inscrição, e uma meta verificável evita lentidão justamente nesse momento.
+ 
+### RNF02 — Usabilidade (Proposto)
+ 
+O fluxo do estudante deve ter quatro telas (início, inscrição, revisão e confirmação) e ser funcional em telas a partir de 360 px de largura. As mensagens de erro devem dizer o que aconteceu (inscrição duplicada, processo encerrado, campo inválido) e o que fazer em seguida.
+ 
+### RNF03 — Segurança (Definido pelo grupo e Proposto)
+ 
+A aplicação deve se conectar ao banco com a role dedicada monitora_app (Definido pelo grupo), que deve ter apenas as permissões necessárias (Proposto). A senha do chefe da comissão deve ser guardada com hash, nunca em texto puro (RI04). A comunicação deve usar HTTPS, as consultas ao banco devem ser parametrizadas, e as rotas da área do chefe só respondem a sessão autenticada.
+ 
+Justificativa: como a senha é única e permanente (RN07), a proteção dela e da rota do ranking é o principal controle de segurança do sistema.
+ 
+### RNF04 — Privacidade e proteção de dados pessoais (Proposto)
+ 
+O sistema trata como dados pessoais os dados do formulário de inscrição (incluindo nome, matrícula, e-mail e coeficiente), conforme a Lei Geral de Proteção de Dados (Lei nº 13.709/2018). Esses dados só podem ser vistos pelo chefe da comissão (RI09), são usados só para o processo seletivo e o envio do resultado, e são apagados na limpeza do semestre (RF13).
+ 
+### RNF05 — Compatibilidade (Proposto)
+ 
+O site deve funcionar nas duas versões mais recentes do Chrome, Firefox, Edge e Safari, em computador e em celular.
+ 
+### RNF06 — Manutenibilidade e testes (Definido pelo grupo)
+ 
+O banco de dados deve ser criado por scripts SQL versionados e executáveis em ordem: schema, setup/seed e testes. Os scripts rodam no pgAdmin e devem poder ser repetidos sem erro. O código deve separar front-end (HTML, CSS e TypeScript), back-end (Python) e banco (PostgreSQL), de modo que uma mudança em uma frente não obrigue a alterar as outras.
+ 
+### RNF07 — Integridade dos dados (Definido pelo grupo)
+ 
+O banco deve garantir por restrições, e não só pela aplicação: matrícula única por processo seletivo (RN03), professor escolhido pertencente à disciplina escolhida (RN09) e inscrição ligada a um processo seletivo (RN11). A limpeza do semestre nunca pode remover a conta do chefe (RN12).
+ 
+### RNF08 — Confiabilidade do envio de e-mails (Proposto)
+ 
+O envio dos resultados (RF14) deve ser repetível sem duplicar os e-mails já entregues, e cada falha deve ficar registrada com o estudante e o motivo.
+ 
+## 4. Requisitos Inversos
+ 
+Requisitos inversos definem explicitamente o que o sistema não deve fazer.
+ 
+| ID | Descrição |
+|---|---|
+| RI01 | O sistema não deve aceitar mais de uma inscrição da mesma matrícula no mesmo semestre, nem em disciplinas diferentes. |
+| RI02 | O sistema não deve oferecer login nem acesso a professores que não sejam o chefe da comissão, nem a estudantes. |
+| RI03 | O sistema não deve decidir sozinho quem é aprovado, bolsista ou voluntário. Ele só gera o ranking. |
+| RI04 | O sistema não deve armazenar a senha do chefe da comissão em texto puro, sob nenhuma circunstância. |
+| RI05 | O sistema não deve apagar a conta do chefe da comissão, nem na limpeza do semestre. |
+| RI06 | O sistema não deve aceitar inscrições quando não houver processo seletivo aberto. |
+| RI07 | O sistema não deve enviar e-mail de resultado antes do encerramento do período de inscrição e da decisão do chefe da comissão. |
+| RI08 | O sistema não deve impor limite de monitores por professor. |
+| RI09 | O sistema não deve exibir os dados dos inscritos a quem não seja o chefe da comissão. |
+| RI10 | O sistema não deve exigir troca de senha do chefe da comissão no primeiro login. |
+ 
+## 5. Limitações e Riscos Conhecidos
+ 
+| ID | Limitação ou risco | Mitigação |
+|---|---|---|
+| L01 | Senha única e permanente. Como a mesma senha é usada por quem ocupa o cargo ao longo do tempo, ela pode circular entre pessoas. | Senha com hash (RNF03). Troca manual feita pela equipe quando o cargo mudar de mãos. |
+| L02 | Um único professor com acesso. Se o chefe da comissão ficar indisponível, ninguém mais consegue decidir o resultado. | Conta ligada ao cargo, não à pessoa (RN12), e e-mail dedicado admin@monitora.unb.br. |
+| L03 | Dependência do scraper e do SIGAA. Mudanças no SIGAA podem quebrar a carga de disciplinas e professores. | Falha registrada, sem gravar dados incompletos (RF12). Último semestre não é mantido (RN10), por isso é preciso reexecutar o scraper a cada semestre. |
+| L04 | Processo seletivo aberto é pré-requisito. Sem ele, todas as inscrições falham. Isso já ocorreu quando o script de seed estava vazio. | Seed passa a abrir o processo do semestre (RF11.1), e os testes do banco verificam essa condição. |
+| L05 | A limpeza apaga o histórico. Depois dela, não há como consultar quem se inscreveu ou foi aprovado em semestres anteriores. | Exportar o ranking e as decisões antes de limpar (Proposto). |
+| L06 | Dependência do SMTP. Se o serviço de e-mail estiver fora do ar, os resultados não chegam. | Registro de falhas e reenvio (RF14.3, RNF08). Configuração do SMTP em andamento com o Macedo. |
+| L07 | Critério de "não apto" em aberto. O grupo ainda precisa confirmar se a página reúne os rejeitados ou também candidatos que não cumprem critérios objetivos. | Resolver na revisão deste documento (Anexo A). |
+ 
+## 6. Matriz de Rastreabilidade
+ 
+| ID | Subrequisitos | Épico | Origem / regras ligadas | Prioridade |
+|---|---|---|---|---|
+| RF01 | — | Inscrição | Fluxo de telas do estudante (início) | Essencial |
+| RF02 | RF02.1 a RF02.4 | Inscrição | Fluxo de telas (inscrição); RN01, RN02, RN03, RN09 | Essencial |
+| RF03 | — | Inscrição | Fluxo de telas (revisão); RN11 | Essencial |
+| RF04 | — | Inscrição | Fluxo de telas (confirmação) | Essencial |
+| RF05 | — | Inscrição | RN06 | Essencial |
+| RF06 | RF06.1 a RF06.4 | Chefe da comissão | Fluxo de telas (login); RN05, RN07, RN12 | Essencial |
+| RF07 | RF07.1 a RF07.3 | Chefe da comissão | Fluxo de telas (ranking); RN01, RN04; pedido do chefe de filtrar e ordenar | Essencial |
+| RF08 | — | Chefe da comissão | Fluxo de telas (aprovar e rejeitar); RN04 | Essencial |
+| RF09 | — | Chefe da comissão | Fluxo de telas (página "não apto") | Essencial |
+| RF10 | RF10.1, RF10.2 | Chefe da comissão | RN04 | Essencial |
+| RF11 | RF11.1, RF11.2 | Processo seletivo | RN06, RN11; correção do seed vazio | Essencial |
+| RF12 | — | Processo seletivo | RN08 | Essencial |
+| RF13 | RF13.1, RF13.2 | Processo seletivo | RN10, RN12 | Importante |
+| RF14 | RF14.1 a RF14.3 | Comunicação | RN13; tarefa de SMTP da reunião de 16/11/2026 | Essencial |
+| RF15 | RF15.1, RF15.2 | Transversal | Tarefa de modo escuro da reunião de 16/11/2026 | Importante |
+| RNF01 a RNF08 | — | Transversal | Decisão do grupo ou proposta deste documento (ver cada item) | — |
+ 
+## 7. Resumo por Prioridade
+ 
+| Prioridade | Requisitos funcionais |
+|---|---|
+| Essencial | RF01 a RF12, RF14 |
+| Importante | RF13, RF15 |
+| Desejável | Nenhum até agora (a definir na revisão) |
+ 
+Todos os requisitos não funcionais (RNF01 a RNF08) e inversos (RI01 a RI10) valem desde a primeira versão do sistema.
+ 
+## Anexo A — Parâmetros configuráveis
+ 
+Valores ajustáveis sem alterar os requisitos. Os marcados como A definir ainda não foram decididos pelo grupo.
+ 
+| Parâmetro | Valor inicial | Usado em |
+|---|---|---|
+| Formato do semestre | 2026/2 | RF01, RF11 |
+| Fonte de disciplinas e professores | SIGAA, via scraper | RF12 (RN08) |
+| E-mail da conta do chefe da comissão | (ex:admin@monitora.unb.br) | RF06, RF13 (RN12) |
+| Role do banco usada pela aplicação | monitora_app | RNF03 |
+| Limite de monitores por professor | Sem limite | RN02, RI08 |
+| Inscrições por matrícula por semestre | 1 | RN03 |
+| Campos do formulário de inscrição e quais são obrigatórios | Todos meno o campo de escrita do nome do professor que é opcional | RF02.1 |
+| Formato aceito para a matrícula | Formato seguido pela UnB de nove números (012345678) | RF02.1 |
+| Origem do coeficiente | Coef= (0,6 x IRA) +( 0,4 x Menção) [MM=3; MS =4; SS=5] | RF02.1, RF07 |
+| Critério para considerar um candidato "não apto" | Não ter concluído a disciplina que deseja monitorar em semestres anteriores | RF08, RF09 |
+| Datas de abertura e de encerramento das inscrições | Depende do administrador | RF11 |
+| Tempo máximo de resposta das páginas | A definir | RNF01 |
+| Volume de acessos simultâneos esperado no pico | A definir | RNF01 |
+| Conteúdo e remetente do e-mail de resultado | A definir (configuração SMTP) | RF14 |
+ 
+## Anexo B — Regras de negócio
+ 
+Regras citadas pelos requisitos funcionais. Os valores ajustáveis estão no Anexo A.
+ 
+### RN01 — Vários professores por disciplina
+ 
+Uma disciplina pode ter vários professores. O estudante escolhe com qual deles quer ser monitor.
+ 
+### RN02 — Sem limite de monitores por professor
+ 
+O limite de monitores não é uma informação que o grupo detém e é algo que está sempre em mudança, portanto cabe ao chefe da comissão de monitoria conversar com os professores e escolher os candidatos de acordo com o decidido
+ 
+### RN03 — Uma inscrição por semestre
+ 
+O estudante só pode se inscrever em uma disciplina por semestre. A verificação é feita pela matrícula.
+ 
+### RN04 — O sistema gera o ranking, o chefe decide
+ 
+- O sistema só gera o ranking, ordenado pelo coeficiente, do maior para o menor.
+- O chefe da comissão decide quem é aprovado e quem recebe a bolsa (maior coeficiente) ou fica como voluntário.
+### RN05 — Acesso restrito ao chefe da comissão
+ 
+Só um professor tem acesso ao sistema: o chefe da comissão de monitoria. Os outros professores não têm login e não têm acesso.
+ 
+### RN06 — Inscrição só com processo seletivo aberto
+ 
+O sistema só aceita inscrições enquanto existir um processo seletivo aberto.
+ 
+### RN07 — Senha permanente
+ 
+A senha do chefe da comissão é única e permanente. Não há troca obrigatória no primeiro login (a ideia anterior de um modal de troca de senha foi descartada).
+ 
+### RN08 — Origem de disciplinas e professores
+ 
+Disciplinas e professores vêm do scraper (SIGAA), que já está integrado ao banco, e são carregados a cada semestre.
+ 
+### RN09 — Disciplina e professor da inscrição
+ 
+Cada inscrição refere-se a uma única disciplina e a um único professor(opcional informar o professor), que deve ser um dos professores dessa disciplina.
+ 
+### RN10 — Limpeza ao fim do semestre
+ 
+Depois do período de inscrição e da decisão, todo o banco pode ser apagado, porque o semestre seguinte tem estudantes novos ou que voltam, e as disciplinas e os professores podem mudar (código da disciplina, nome do professor). A limpeza inclui as disciplinas do semestre, que o scraper recarrega do SIGAA. A única exceção é a conta do chefe da comissão (RN12).
+ 
+### RN11 — Inscrição ligada ao processo seletivo
+ 
+Toda inscrição pertence a um processo seletivo, identificado pelo semestre no formato 2026/2.
+ 
+### RN12 — Conta do chefe da comissão
+ 
+A conta do chefe da comissão nunca é descartada entre semestres, porque está ligada ao cargo (chefe da comissão de monitoria) e não à pessoa que o ocupa no momento. Usa o email dedicado admin@monitora.unb.br, criado só para isso.
+ 
+### RN13 — E-mail de resultado
+ 
+Depois do período de inscrição e da decisão do chefe da comissão, o sistema envia um email com o resultado a cada estudante, tendo passado ou não.
+ 

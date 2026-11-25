@@ -2,56 +2,111 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Documentação - MDS</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/style.min.css" title="docsify-darklight-theme" type="text/css" />
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-
-  :root {
-    --theme-color: #005A36; 
-    --base-font-family: 'Poppins', sans-serif;
-    --sidebar-name-font-weight: bold;
-  }
-
-  /* Efeito de destaque no menu lateral */
-  .sidebar ul li.active > a {
-    background: linear-gradient(90deg, #47a881 0%, #1ca870 100%);
-    color: white !important;
-    border-radius: 6px;
-    padding: 5px 10px;
-    transition: all 0.3s ease;
-    font-weight: 500;
-  }
-
-  .sidebar ul li a:hover {
-    color: #005A36;
-    text-decoration: underline;
-  }
-</style>
+  <title>Monitora-UnB | Documentação</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <link rel="stylesheet" href="assets/tema.css">
+  <script>
+    /* modo claro/escuro com botão e memória do navegador */
+    (function(){var k='tema-mu',s='claro';try{s=localStorage.getItem(k)||(matchMedia('(prefers-color-scheme: dark)').matches?'escuro':'claro')}catch(e){}
+    document.documentElement.setAttribute('data-tema',s);
+    window.addEventListener('DOMContentLoaded',function(){var b=document.createElement('button');b.id='tema-btn';
+    var l=function(){b.textContent=s==='escuro'?'Modo claro':'Modo escuro'};l();
+    b.onclick=function(){s=s==='escuro'?'claro':'escuro';document.documentElement.setAttribute('data-tema',s);try{localStorage.setItem(k,s)}catch(e){}l()};
+    document.body.appendChild(b)})})();
+  </script>
 </head>
 <body>
   <div id="app">Carregando...</div>
   <script>
+
+    /* ---- Cards e participantes (edite aqui para mudar o conteúdo) ---- */
+    var DOCS=[
+      ["Documento de Visão","Contexto, objetivos e escopo do produto.","#/Documento_de_visao"],
+      ["Documento de Requisitos","Requisitos funcionais e não funcionais.","#/Documento_de_requisitos"],
+      ["Story Map","Mapeamento da jornada e das histórias de usuário.","https://www.figma.com/board/uMI0chh0NXErrtzv5eDBgr/FigJam-basics?node-id=0-1&p=f&t=BSS0Q8BY5yVRBwKL-0"],
+      ["Arquitetura","Arquitetura C4 do sistema.","#/arquitetura"],
+      ["Protótipo no Figma","Protótipo das telas do sistema.","https://panic-iso-13327902.figma.site/"],
+      ["Licença","Termos de uso do repositório (MIT).","https://github.com/unb-mds/2026-2-MonitoraUnB/blob/main/LICENSE"]
+    ];
+    var FUNC=[
+      ["Portal","Apresentação do sistema e acesso à inscrição."],
+      ["Inscrição","Envio do histórico em PDF e escolha da disciplina."],
+      ["Revisão","Conferência dos dados (aluno, matrícula, semestre, disciplina e IRA) antes do envio."],
+      ["Solicitação","Confirmação de que a inscrição foi registrada e encaminhada para análise."]
+    ];
+    var TEAM=[
+      ["AnaBiaGuerra","Ana Beatriz Nogueira Ferreira Guerra","Product Owner"],
+      ["MariaMacedoToledo","Maria Eduarda Macedo Toledo",""],
+      ["Aquila27","João Áquila","Scrum Master"],
+      ["pablosousaa","Pablo Antonio",""],
+      ["iurikoboldt","Iuri Capanema Souza Koboldt",""],
+      ["vitormorhy","Vitor Piau Morhy",""],
+      ["Vinicius-Eugenio-337","Vinicius Eugênio Montalvão Silva",""]
+    ];
+
+    /* tira acentos, emojis/símbolos e maiúsculas para comparar títulos */
+    function norm(s){
+      return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+    }
+
+    function injeta(titulo,html){
+      var hs=document.querySelectorAll('.markdown-section h2');
+      for(var i=0;i<hs.length;i++){
+        if(norm(hs[i].textContent).indexOf(norm(titulo))!==-1){
+          var el=hs[i],nx=el.nextElementSibling;
+          if(nx&&nx.tagName==='P')el=nx;
+          el.insertAdjacentHTML('afterend',html);return;
+        }
+      }
+      console.warn('injeta: título não encontrado ->',titulo);
+    }
+
+    function blocos(){
+      try{
+        /* evita injetar duas vezes */
+        if(document.querySelector('.markdown-section .cards, .markdown-section .team'))return;
+
+        injeta('Documentação','<div class="cards">'+DOCS.map(function(d){
+          var ext=d[2].charAt(0)!=='#'?' target="_blank" rel="noopener"':'';
+          return '<a class="card" href="'+d[2]+'"'+ext+'><b>'+d[0]+'</b><span>'+d[1]+'</span></a>';
+        }).join('')+'</div>');
+
+        injeta('Funcionalidades','<div class="cards">'+FUNC.map(function(f,i){
+          return '<div class="card"><b><i class="n">'+(i+1)+'</i>'+f[0]+'</b><span>'+f[1]+'</span></div>';
+        }).join('')+'</div>');
+
+        injeta('Participantes','<div class="team">'+TEAM.map(function(t){
+          return '<a class="p" href="https://github.com/'+t[0]+'" target="_blank" rel="noopener"><img src="https://github.com/'+t[0]+'.png?size=160" alt="">'+t[1]+(t[2]?'<br><em>'+t[2]+'</em>':'')+'</a>';
+        }).join('')+'</div>');
+      }catch(e){
+        console.error('Erro ao montar os blocos:',e);
+      }
+    }
+
     window.$docsify = {
-      name: 'Trabalho de MDS',
-      repo: 'https://github.com/unb-mds/2026-2-MonitoraUnB.git',
-      loadSidebar: true, 
-      homepage: 'Como_executar.md',
+      plugins: [function(hook){
+        hook.doneEach(blocos);
+        hook.ready(blocos);
+      }],
+      name: 'Monitora-UnB',
+      repo: 'unb-mds/2026-2-MonitoraUnB',
+      homepage: 'inicio.md',
       coverpage: true,
-      subMaxLevel: 2
+      loadSidebar: true,
+      subMaxLevel: 2,
+      auto2top: true,
+      search: { placeholder: 'Buscar na documentação', noData: 'Nada encontrado.', depth: 3 },
+      pagination: { previousText: 'Anterior', nextText: 'Próximo' }
     }
   </script>
   <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
-  <!-- Pesquisa -->
-<script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-<!-- Botão de Copiar Código -->
-<script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
-<!-- Paginação no fim da página -->
-<script src="//unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script>
-<!-- Tema Dark/Light -->
-<script src="//cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/index.min.js" type="text/javascript"></script>
-
-<script src="https://unpkg.com/docsify-plugin-flexible-alerts"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code@2/dist/docsify-copy-code.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-plugin-flexible-alerts@1"></script>
+  <script src="//cdn.jsdelivr.net/npm/mermaid@10.9.3/dist/mermaid.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-mermaid@2/dist/docsify-mermaid.js"></script>
+  <script>mermaid.initialize({ startOnLoad: false, theme: 'default' });</script>
 </body>
 </html>

@@ -1,238 +1,171 @@
-# Arquitetura do Banco de Dados — API de Disciplinas do SIGAA UnB
-
-## 1. Objetivo
-
-Este documento descreve a arquitetura proposta para o banco de dados do projeto da API de Disciplinas do SIGAA da Universidade de Brasília (UnB).
-
-O banco será desenvolvido em MySQL e terá duas responsabilidades principais:
-
-- Armazenar os códigos e nomes das disciplinas coletadas do portal público do SIGAA UnB.
-- Armazenar as informações necessárias para o login do presidente da comissão.
-
-As duas funcionalidades serão mantidas em um único banco de dados, com tabelas separadas para organizar as informações.
-
-## 2. Tecnologias
-
-| Tecnologia | Responsabilidade |
-|---|---|
-| MySQL | Armazenamento persistente dos dados |
-| Docker Desktop | Execução do MySQL em um container local |
-| Docker Compose | Configuração e inicialização do ambiente |
-| Python + SQLAlchemy | Integração do backend com o banco |
-| PyMySQL | Driver de conexão entre Python e MySQL |
-| FastAPI | API responsável pela sincronização e consulta das disciplinas |
-
-O banco será executado localmente durante o desenvolvimento. O Docker permitirá padronizar o ambiente utilizado pelos integrantes do grupo, independentemente do sistema operacional.
-
-## 3. Estrutura do banco de dados
-
-O banco será denominado provisoriamente `sigaa_unb`. O nome poderá ser alterado conforme a decisão do grupo.
-
-Inicialmente, serão utilizadas duas tabelas: `disciplinas` e `usuarios`.
-
-### 3.1. Tabela `disciplinas`
-
-Responsável por armazenar as disciplinas coletadas pelo módulo de web scraping.
-
-| Coluna | Tipo | Restrições | Descrição |
-|---|---|---|---|
-| `codigo` | `VARCHAR(20)` | Chave primária | Código único da disciplina |
-| `nome` | `VARCHAR(255)` | `NOT NULL` | Nome da disciplina |
-| `atualizado_em` | `TIMESTAMP` | Automático | Data e hora da última inserção ou atualização |
-
-**Regras de funcionamento:**
-
-- O código será a chave primária, evitando o cadastro de duas disciplinas com o mesmo código.
-- O nome será obrigatório.
-- A coluna `atualizado_em` registrará a data e a hora da última inserção ou alteração do registro.
-- A tabela utilizará `utf8mb4` para suportar acentos e outros caracteres Unicode.
-- A sincronização utilizará a operação `INSERT ... ON DUPLICATE KEY UPDATE`, conhecida como *upsert*, para inserir novas disciplinas e atualizar as já existentes.
-
-A consulta das disciplinas armazenadas será feita diretamente no banco, sem a necessidade de acessar o SIGAA novamente.
-
-### 3.2. Tabela `usuarios`
-
-Responsável por armazenar os dados da conta utilizada pelo presidente da comissão para acessar o sistema.
-
-| Coluna | Tipo | Restrições | Descrição |
-|---|---|---|---|
-| `id` | `INT` | Chave primária, incremento automático | Identificador do usuário |
-| `nome` | `VARCHAR(150)` | `NOT NULL` | Nome do usuário |
-| `email` | `VARCHAR(255)` | `NOT NULL`, único | E-mail utilizado no login |
-| `senha_hash` | `VARCHAR(255)` | `NOT NULL` | Hash seguro da senha |
-| `ativo` | `BOOLEAN` | `NOT NULL`, padrão verdadeiro | Indica se a conta está habilitada |
-| `criado_em` | `TIMESTAMP` | Automático | Data de criação da conta |
-| `atualizado_em` | `TIMESTAMP` | Automático | Data da última atualização dos dados |
-
-**Regras de funcionamento:**
-
-- O e-mail será único, evitando a criação de contas duplicadas para a mesma identificação.
-- A senha nunca será armazenada em texto puro.
-- O backend utilizará uma biblioteca de autenticação para gerar e verificar o hash da senha. Recomenda-se Argon2id ou bcrypt.
-- A coluna `ativo` permitirá desabilitar a conta sem precisar excluir o registro.
-- O cadastro inicial do presidente da comissão deverá ser realizado por um procedimento controlado, sem disponibilizar publicamente um endpoint de criação de usuários desnecessário.
-
-A tabela poderá comportar outros usuários no futuro, embora o requisito atual seja atender ao presidente da comissão.
-
-## 4. Relacionamento entre as tabelas
-
-As tabelas `disciplinas` e `usuarios` não terão relacionamento direto na versão inicial.
-
-A tabela `disciplinas` armazenará informações acadêmicas coletadas do SIGAA, enquanto `usuarios` armazenará os dados de autenticação do sistema.
-
-Essa separação facilita a manutenção e evita misturar informações acadêmicas com credenciais de acesso.
-
-## 5. Esquema SQL inicial
-
-A estrutura poderá ser criada com os seguintes comandos:
-
-```sql
-CREATE DATABASE IF NOT EXISTS sigaa_unb
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci;
-
-USE sigaa_unb;
-
-CREATE TABLE disciplinas (
-    codigo VARCHAR(20) PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
-    atualizado_em TIMESTAMP
-        NOT NULL DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE usuarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(150) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    senha_hash VARCHAR(255) NOT NULL,
-    ativo BOOLEAN NOT NULL DEFAULT TRUE,
-    criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_unicode_ci;
+# Estrutura e Organização do Banco de Dados do Monitora-UnB
+ 
+## 1. Visão geral
+ 
+O banco de dados do sistema Monitora UnB foi desenvolvido utilizando o PostgreSQL e tem como objetivo armazenar, organizar e gerenciar as informações necessárias para o funcionamento dos processos seletivos de monitoria da Universidade de Brasília.
+ 
+Sua estrutura foi planejada para atender às principais etapas do processo, desde a abertura de um edital e a realização das inscrições pelos estudantes até a classificação dos candidatos, o registro das decisões da comissão responsável e o envio dos resultados por e-mail.
+ 
+A modelagem busca garantir a integridade e a consistência das informações, evitando duplicidades e restringindo operações que possam comprometer as regras estabelecidas para o processo seletivo. Além disso, considera que os processos possuem duração semestral e que os dados operacionais dos estudantes não precisam ser mantidos após a conclusão do processo e o envio de todas as notificações.
+ 
+## 2. Organização das tabelas
+ 
+O banco de dados é composto por seis tabelas principais: `aluno`, `usuario_administrador`, `disciplina`, `processo_seletivo`, `inscricao` e `resultado`. Cada uma possui uma responsabilidade específica dentro do sistema.
+ 
+### 2.1. Tabela `aluno`
+ 
+A tabela `aluno` armazena os dados cadastrais dos estudantes que participam do processo seletivo. São registrados o identificador interno do aluno, sua matrícula, seu nome e seu endereço de e-mail.
+ 
+A matrícula é utilizada como identificador acadêmico único, impedindo que um mesmo estudante seja cadastrado mais de uma vez. O endereço de e-mail é utilizado posteriormente para o envio das notificações referentes ao resultado da inscrição.
+ 
+### 2.2. Tabela `usuario_administrador`
+ 
+A tabela `usuario_administrador` armazena as informações de acesso do responsável pela administração do processo seletivo, representando a conta da comissão responsável pela seleção.
+ 
+São armazenados o identificador do usuário, o e-mail utilizado para autenticação, o hash da senha e a situação da conta, que indica se ela está ativa ou inativa.
+ 
+A utilização de uma conta administrativa permite que o acesso ao sistema permaneça associado à comissão, mesmo que ocorra uma substituição do professor responsável.
+ 
+### 2.3. Tabela `disciplina`
+ 
+A tabela `disciplina` contém o cadastro das disciplinas disponíveis para participação no processo seletivo. Cada disciplina possui um identificador interno, um código e um nome.
+ 
+O código da disciplina é único, evitando registros duplicados. Essa tabela permite relacionar cada inscrição à disciplina correspondente e organizar a classificação dos candidatos de acordo com a disciplina escolhida.
+ 
+### 2.4. Tabela `processo_seletivo`
+ 
+A tabela `processo_seletivo` registra os processos seletivos realizados pelo sistema.
+ 
+Cada registro possui um identificador, o usuário administrador responsável, o semestre correspondente, as datas de abertura e encerramento e o status do processo.
+ 
+O status pode assumir três valores: `AGENDADO`, `ABERTO` ou `ENCERRADO`.
+ 
+Essa organização permite controlar o período de funcionamento das inscrições e identificar se determinado processo está disponível para receber novos candidatos. O banco também possui uma restrição que impede a existência de mais de um processo com status `ABERTO` simultaneamente.
+ 
+### 2.5. Tabela `inscricao`
+ 
+A tabela `inscricao` é responsável por armazenar as informações acadêmicas e os dados referentes à participação dos estudantes no processo seletivo.
+ 
+Cada inscrição está relacionada a um aluno, a uma disciplina e a um processo seletivo. Também são armazenados o IRA, a menção obtida na disciplina, o coeficiente calculado, o caminho do arquivo do histórico acadêmico e a data de realização da inscrição.
+ 
+O arquivo PDF do histórico acadêmico é armazenado no servidor da aplicação, enquanto o banco de dados registra apenas o caminho de acesso ao documento.
+ 
+O coeficiente de classificação é calculado de acordo com a seguinte fórmula:
+ 
 ```
-
-Esse script representa a estrutura inicial proposta. Ele não cria automaticamente a conta do presidente da comissão, pois o cadastro deve ser feito por um procedimento seguro.
-
-## 6. Integração com o backend
-
-A conexão entre o backend e o banco será realizada por SQLAlchemy, utilizando o driver PyMySQL.
-
-O backend será responsável por executar as operações de leitura e escrita, enquanto o banco será responsável por armazenar e manter os registros.
-
-### 6.1. Sincronização das disciplinas
-
-O endpoint `POST /sincronizar` será responsável por:
-
-1. Receber um trecho do nome ou do código de uma disciplina.
-2. Solicitar ao módulo de scraping a busca no SIGAA.
-3. Receber os códigos e nomes encontrados.
-4. Inserir as disciplinas novas no banco.
-5. Atualizar os registros existentes quando houver alterações.
-6. Retornar informações sobre o resultado da sincronização.
-
-O código da disciplina será utilizado para identificar registros existentes e evitar duplicatas.
-
-### 6.2. Consulta das disciplinas
-
-O endpoint `GET /disciplinas` consultará os registros já armazenados no MySQL.
-
-Poderá receber os seguintes parâmetros opcionais:
-
-- `nome`: filtra disciplinas pelo nome.
-- `codigo`: filtra disciplinas pelo código.
-- `limite`: limita a quantidade de resultados, com padrão de 100 e máximo de 1000.
-
-Os resultados serão ordenados pelo código da disciplina.
-
-A consulta não deverá realizar scraping. Dessa maneira, a disponibilidade do SIGAA não será necessária para consultar dados previamente armazenados.
-
-### 6.3. Login do presidente da comissão
-
-A tabela `usuarios` será utilizada pelo mecanismo de autenticação do sistema.
-
-O fluxo previsto será:
-
-1. O presidente da comissão informa seu e-mail e sua senha no formulário de login.
-2. O backend procura a conta pelo e-mail.
-3. O backend verifica a senha informada contra o hash armazenado.
-4. Se a senha estiver correta e a conta estiver ativa, o sistema autoriza o acesso conforme as regras de autenticação definidas pelo grupo.
-
-A senha original não será recuperável a partir do hash. Uma eventual alteração de senha deverá gerar um novo hash.
-
-## 7. Configuração e segurança
-
-### 7.1. Variáveis de ambiente
-
-As credenciais de conexão não deverão ser escritas diretamente no código-fonte.
-
-O backend poderá utilizar variáveis de ambiente como:
-
-- `DB_HOST`
-- `DB_PORT`
-- `DB_NAME`
-- `DB_USER`
-- `DB_PASSWORD`
-
-Os valores serão definidos conforme o ambiente de execução. Em um projeto local com Docker Compose, o endereço do banco dependerá de onde o backend estiver sendo executado: no próprio computador ou em outro container.
-
-Arquivos `.env` que contenham credenciais reais deverão ser excluídos do controle de versão por meio do `.gitignore`. Um arquivo de exemplo poderá documentar os nomes das variáveis sem incluir senhas reais.
-
-### 7.2. Acesso local
-
-Durante o desenvolvimento, a porta do MySQL deverá ser disponibilizada apenas conforme a necessidade do projeto, preferencialmente restrita ao próprio computador quando o acesso ocorrer a partir do sistema operacional hospedeiro.
-
-Quando o backend e o banco estiverem em containers separados, a comunicação deverá ocorrer pela rede Docker apropriada. A configuração deverá considerar o ambiente de execução utilizado por cada integrante do grupo.
-
-As credenciais administrativas do MySQL não deverão ser utilizadas indiscriminadamente pelo backend. Recomenda-se criar um usuário específico para a aplicação, com as permissões necessárias.
-
-### 7.3. Armazenamento de senhas
-
-A senha do presidente da comissão deverá ser protegida com um algoritmo específico para armazenamento de senhas, como Argon2id ou bcrypt.
-
-Não se deve utilizar MD5 ou SHA-256 simples para armazenar senhas, nem guardar a senha original em uma coluna do banco.
-
-## 8. Persistência dos dados no Docker
-
-O MySQL será executado em um container Docker.
-
-Será necessário configurar um volume persistente para que os dados do banco não sejam perdidos quando o container for recriado ou removido.
-
-O Docker Compose poderá centralizar a configuração do serviço MySQL, incluindo imagem, porta, variáveis de ambiente e volume.
-
-As credenciais deverão ser configuradas de forma apropriada para o ambiente de desenvolvimento e não deverão ser publicadas no repositório.
-
-## 9. Plano inicial de testes
-
-Os seguintes testes deverão ser realizados durante o desenvolvimento:
-
-1. Verificar se o banco foi criado corretamente.
-2. Verificar se as tabelas `disciplinas` e `usuarios` possuem as colunas e restrições esperadas.
-3. Inserir uma disciplina de teste e consultá-la por meio de `SELECT`.
-4. Executar a sincronização duas vezes e verificar se não são criadas disciplinas duplicadas.
-5. Alterar o nome de uma disciplina de teste e verificar se a sincronização atualiza o registro.
-6. Consultar as disciplinas utilizando filtros por nome e código.
-7. Testar a persistência dos dados após reiniciar o container.
-8. Verificar se os nomes com acentos são armazenados corretamente.
-9. Confirmar que as credenciais do banco não estão expostas no código ou no repositório.
-10. Testar a autenticação válida, a senha incorreta e a conta desativada.
-
-## 10. Referências técnicas
-
-- [MySQL — documentação oficial](https://dev.mysql.com/doc/)
-- [MySQL — INSERT e ON DUPLICATE KEY UPDATE](https://dev.mysql.com/doc/refman/8.4/en/insert.html)
-- [Docker Compose — configuração de variáveis de ambiente](https://docs.docker.com/compose/how-tos/environment-variables/set-environment-variables/)
-- [OWASP — Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)
-
-## 11. Conclusão
-
-A arquitetura proposta utiliza um único banco de dados MySQL, organizado em duas tabelas independentes: `disciplinas`, para armazenar os dados coletados do SIGAA UnB, e `usuarios`, para armazenar os dados necessários à autenticação do presidente da comissão.
-
-A solução mantém a responsabilidade de persistência separada do scraping e da exposição dos endpoints, utiliza mecanismos para evitar duplicatas e prevê cuidados básicos com credenciais, senhas e persistência local.
-
-A estrutura poderá ser ampliada futuramente, caso o projeto passe a armazenar outros dados acadêmicos ou precise oferecer funcionalidades adicionais de autenticação.
+Coeficiente = (0,6 × IRA) + (0,4 × Nota da menção)
+```
+ 
+Para o cálculo, são utilizados os seguintes valores:
+ 
+- MM = 3;
+- MS = 4;
+- SS = 5.
+O banco possui restrições que garantem que o IRA esteja entre 0 e 5, que a menção corresponda a um dos valores aceitos e que o coeficiente registrado esteja de acordo com a fórmula estabelecida.
+ 
+Também existe uma restrição que impede que um mesmo aluno realize mais de uma inscrição dentro do mesmo processo seletivo. Entretanto, o estudante pode participar de novos processos em semestres posteriores.
+ 
+### 2.6. Tabela `resultado`
+ 
+A tabela `resultado` armazena a decisão final da comissão responsável pela seleção de cada candidato.
+ 
+Cada registro está associado a uma inscrição e contém a decisão, a modalidade de participação, a data da decisão e as informações referentes ao envio do e-mail de notificação.
+ 
+A decisão pode ser `APROVADO` ou `REPROVADO`. Quando aprovado, o candidato deve receber uma modalidade, que pode ser `BOLSISTA` ou `VOLUNTARIO`. Para candidatos reprovados, a modalidade permanece nula.
+ 
+A tabela também possui os campos `email_enviado` e `data_envio`, utilizados para acompanhar o envio das notificações. Dessa forma, o sistema consegue identificar quais resultados já foram comunicados e quais ainda precisam de envio ou reenvio.
+ 
+## 3. Relacionamentos entre as tabelas
+ 
+A organização do banco utiliza chaves primárias e estrangeiras para estabelecer os relacionamentos entre as entidades e garantir a integridade referencial.
+ 
+Os principais relacionamentos são:
+ 
+- Um usuário administrador pode ser responsável por diferentes processos seletivos.
+- Um processo seletivo pode possuir diversas inscrições.
+- Um aluno pode realizar inscrições em diferentes processos seletivos, respeitando a regra de uma inscrição por processo.
+- Uma disciplina pode estar relacionada a diversas inscrições.
+- Cada inscrição possui, no máximo, um resultado registrado.
+Dessa maneira, as tabelas são conectadas de forma que as informações de cada estudante, disciplina, processo e resultado possam ser consultadas sem a necessidade de repetir os mesmos dados em diferentes registros.
+ 
+## 4. Views e consultas auxiliares
+ 
+Além das tabelas, foram desenvolvidas quatro views para facilitar a consulta e a apresentação das informações utilizadas pela aplicação.
+ 
+As views são consultas armazenadas que permitem organizar os dados de acordo com as necessidades do sistema, sem exigir que o backend construa novamente todas as consultas SQL.
+ 
+Foram criadas as seguintes views:
+ 
+- `vw_inscricoes_pendentes`: apresenta as inscrições que ainda não possuem um resultado registrado.
+- `vw_ranking_geral`: apresenta a classificação geral dos candidatos, considerando os coeficientes calculados.
+- `vw_ranking_por_disciplina`: organiza a classificação dos candidatos individualmente por disciplina.
+- `vw_total_inscritos_disciplina`: apresenta a quantidade de inscrições recebidas por cada disciplina no processo aberto, incluindo disciplinas que ainda não possuem candidatos inscritos.
+Essas consultas auxiliam a comissão na visualização das inscrições e na análise da classificação dos candidatos.
+ 
+## 5. Funções e gatilhos de validação
+ 
+Para reforçar a integridade das informações, foram implementadas funções e gatilhos (triggers) responsáveis por validar determinadas operações realizadas no banco de dados.
+ 
+Entre as principais regras implementadas, destacam-se:
+ 
+- **Controle de inscrições:** impede que sejam realizadas inscrições em processos que não estejam com status `ABERTO`.
+- **Proteção dos resultados enviados:** impede alterações na decisão ou na modalidade de um candidato depois que o e-mail de notificação já foi enviado.
+- **Validação do encerramento:** impede que um processo seja encerrado enquanto existirem inscrições sem resultado registrado ou notificações pendentes de envio.
+- **Proteção contra exclusões indevidas:** impede a exclusão de processos que ainda não foram encerrados e de alunos que possuam inscrições vinculadas a processos ainda ativos.
+- **Controle da limpeza dos dados:** garante que a exclusão dos dados operacionais ocorra somente após o encerramento do processo e a confirmação do envio de todas as notificações.
+Essas validações permitem que parte das regras de negócio seja garantida diretamente pelo banco de dados, reduzindo a possibilidade de inconsistências provocadas por operações indevidas da aplicação.
+ 
+## 6. Gerenciamento e limpeza dos dados
+ 
+Considerando que o sistema será utilizado em processos seletivos semestrais, a estrutura foi planejada para não manter indefinidamente os dados operacionais dos estudantes.
+ 
+Após o encerramento do processo seletivo e a confirmação de que todos os resultados foram enviados por e-mail, uma função específica permite realizar a limpeza dos registros relacionados àquele processo.
+ 
+Essa operação verifica se o processo está encerrado, se não existem inscrições sem resultado ou notificações pendentes e se os alunos envolvidos não possuem inscrições vinculadas a outros processos.
+ 
+Após a validação dessas condições, são excluídos os registros dos alunos e as informações relacionadas às inscrições e aos resultados. O processo seletivo também é removido.
+ 
+Os arquivos PDF dos históricos acadêmicos, armazenados no servidor da aplicação, deverão ser excluídos pelo backend durante essa etapa, uma vez que o banco de dados armazena apenas os caminhos dos documentos.
+ 
+As informações da conta administrativa e o cadastro das disciplinas são mantidos, pois são necessários para a continuidade dos processos seletivos seguintes.
+ 
+## 7. Controle de acesso
+ 
+Para a conexão da aplicação com o PostgreSQL, foi criado um usuário específico denominado `monitora_app`.
+ 
+Esse usuário possui permissões próprias para acessar o banco de dados e realizar as operações necessárias ao funcionamento do sistema, sem utilizar a conta administrativa do PostgreSQL.
+ 
+A separação entre o usuário administrador do banco e o usuário utilizado pela aplicação contribui para a segurança do sistema, reduzindo a exposição de permissões administrativas durante a execução do backend.
+ 
+As permissões iniciais foram concedidas de acordo com as operações previstas para a aplicação e ainda devem ser revisadas conforme as necessidades identificadas durante a integração com o backend.
+ 
+## 8. Considerações finais
+ 
+A estrutura do banco de dados do Monitora UnB foi desenvolvida para atender às necessidades de gerenciamento das inscrições e dos resultados dos processos seletivos de monitoria.
+ 
+A separação das informações em tabelas específicas, a utilização de relacionamentos, restrições de integridade, views, funções e gatilhos permite organizar os dados e garantir que as principais regras do processo sejam respeitadas.
+ 
+Com a estrutura inicial implementada no PostgreSQL, o banco está preparado para a etapa de integração com o backend em Python, que será responsável por realizar as operações da aplicação, processar os históricos acadêmicos, gerenciar as inscrições e decisões e efetuar o envio das notificações por e-mail.
+ 
+---
+ 
+## 1. Escopo definitivo do sistema
+ 
+O Monitora UnB terá estas responsabilidades:
+ 
+1. Receber as inscrições dos alunos.
+2. Receber os históricos escolares em PDF.
+3. Extrair e validar as informações dos históricos.
+4. Calcular o coeficiente de classificação.
+5. Gerar uma planilha com o ranking dos candidatos por disciplina.
+6. Permitir que o professor responsável consulte a classificação.
+7. Permitir que o professor envie o resultado por e-mail aos candidatos aprovados.
+O sistema NÃO será responsável por:
+ 
+- Definir quantidade de vagas.
+- Definir quantidade de bolsas.
+- Escolher quem recebe bolsa.
+- Escolher quem será voluntário.
+- Decidir quem será aprovado.
+- Distribuir monitores entre professores.
+ 
