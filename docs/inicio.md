@@ -25,24 +25,10 @@ Projeto desenvolvido colaborativamente para a disciplina de **Métodos de Desenv
  
 A documentação detalhada do projeto está disponível na pasta [`docs/`](https://github.com/unb-mds/2026-2-MonitoraUnB/tree/main/docs).
  
-<div class="cards">
-<a class="card" href="#/Documento_de_visao"><b>Documento de Visão</b><span>Contexto, objetivos e escopo do produto.</span></a>
-<a class="card" href="#/Documento_de_requisitos"><b>Documento de Requisitos</b><span>Requisitos funcionais e não funcionais.</span></a>
-<a class="card" href="https://www.figma.com/board/uMI0chh0NXErrtzv5eDBgr/FigJam-basics?node-id=0-1&p=f&t=BSS0Q8BY5yVRBwKL-0"><b>Story Map</b><span>Mapeamento da jornada e das histórias de usuário.</span></a>
-<a class="card" href="#/arquitetura"><b>Arquitetura</b><span>Arquitetura C4 do sistema.</span></a>
-<a class="card" href="https://panic-iso-13327902.figma.site/"><b>Protótipo no Figma</b><span>Protótipo das telas do sistema.</span></a>
-<a class="card" href="https://github.com/unb-mds/2026-2-MonitoraUnB/blob/main/LICENSE"><b>Licença</b><span>Termos de uso do repositório (MIT).</span></a>
-</div>
 ## Funcionalidades
  
 O fluxo do sistema é composto por quatro telas:
  
-<div class="cards">
-<div class="card"><b><i class="n">1</i>Portal</b><span>Apresentação do sistema e acesso à inscrição.</span></div>
-<div class="card"><b><i class="n">2</i>Inscrição</b><span>Envio do histórico em PDF e escolha da disciplina.</span></div>
-<div class="card"><b><i class="n">3</i>Revisão</b><span>Conferência dos dados (aluno, matrícula, semestre, disciplina e IRA) antes do envio.</span></div>
-<div class="card"><b><i class="n">4</i>Solicitação</b><span>Confirmação de que a inscrição foi registrada e encaminhada para análise.</span></div>
-</div>
 ## Papéis
  
 - **Scrum Master:** João Áquila ([@Aquila27](https://github.com/Aquila27))
@@ -51,15 +37,6 @@ O fluxo do sistema é composto por quatro telas:
  
 Projeto desenvolvido colaborativamente pelos integrantes do Grupo 11.
  
-<div class="team">
-<a class="p" href="https://github.com/AnaBiaGuerra"><img src="https://github.com/AnaBiaGuerra.png?size=160" alt="">Ana Beatriz Nogueira Ferreira Guerra<br><em>Product Owner</em></a>
-<a class="p" href="https://github.com/MariaMacedoToledo"><img src="https://github.com/MariaMacedoToledo.png?size=160" alt="">Maria Eduarda Macedo Toledo</a>
-<a class="p" href="https://github.com/Aquila27"><img src="https://github.com/Aquila27.png?size=160" alt="">João Áquila<br><em>Scrum Master</em></a>
-<a class="p" href="https://github.com/pablosousaa"><img src="https://github.com/pablosousaa.png?size=160" alt="">Pablo Antonio</a>
-<a class="p" href="https://github.com/iurikoboldt"><img src="https://github.com/iurikoboldt.png?size=160" alt="">Iuri Capanema Souza Koboldt</a>
-<a class="p" href="https://github.com/vitormorhy"><img src="https://github.com/vitormorhy.png?size=160" alt="">Vitor Piau Morhy</a>
-<a class="p" href="https://github.com/Vinicius-Eugenio-337"><img src="https://github.com/Vinicius-Eugenio-337.png?size=160" alt="">Vinicius Eugênio Montalvão Silva</a>
-</div>
 ## Estrutura do repositório
  
 ```
