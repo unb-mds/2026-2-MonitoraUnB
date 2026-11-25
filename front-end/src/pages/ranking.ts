@@ -1,4 +1,8 @@
-import { listarInscricoes, obterProcessoAberto } from "../services/inscricao.js";
+import {
+    baixarPlanilhaInscricoes,
+    listarInscricoes,
+    obterProcessoAberto,
+} from "../services/inscricao.js";
 import type { InscricaoRanking, StatusInscricao } from "../types/inscricao-ranking.js";
 
 type LinhaVisivel = {
@@ -6,6 +10,7 @@ type LinhaVisivel = {
     item: InscricaoRanking;
 };
 
+let semestreAtual = "";
 const inscricoes: InscricaoRanking[] = [];
 
 const selDisciplina = document.getElementById("filtro-disciplina") as HTMLSelectElement;
@@ -121,58 +126,39 @@ function desenhar(): void {
         .join("");
 }
 
-function celula(valor: string | number): string {
-    let t = String(valor);
-    if (/^[=+\-@]/.test(t)) t = "'" + t; // evita fórmulas vindas de texto digitado
-    return `"${t.replace(/"/g, '""')}"`;
-}
+async function baixarPlanilha(): Promise<void> {
+    if (!visiveis.length || !semestreAtual) return;
 
-function gerarCSV(): string {
-    const linhas: Array<Array<string | number>> = [
-        ["Posição", "Nome completo", "Disciplina", "Professor", "IRA", "COEF", "Situação"],
-    ];
+    btnBaixar.disabled = true;
+    try {
+        const disciplina = selDisciplina.value || undefined;
+        const blob = await baixarPlanilhaInscricoes(semestreAtual, disciplina);
 
-    visiveis.forEach((v) => {
-        const i = v.item;
-        linhas.push([
-            v.pos,
-            i.nome,
-            i.disciplina,
-            i.professor ?? "Não informado",
-            fmt(i.ira),
-            fmt(i.coef),
-            ROTULOS[i.status],
-        ]);
-    });
+        const hoje = new Date().toISOString().slice(0, 10);
+        const escopo = disciplina
+            ? disciplina
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-|-$/g, "")
+            : "todas-as-disciplinas";
 
-    // ponto e vírgula + BOM: o Excel em português abre com colunas e acentos corretos
-    return (
-        "\uFEFF" +
-        linhas.map((l) => l.map(celula).join(";")).join("\r\n")
-    );
-}
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
 
-function baixarPlanilha(): void {
-    if (!visiveis.length) return;
-
-    const hoje = new Date().toISOString().slice(0, 10);
-    const escopo = selDisciplina.value
-        ? selDisciplina.value
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/^-|-$/g, "")
-        : "todas-as-disciplinas";
-
-    const blob = new Blob([gerarCSV()], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-
-    a.href = url;
-    a.download = `ranking-monitoria-${escopo}-${hoje}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+        a.href = url;
+        a.download = `ranking-monitoria-${escopo}-${hoje}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    } catch (erro) {
+        const mensagem = erro instanceof Error
+            ? erro.message
+            : "Não foi possível baixar a planilha.";
+        alert(mensagem);
+    } finally {
+        btnBaixar.disabled = !visiveis.length;
+    }
 }
 
 function ehStatusInscricao(valor: string | undefined): valor is StatusInscricao {
@@ -198,6 +184,7 @@ async function carregarInscricoes(): Promise<void> {
 
     try {
         const { semestre } = await obterProcessoAberto();
+        semestreAtual = semestre;
         inscricoes.length = 0;
         inscricoes.push(...await listarInscricoes(semestre));
         preencherDisciplinas();

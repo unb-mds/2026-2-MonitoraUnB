@@ -2,6 +2,7 @@
 Assinatura temporária dos dados acadêmicos já validados pelo histórico.
 """
 
+from backend.services.spreadsheet_service import generate_spreadsheet
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 from sqlalchemy import String, case, literal
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -209,3 +210,96 @@ def listar_inscricoes(db: Session, semestre: str) -> list[dict]:
     )
 
     return [dict(linha._mapping) for linha in linhas]
+
+
+ROTULOS_STATUS_PLANILHA = {
+    "pendente": "Pendente",
+    "aprovado": "Aprovado",
+    "reprovado": "Reprovado",
+}
+
+
+def gerar_planilha_inscricoes(
+    db: Session,
+    semestre: str,
+    disciplina: str | None = None,
+) -> bytes:
+    """Consulta as inscrições do semestre no banco e gera a planilha .xlsx."""
+    processo = (
+        db.query(ProcessoSeletivo)
+        .filter(ProcessoSeletivo.semestre == semestre)
+        .first()
+    )
+    if processo is None:
+        raise ProcessoNaoEncontradoError
+
+    situacao = case(
+        (Resultado.id_resultado.is_(None), "pendente"),
+        (Resultado.decisao == "APROVADO", "aprovado"),
+        (Resultado.decisao == "REPROVADO", "reprovado"),
+        else_="pendente",
+    ).label("status")
+
+    consulta = (
+        db.query(
+            Aluno.nome.label("nome"),
+            Aluno.matricula.label("matricula"),
+            Aluno.email.label("email"),
+            Disciplina.codigo.label("codigo_disciplina"),
+            Disciplina.nome.label("disciplina"),
+            Inscricao.ira.label("ira"),
+            Inscricao.mencao.label("mencao"),
+            Inscricao.coeficiente.label("coeficiente"),
+            situacao,
+            Resultado.modalidade.label("modalidade"),
+            Inscricao.data_inscricao.label("data_inscricao"),
+        )
+        .join(Aluno, Inscricao.id_aluno == Aluno.id_aluno)
+        .join(Disciplina, Inscricao.id_disciplina == Disciplina.id)
+        .outerjoin(Resultado, Resultado.id_inscricao == Inscricao.id_inscricao)
+        .filter(Inscricao.id_processo == processo.id_processo)
+    )
+
+    if disciplina and disciplina.strip():
+        consulta = consulta.filter(Disciplina.nome == disciplina.strip())
+
+    linhas = consulta.order_by(
+        Inscricao.coeficiente.desc(),
+        Inscricao.ira.desc(),
+    ).all()
+
+    headers = [
+        "Posição",
+        "Nome completo",
+        "Matrícula",
+        "E-mail",
+        "Código",
+        "Disciplina",
+        "IRA",
+        "Menção",
+        "Coeficiente",
+        "Situação",
+        "Modalidade",
+        "Data da inscrição",
+    ]
+
+    rows = [
+        [
+            indice,
+            linha.nome,
+            linha.matricula,
+            linha.email,
+            linha.codigo_disciplina,
+            linha.disciplina,
+            float(linha.ira),
+            linha.mencao,
+            float(linha.coeficiente),
+            ROTULOS_STATUS_PLANILHA.get(linha.status, "Pendente"),
+            linha.modalidade or "",
+            linha.data_inscricao.strftime("%d/%m/%Y %H:%M") if linha.data_inscricao else "",
+        ]
+        for indice, linha in enumerate(linhas, start=1)
+    ]
+
+    titulo_aba = f"Inscricoes {semestre.replace('/', '-')}"
+    return generate_spreadsheet(headers=headers, rows=rows, sheet_title=titulo_aba)

@@ -101,3 +101,28 @@ export async function listarInscricoes(semestre: string): Promise<InscricaoRanki
 
     return resultado as InscricaoRanking[];
 }
+
+// Baixa a planilha .xlsx gerada pelo backend com as inscrições do semestre.
+export async function baixarPlanilhaInscricoes(
+    semestre: string,
+    disciplina?: string,
+): Promise<Blob> {
+    const url = new URL(`${API_BASE}/inscricoes/planilha`, window.location.origin);
+    url.searchParams.set("semestre", semestre);
+    if (disciplina) {
+        url.searchParams.set("disciplina", disciplina);
+    }
+
+    const resposta = await fetch(url, {
+        method: "GET",
+        credentials: "include",
+    });
+
+    if (!resposta.ok) {
+        throw new Error(
+            await obterDetalheErro(resposta, "Não foi possível baixar a planilha."),
+        );
+    }
+
+    return await resposta.blob();
+}

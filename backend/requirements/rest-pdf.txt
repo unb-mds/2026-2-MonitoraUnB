@@ -4,3 +4,4 @@ python-multipart
 pypdf
 itsdangerous
 bcrypt
+openpyxl

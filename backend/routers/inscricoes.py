@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, status
 from pydantic import ValidationError
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
@@ -19,6 +19,7 @@ from backend.services.inscricoes_service import (
     InscricaoDuplicadaError,
     ProcessoNaoAbertoError,
     ProcessoNaoEncontradoError,
+    gerar_planilha_inscricoes,
     ler_token_validacao,
     listar_inscricoes as listar_inscricoes_service,
     obter_processo_aberto as obter_processo_aberto_service,
@@ -82,6 +83,48 @@ def obter_inscricoes(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Não foi possível consultar as inscrições no banco de dados.",
         ) from erro
+
+
+@router.get("/planilha")
+def baixar_planilha_inscricoes(
+    request: Request,
+    semestre: str = Query(..., pattern=r"^\d{4}/[12]$"),
+    disciplina: str | None = Query(default=None),
+    db: Session = Depends(get_db),
+) -> Response:
+    if not professor_autenticado(request.session):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="É necessário autenticar como professor para baixar a planilha.",
+        )
+
+    try:
+        conteudo = gerar_planilha_inscricoes(
+            db=db,
+            semestre=semestre,
+            disciplina=disciplina,
+        )
+    except ProcessoNaoEncontradoError as erro:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Não existe processo seletivo cadastrado para o semestre informado.",
+        ) from erro
+    except SQLAlchemyError as erro:
+        db.rollback()
+        logger.exception("Erro ao gerar planilha de inscrições.")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Não foi possível gerar a planilha de inscrições.",
+        ) from erro
+
+    nome_arquivo = f"inscricoes-monitoria-{semestre.replace('/', '-')}.xlsx"
+    return Response(
+        content=conteudo,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={
+            "Content-Disposition": f'attachment; filename="{nome_arquivo}"',
+        },
+    )
 
 
 @router.post("", response_model=InscricaoResponse)
