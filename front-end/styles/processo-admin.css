@@ -1,0 +1,152 @@
+/* Processo seletivo — alinhado ao visual global / ranking */
+
+.pa-bloco {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin: 0;
+}
+
+.pa-bloco[hidden] {
+    display: none !important;
+}
+
+.pa-bloco .btn {
+    padding: 11px 22px;
+    font-size: 0.95rem;
+}
+
+.pa-bloco .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.pa-status {
+    color: var(--texto-suave);
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.pa-status:empty {
+    display: none;
+}
+
+.pa-aviso {
+    margin: 0 0 18px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border-left: 4px solid var(--azul-escuro);
+    background: var(--azul-claro);
+    color: var(--texto);
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.pa-aviso[hidden] {
+    display: none !important;
+}
+
+.pa-aviso[data-tipo="erro"] {
+    border-left-color: var(--vermelho);
+    background: var(--vermelho-claro);
+    color: var(--vermelho);
+}
+
+.pa-aviso[data-tipo="ok"] {
+    border-left-color: #217346;
+    background: #e6f6ec;
+    color: #217346;
+}
+
+.pa-dialogo {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    height: fit-content;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    border: 1px solid var(--borda);
+    border-radius: 16px;
+    background: #ffffff;
+    color: var(--texto);
+    padding: 32px 36px;
+    max-width: 420px;
+    width: calc(100% - 2rem);
+    box-shadow: var(--sombra);
+}
+
+.pa-dialogo::backdrop {
+    background: rgba(23, 54, 166, 0.35);
+}
+
+.pa-dialogo h2 {
+    margin: 0 0 22px;
+    color: var(--azul-escuro);
+    font-size: 1.45rem;
+    text-align: center;
+}
+
+.pa-campo {
+    margin-bottom: 18px;
+}
+
+.pa-campo label {
+    display: block;
+    color: #344054;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.pa-campo input {
+    width: 100%;
+    padding: 14px 15px;
+    border: 1px solid #cdd7e8;
+    border-radius: 10px;
+    background-color: #fbfcff;
+    color: var(--texto);
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: 0.2s ease;
+}
+
+.pa-campo input:focus {
+    outline: none;
+    border-color: var(--azul);
+    box-shadow: 0 0 0 3px rgba(40, 85, 217, 0.12);
+}
+
+.pa-acoes {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.pa-acoes .btn {
+    flex: 1;
+}
+
+@media (max-width: 700px) {
+    .pa-bloco {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .pa-bloco .btn {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .pa-dialogo {
+        padding: 28px 22px 24px;
+    }
+
+    .pa-acoes {
+        flex-direction: column;
+    }
+}

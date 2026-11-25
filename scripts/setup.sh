@@ -87,11 +87,31 @@ atualizar_env() {
     local chave="$1"
     local valor="$2"
 
-    if grep -q "^${chave}=" .env; then
-        sed -i "s|^${chave}=.*|${chave}=${valor}|" .env
-    else
-        printf '\n%s=%s\n' "$chave" "$valor" >> .env
-    fi
+    ENV_CHAVE="$chave" ENV_VALOR="$valor" ./.venv/bin/python - <<'PY'
+import os
+from pathlib import Path
+
+caminho = Path(".env")
+chave = os.environ["ENV_CHAVE"]
+valor = os.environ["ENV_VALOR"]
+linha_nova = f"{chave}={valor}\n"
+
+if not caminho.exists():
+    caminho.write_text(linha_nova, encoding="utf-8")
+else:
+    linhas = caminho.read_text(encoding="utf-8").splitlines(keepends=True)
+    encontrou = False
+    for i, linha in enumerate(linhas):
+        if linha.startswith(f"{chave}="):
+            linhas[i] = linha_nova
+            encontrou = True
+            break
+    if not encontrou:
+        if linhas and not linhas[-1].endswith("\n"):
+            linhas[-1] += "\n"
+        linhas.append(linha_nova)
+    caminho.write_text("".join(linhas), encoding="utf-8")
+PY
 }
 
 # Instala o bcrypt
@@ -139,16 +159,17 @@ configurar_professor() {
         erro "Usuário inválido."
     fi
 
-    if ! hash=$(./.venv/bin/python backend/scripts/gerar_hash_senha.py); then
+    if ! ./.venv/bin/python backend/scripts/gerar_hash_senha.py >/dev/null; then
         erro "Não foi possível gerar a senha."
     fi
 
-    if [[ ! "$hash" =~ ^\$2[aby]\$[0-9]{2}\$[./A-Za-z0-9]{53}$ ]]; then
+    hash=$(grep -E '^PROFESSOR_PASSWORD_HASH=' .env | tail -n 1 | cut -d'=' -f2-)
+
+    if [[ ! "$hash" =~ ^\$\$2[aby]\$\$[0-9]{2}\$\$[./A-Za-z0-9]{53}$ ]]; then
         erro "Hash bcrypt inválido."
     fi
 
     atualizar_env PROFESSOR_USERNAME "$usuario"
-    atualizar_env PROFESSOR_PASSWORD_HASH "'${hash}'"
 
     echo ""
     sucesso "Usuário configurado."
@@ -160,7 +181,7 @@ configurar_professor() {
 configurar_sessao() {
     local session_secret
 
-    session_secret=$(openssl rand -hex 32)
+    session_secret=$(./.venv/bin/python -c "import secrets; print(secrets.token_hex(32))")
 
     atualizar_env SESSION_SECRET "$session_secret"
 
@@ -170,13 +191,37 @@ configurar_sessao() {
 
 # Configura a senha inicial do banco, se necessário
 configurar_banco() {
-    if ! grep -q '^DB_PASSWORD=' .env ||
-       grep -Eq '^DB_PASSWORD=(substitua_por_uma_senha_segura)?$' .env; then
+    local senha
 
-        atualizar_env DB_PASSWORD "$(openssl rand -hex 32)"
+    echo
 
-        sucesso "Senha do PostgreSQL configurada."
+    read -rsp "Senha do banco de dados (Enter para padrão): " senha
+    echo
+
+    if [[ -z "$senha" ]]; then
+
+        if grep -Eq "^DB_PASSWORD=.+$" .env &&
+           ! grep -q "^DB_PASSWORD=substitua_por_uma_senha_segura$" .env; then
+
+            sucesso "Senha existente do banco mantida."
+
+            return
+        fi
+
+        senha=$(./.venv/bin/python -c \
+            "import secrets; print(secrets.token_hex(8))")
+
+        sucesso "Senha padrão gerada automaticamente."
+
+    else
+
+        sucesso "Senha personalizada selecionada."
+
     fi
+
+    atualizar_env DB_PASSWORD "$senha"
+
+    sucesso "Senha do PostgreSQL configurada."
 }
 
 

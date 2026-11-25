@@ -1,9 +1,9 @@
-import { extrairDadosHistorico } from "../services/inscricao.js";
+import {
+  extrairDadosHistorico,
+  obterProcessoAberto,
+} from "../services/inscricao.js";
 import { salvarInscricao, salvarMotivo } from "../utils/storage.js";
 import { ehPdf } from "../utils/validadores.js";
-
-const SEMESTRE_ATUAL = "2026/2";
-
 const inputHistorico = document.getElementById("historico") as HTMLInputElement;
 const campoEmail = document.getElementById("email") as HTMLInputElement;
 const campoDisciplina = document.getElementById("disciplina") as HTMLInputElement;
@@ -76,6 +76,7 @@ botaoContinuar.addEventListener("click", async (evento) => {
   definirCarregando(true);
 
   try {
+    const processo = await obterProcessoAberto();
     const historico = await extrairDadosHistorico(
       arquivo,
       codigo,
@@ -86,7 +87,7 @@ botaoContinuar.addEventListener("click", async (evento) => {
       aluno: historico.aluno,
       matricula: historico.matricula,
       ira: historico.ira,
-      semestre: SEMESTRE_ATUAL,
+      semestre: processo.semestre,
       disciplina: historico.disciplina.codigo,
       disciplinaNome: historico.disciplina.nome,
       professor: campoProfessor.value.trim(),

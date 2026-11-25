@@ -2,18 +2,24 @@
 Configurações da aplicação carregadas via variáveis de ambiente (.env).
 """
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 from sqlalchemy.engine import URL
+
 
 
 class Settings(BaseSettings):
     """Configurações da aplicação."""
 
+    model_config = SettingsConfigDict(
+            env_file=".env",
+            env_file_encoding="utf-8",
+            extra="ignore",
+        )
     # Database
     DB_HOST: str = "localhost"
     DB_PORT: int = 5432
-    DB_USER: str = "monitora"
+    DB_USER: str = "monitora_app"
     DB_PASSWORD: str = ""
     DB_NAME: str = "monitora_unb"
 
@@ -45,11 +51,6 @@ class Settings(BaseSettings):
             port=self.DB_PORT,
             database=self.DB_NAME,
         ).render_as_string(hide_password=False)
-
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-
 
 @lru_cache()
 def get_settings() -> Settings:

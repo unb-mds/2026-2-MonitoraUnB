@@ -7,8 +7,7 @@ from sqlalchemy.orm import Session
 from backend.database.database import get_db
 from backend.database.models import Departamento, Disciplina
 from backend.schemas.schemas import DepartamentoResponse, DisciplinaResponse
-from backend.scraping.sigaa import sincronizar_departamentos
-
+from backend.services.scraping_service import sincronizar_departamentos
 
 router = APIRouter(
     prefix="/departamentos",

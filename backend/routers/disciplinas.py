@@ -1,25 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, Query
 from backend.database.database import get_db
 
 import math
 
-from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from backend.database.models import Departamento, Disciplina, ScrapingLog
+from backend.database.models import Departamento, Disciplina
 from backend.schemas.schemas import (
     DepartamentoResponse,
     DisciplinaResponse,
     DisciplinaComDepartamento,
-    ScrapingRequest,
-    ScrapingLogResponse,
-    ScrapingStatusResponse,
-    EstatisticasResponse,
 )
-from backend.scraping.sigaa import executar_scraping, sincronizar_departamentos
 
-
-from sqlalchemy.orm import Session
 
 from typing import Optional
 
