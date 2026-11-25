@@ -1,0 +1,21 @@
+/* Camada leve sobre o docsify-darklight-theme: funciona no modo claro e no escuro.
+   Não mexe em fundo, texto nem barra lateral, só na capa e em detalhes. */
+
+/* Capa (hero azul) */
+section.cover{background:linear-gradient(135deg,#051642,#0039A6 55%,#1a63e6)!important;border-bottom:4px solid #3DD68C}
+section.cover .mask{background:transparent!important}
+section.cover .cover-main{max-width:780px;text-align:left;margin:0 6vw}
+section.cover h1{color:#fff!important;font-size:clamp(2.8rem,8vw,4.6rem);font-weight:700;text-align:left;margin:0 0 14px}
+section.cover h1 small{font-size:inherit;color:#6ee7b7;margin:0}
+section.cover h1 small::before{content:"-"}
+section.cover blockquote{text-align:left;color:#e8f0ff!important;font-size:1.25rem;margin:0 0 18px;border:0;background:transparent}
+section.cover .cover-main>p{text-align:left;color:#a9d0ff}
+section.cover .cover-main>p:last-child{margin-top:28px}
+section.cover .cover-main>p:last-child a{border-radius:12px;padding:.9em 1.8em;font-weight:600;margin:0 12px 12px 0;color:#fff;border:2px solid rgba(255,255,255,.7);background:transparent}
+section.cover .cover-main>p:last-child a:first-child{background:#fff;color:#0039A6;border-color:#fff}
+
+/* Detalhes do conteúdo */
+.markdown-section h2{border-bottom:0}
+.markdown-section h2::after{content:"";display:block;width:56px;height:4px;border-radius:2px;background:#1ca870;margin-top:8px}
+.markdown-section blockquote{border-left:4px solid #1ca870;border-radius:0 10px 10px 0}
+.markdown-section pre{border-radius:12px}
