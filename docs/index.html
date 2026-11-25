@@ -44,30 +44,51 @@
       ["vitormorhy","Vitor Piau Morhy",""],
       ["Vinicius-Eugenio-337","Vinicius Eugênio Montalvão Silva",""]
     ];
+
+    /* tira acentos, emojis/símbolos e maiúsculas para comparar títulos */
+    function norm(s){
+      return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+    }
+
     function injeta(titulo,html){
       var hs=document.querySelectorAll('.markdown-section h2');
       for(var i=0;i<hs.length;i++){
-        if(hs[i].textContent.trim()===titulo){
+        if(norm(hs[i].textContent).indexOf(norm(titulo))!==-1){
           var el=hs[i],nx=el.nextElementSibling;
           if(nx&&nx.tagName==='P')el=nx;
           el.insertAdjacentHTML('afterend',html);return;
         }
       }
+      console.warn('injeta: título não encontrado ->',titulo);
     }
+
     function blocos(){
-      injeta('Documentação','<div class="cards">'+DOCS.map(function(d){
-        var ext=d[2].charAt(0)!=='#'?' target="_blank" rel="noopener"':'';
-        return '<a class="card" href="'+d[2]+'"'+ext+'><b>'+d[0]+'</b><span>'+d[1]+'</span></a>';
-      }).join('')+'</div>');
-      injeta('Funcionalidades','<div class="cards">'+FUNC.map(function(f,i){
-        return '<div class="card"><b><i class="n">'+(i+1)+'</i>'+f[0]+'</b><span>'+f[1]+'</span></div>';
-      }).join('')+'</div>');
-      injeta('Participantes','<div class="team">'+TEAM.map(function(t){
-        return '<a class="p" href="https://github.com/'+t[0]+'" target="_blank" rel="noopener"><img src="https://github.com/'+t[0]+'.png?size=160" alt="">'+t[1]+(t[2]?'<br><em>'+t[2]+'</em>':'')+'</a>';
-      }).join('')+'</div>');
+      try{
+        /* evita injetar duas vezes */
+        if(document.querySelector('.markdown-section .cards, .markdown-section .team'))return;
+
+        injeta('Documentação','<div class="cards">'+DOCS.map(function(d){
+          var ext=d[2].charAt(0)!=='#'?' target="_blank" rel="noopener"':'';
+          return '<a class="card" href="'+d[2]+'"'+ext+'><b>'+d[0]+'</b><span>'+d[1]+'</span></a>';
+        }).join('')+'</div>');
+
+        injeta('Funcionalidades','<div class="cards">'+FUNC.map(function(f,i){
+          return '<div class="card"><b><i class="n">'+(i+1)+'</i>'+f[0]+'</b><span>'+f[1]+'</span></div>';
+        }).join('')+'</div>');
+
+        injeta('Participantes','<div class="team">'+TEAM.map(function(t){
+          return '<a class="p" href="https://github.com/'+t[0]+'" target="_blank" rel="noopener"><img src="https://github.com/'+t[0]+'.png?size=160" alt="">'+t[1]+(t[2]?'<br><em>'+t[2]+'</em>':'')+'</a>';
+        }).join('')+'</div>');
+      }catch(e){
+        console.error('Erro ao montar os blocos:',e);
+      }
     }
+
     window.$docsify = {
-      plugins: [function(hook){ hook.doneEach(blocos); }],
+      plugins: [function(hook){
+        hook.doneEach(blocos);
+        hook.ready(blocos);
+      }],
       name: 'Monitora-UnB',
       repo: 'unb-mds/2026-2-MonitoraUnB',
       homepage: 'inicio.md',
