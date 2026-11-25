@@ -187,6 +187,7 @@ tr.reprovado td { background-color: #fffafa; }
 
 .botoes-barra {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
     gap: 10px;
 }

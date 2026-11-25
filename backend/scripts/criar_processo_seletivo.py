@@ -8,8 +8,10 @@ Execução:
 
 from __future__ import annotations
 
+import re
 import sys
 from datetime import date, datetime
+from getpass import getpass
 from pathlib import Path
 
 # Garante que a raiz do projeto esteja no sys.path
@@ -55,12 +57,16 @@ def exibir_banner() -> None:
 
 
 def conectar_banco() -> Session:
-    """Conecta ao PostgreSQL usando as configurações já prontas do .env."""
+    """Conecta ao PostgreSQL pedindo credenciais administrativas sem salvá-las."""
     settings = get_settings()
 
-    if not settings.DB_PASSWORD:
-        print(f"{Cores.VERMELHO}✖ Erro: DB_PASSWORD está vazio no arquivo .env.{Cores.RESET}")
-        print(f"{Cores.AMARELO}ℹ Execute o setup.bat primeiro para configurar a senha do banco.{Cores.RESET}\n")
+    usuario = input("Usuário administrador do PostgreSQL [monitora]: ").strip() or "monitora"
+    senha = getpass("Senha do usuário administrador do PostgreSQL: ")
+    if not senha:
+        print(
+            f"{Cores.VERMELHO}✖ A senha do banco não pode ficar vazia."
+            f"{Cores.RESET}\n"
+        )
         sys.exit(1)
 
     # Prioriza localhost/127.0.0.1 quando executado no host (Windows/Linux fora do Docker)
@@ -77,12 +83,12 @@ def conectar_banco() -> Session:
         try:
             db_url = URL.create(
                 drivername="postgresql+psycopg",
-                username=settings.DB_USER,
-                password=settings.DB_PASSWORD,
+                username=usuario,
+                password=senha,
                 host=host,
                 port=settings.DB_PORT,
                 database=settings.DB_NAME,
-            ).render_as_string(hide_password=False)
+            )
 
             eng = create_engine(
                 db_url,
@@ -109,7 +115,7 @@ def conectar_banco() -> Session:
 def obter_usuario_responsavel(db: Session) -> UsuarioAdministrador:
     """
     Recupera ou registra automaticamente o usuário administrador
-    usando as credenciais que já foram salvas no .env pelo setup.
+    usando o nome e o hash da senha do professor configurados no .env.
     """
     settings = get_settings()
     username = settings.PROFESSOR_USERNAME or "professor"
@@ -133,12 +139,19 @@ def obter_usuario_responsavel(db: Session) -> UsuarioAdministrador:
 
 def coletar_semestre(db: Session) -> str:
     print(f"{Cores.CIANO}{Cores.NEGRITO}[1/3] Semestre Letivo{Cores.RESET}")
-    print(f"{Cores.CINZA}Formato recomendado: AAAA.S (ex: 2026.2, 2027.1){Cores.RESET}")
+    print(f"{Cores.CINZA}Formato esperado: AAAA/S (ex: 2026/2, 2027/1){Cores.RESET}")
 
     while True:
         semestre = input("Informe o semestre: ").strip()
         if not semestre:
             print(f"{Cores.VERMELHO}O semestre não pode ser vazio.{Cores.RESET}")
+            continue
+
+        if not re.fullmatch(r"\d{4}/[12]", semestre):
+            print(
+                f"{Cores.VERMELHO}Formato inválido. Use AAAA/1 ou AAAA/2, "
+                f"por exemplo 2027/1.{Cores.RESET}"
+            )
             continue
 
         existente = db.query(ProcessoSeletivo).filter(ProcessoSeletivo.semestre == semestre).first()
