@@ -13,6 +13,7 @@ from backend.routers import (
     historico,
     inscricoes,
     departamentos,
+    rotas_botao,
     scraping,
 )
 
@@ -80,6 +81,11 @@ app.include_router(
 
 app.include_router(
     departamentos.router,
+    prefix="/api"
+)
+
+app.include_router(
+    rotas_botao.router,
     prefix="/api"
 )
 
