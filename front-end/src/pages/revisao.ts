@@ -34,9 +34,9 @@ function iniciar(): void {
     definirTexto("status", "Enviando...");
 
     try {
-      const mensagem = await enviarInscricao(dados);
-      botaoEnviar.textContent = "Dados validados";
-      definirTexto("status", mensagem);
+      await enviarInscricao(dados);
+      definirTexto("status", "Inscrição registrada. Redirecionando...");
+      window.location.href = "solicitacao-registrada.html";
     } catch (erro) {
       botaoEnviar.setAttribute("aria-disabled", "false");
       botaoEnviar.textContent = "Enviar inscrição";
